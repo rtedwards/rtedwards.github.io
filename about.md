@@ -1,41 +1,17 @@
-<dl> 
-  <iframe src="https://open.spotify.com/embed/album/1DFixLWuPkv3KT3TnV35m3" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe> 
-</dl>
+# Bio
+A Robotics Engineer transitioning to Statistician. I enjoy tinkering and creating
 
-## Welcome to GitHub Pages
 
-You can use the [editor on GitHub](https://github.com/rtedwards/rtedwards.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+# Past Roles
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+**PRENAV**  
+I joined [PRENAV](www.prenav.com/) early in its inception in 2015.  
 
-### Markdown
+**NASA Ames G-NAT Lab**  
+As an intern at the NASA Ames [Generalized Nanosatellite Avionics Testbed Lab](www.nasa.gov/feature/generalized-nanosatellite-avionics-testbed-g-nat) 
+ 
+ 
+# Current Projects
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/rtedwards/rtedwards.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+- **Spotify Music Library Cluster Analysis** - An analysis of my spotify library to discern my listening habits and find trends in my music taste. 
+- **ARDS Classification** - Prediction of acute respiratory distress syndrome survival via biomarkers. 
