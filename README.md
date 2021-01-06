@@ -1,5 +1,5 @@
 # Bio
-A Robotics Engineer transitioning to Statistician. I enjoy tinkering and creating
+A Robotics Engineer turned Data Scientist. 
 
 
 # Past Roles
