@@ -1,0 +1,164 @@
+.franklin-content {
+  position: relative;
+  padding-left: 0;
+  padding-right: 0;
+  line-height: 1.35em;
+}
+
+/* on wide screens, fix content width to a max value */
+@media (min-width: 940px) {
+  .franklin-content {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* on narrow device, reduce margins */
+@media (max-width: 768px) {
+  .franklin-content {
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+}
+
+.note {
+  margin-top: 1.5em;
+  width: 95%;
+  margin-left:auto;
+  margin-right:auto;
+  background-color:  aliceblue;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  margin-bottom: 1em;
+}
+
+.info {
+  background-color: rgb(205, 235, 255);
+  padding: 0.5em;
+  margin-bottom: 1em;
+}
+
+.success {
+  background-color: rgb(158, 252, 158);
+  padding: 0.5em;
+  margin-bottom: 1em;
+}
+
+.warning {
+  background-color: rgb(255, 190, 106);
+  padding: 0.5em;
+  margin-bottom: 1em;
+}
+
+.error {
+  background-color: rgb(243, 109, 109);
+  padding: 0.5em;
+  margin-bottom: 1em;
+}
+
+/* ================================================================== */
+/*  PAGE-DIVS
+- .flist = lists with a checkmark
+- .note = highlight the background in light yellow
+*/
+/* ================================================================== */
+
+.blank {
+  height: 1.5em;
+}
+
+.flist p {
+  display:inline;
+}
+.flist ul {
+  list-style: none;
+}
+.flist a#goto {
+  padding-right: 10px;
+  margin-left: -15px;
+}
+.flist a#goto #arrow{
+  display:none;
+}
+.flist a#goto:hover #check {
+  display: none;
+}
+.flist a#goto:hover #arrow {
+  display: inline;
+}
+.tlist p {
+  display:inline;
+}
+
+.note {
+  margin-top: 1.5em;
+  width: 95%;
+  margin-left:auto;
+  margin-right:auto;
+  background-color:  aliceblue;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  margin-bottom: 1em;
+}
+.note .content {
+  padding: 10px;
+  padding-left: 12px;
+}
+.note .title{
+  font-size: 105%;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding-left: 7px;
+  padding-top: 2px;
+  color: white;
+  background: cornflowerblue;
+}
+
+.definition {
+    background-color: aliceblue;
+    border-left: 5px solid cornflowerblue;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 1em;
+}
+
+.important {
+  background-color: lemonchiffon;
+  padding: 0.5em;
+  margin-bottom: 1em;
+}
+
+.silly-formatting {
+  width: 50%;
+  text-align: center;
+  color: magenta;
+  border: 1px solid black;
+}
+
+.ccols {
+  margin-top:1.5em;
+  margin-bottom:1.5em;
+  margin-left:auto;
+  margin-right:auto;
+  width: 60%;
+  text-align: center;}
+.ccols svg {
+  width:30px;}
+
+.lalign td {
+  text-align: left;
+}
+.lalign tr:first-of-type > td {
+  text-align: center;
+}
+
+.lalignb td {
+  text-align: left;
+}
+.lalignb tr:first-of-type > td {
+  text-align: center;
+}
+.lalignb th:nth-child(1){
+  width:100px;
+}
