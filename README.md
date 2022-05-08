@@ -4,6 +4,8 @@
 ## Websites built with Franklin.jl
 - https://seqstat.com/
 - https://ifihan.github.io/blogue/
+- https://aperiodic.dev/https://aperiodic.dev/ (not really but great template)
+    - https://adidoks.netlify.app/
 
 ## Libraries
 - Franklin.jl
