@@ -16,6 +16,7 @@ generate_rss = true
 website_title = "Robert Edwards"
 website_descr = "Diving into data and software."
 website_url   = "https://rtedwards.github.io/robertedwards/"
+prepath = "robertedwards"
 +++
 
 <!--
