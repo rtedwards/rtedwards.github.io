@@ -128,7 +128,7 @@
 .katex * {
   -ms-high-contrast-adjust: none !important;
   border-color: currentColor;
-  color: black;
+  color: currentColor;
 }
 .katex .katex-version::after {
   content: "0.16.4";
@@ -916,6 +916,7 @@
   width: 100%;
   height: inherit;
   fill: currentColor;
+  color: currentColor;
   stroke: currentColor;
   fill-rule: nonzero;
   fill-opacity: 1;

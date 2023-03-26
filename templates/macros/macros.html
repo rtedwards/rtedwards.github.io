@@ -118,23 +118,28 @@
 
 {# === KATEX ===#}
 {% macro katex() %}
-    {% if config.extra.mode == "auto" or config.extra.mode == "dark" or config.extra.mode == "toggle" %}
-        <link rel="stylesheet" id="darkModeKatex" href="{{ get_url(path="katex-dark.css") }}">
-    {% else %}
-        <link rel="stylesheet" href="{{ get_url(path="katex.css") }}">
-    {% endif %}
-<script defer src="{{ get_url(path="katex.js")}}"></script>
-<script defer src="{{ get_url(path="auto-render.js") }}"></script>
+<!-- {% if config.extra.mode == "auto" or config.extra.mode == "dark" or config.extra.mode == "toggle" %}
+    <link rel="stylesheet" id="darkModeKatex" href="{{ get_url(path="katex-dark.css") }}">
+{% else %}
+    <link rel="stylesheet" href="{{ get_url(path="katex.css") }}">
+{% endif %} -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         renderMathInElement(document.body, {
+            // customised options
+            // • auto-render specific keys, e.g.:
             delimiters: [
-              {left: "$$", right: "$$", display: true},
-              {left: "$", right: "$", display: false},
-            ]
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+            ],
+            // • rendering keys, e.g.:
+            throwOnError : false
         });
     });
 </script>
-| <a id="dark-mode-toggle" onclick="toggleTheme()" href=""></a>
-<script src={{ get_url(path="js/themetoggle.js") }}></script>
 {% endmacro katex %}

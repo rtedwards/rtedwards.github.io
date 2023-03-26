@@ -120,7 +120,7 @@
   font-style: normal;
 }
 .katex {
-  font: normal 1.21em KaTeX_Main, Times New Roman, serif;
+  font: normal 1.2em KaTeX_Main, Times New Roman, serif;
   line-height: 1.2;
   text-indent: 0;
   text-rendering: auto;
@@ -128,8 +128,10 @@
 .katex * {
   -ms-high-contrast-adjust: none !important;
   border-color: currentColor;
-  color: white;
-}
+  color: currentColor;
+  -webkit-text-stroke-width: 0.5px;
+  -webkit-text-stroke-color: black;
+
 .katex .katex-version::after {
   content: "0.16.4";
 }
@@ -916,6 +918,7 @@
   width: 100%;
   height: inherit;
   fill: currentColor;
+  color: currentColor;
   stroke: currentColor;
   fill-rule: nonzero;
   fill-opacity: 1;
