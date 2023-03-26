@@ -126,7 +126,10 @@ figure h4::before {
 /* Code blocks */
 code {
     background-color: #f1f1f1;
+    color: var(--maincolor);
     padding: 0.1em 0.2em;
+    font-family: "Fira Code", monospace;
+    border-radius: 2px;
 }
 
 pre {
@@ -317,6 +320,7 @@ svg {
 
 pre {
     font-family: "Fira Code", monospace;
+    border-radius: 10px;
     position: relative;
     -webkit-overflow-scrolling: touch;
 }
@@ -326,7 +330,6 @@ pre code[class*="language-"] {
 }
 
 pre code[class*="language-"]::before {
-    background: black;
     border-radius: 0 0 0.25rem 0.25rem;
     color: white;
     font-size: 12px;
@@ -335,7 +338,6 @@ pre code[class*="language-"]::before {
     position: absolute;
     right: 1rem;
     text-align: right;
-    text-transform: uppercase;
     top: 0;
 }
 
@@ -369,9 +371,8 @@ pre code[class*="language-json"]::before {
 
 pre code[class*="language-python"]::before,
 pre code[class*="language-py"]::before {
-    content: "py";
-    background: blue;
-    color: yellow;
+    content: "python";
+    color: var(--maincolor);
 }
 
 pre code[class*="language-css"]::before {

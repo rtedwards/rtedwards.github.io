@@ -115,3 +115,26 @@
     </article>
 </main>
 {% endmacro content %}
+
+{# === KATEX ===#}
+{% macro katex() %}
+    {% if config.extra.mode == "auto" or config.extra.mode == "dark" or config.extra.mode == "toggle" %}
+        <link rel="stylesheet" id="darkModeKatex" href="{{ get_url(path="katex-dark.css") }}">
+    {% else %}
+        <link rel="stylesheet" href="{{ get_url(path="katex.css") }}">
+    {% endif %}
+<script defer src="{{ get_url(path="katex.js")}}"></script>
+<script defer src="{{ get_url(path="auto-render.js") }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false},
+            ]
+        });
+    });
+</script>
+| <a id="dark-mode-toggle" onclick="toggleTheme()" href=""></a>
+<script src={{ get_url(path="js/themetoggle.js") }}></script>
+{% endmacro katex %}

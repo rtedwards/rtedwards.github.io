@@ -20,8 +20,8 @@ hr {
 }
 
 code {
-    background-color: lightblue;
-    color: black;
+    background-color: #111111;
+    color: var(--darkMaincolor);
     text-decoration: bold;
     padding: 0.1em 0.2em;
 }
@@ -31,6 +31,7 @@ pre {
     line-height: 1.4;
     overflow-x: auto;
     padding: 1em;
+    border-radius: 10px;
 }
 
 blockquote {
@@ -159,8 +160,7 @@ footer {
 .highlight pre code[class*='language-python']::before,
 .highlight pre code[class*='language-py']::before {
     content: 'py';
-    background: blue;
-    color: yellow;
+    color: #2B65EC;
 }
 
 .highlight pre code[class*='language-css']::before {
