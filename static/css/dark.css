@@ -19,19 +19,21 @@ hr {
     border-top: 3px dotted blue;
 }
 
+/* wanted background color for code blocks.  can;t find where to set */
+/* background-color: #01242e; */
 code {
-    background-color: #111111;
+    background-color: transparent;
     color: var(--darkMaincolor);
     text-decoration: bold;
     padding: 0.1em 0.2em;
 }
 
 pre {
-    background-color: #272822;
+    background-color: #01242e;
     line-height: 1.4;
     overflow-x: auto;
     padding: 1em;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 blockquote {
@@ -85,12 +87,23 @@ a:hover {
     color: var(--darkMaincolor);
 }
 
+ul>li::before {
+    content: "-> ";
+    font-weight: bold;
+    color: var(--darkMaincolor)
+}
+
 .site-description a {
     color: #ddd;
 }
 
 .site-description a:hover {
     color: black;
+}
+
+.tags li::before {
+    content: "-> ";
+    color: var(--darkMaincolor)
 }
 
 .tags a {
@@ -132,7 +145,6 @@ footer {
 .highlight pre code[class=language-javaScript]::before,
 .highlight pre code[class="language-js"]::before {
     content: "js";
-    background: #f7df1e;
     color: black;
 }
 
@@ -153,7 +165,6 @@ footer {
 
 .highlight pre code[class*='language-json']::before {
     content: 'json';
-    background: dodgerblue;
     color: #000000
 }
 
@@ -165,19 +176,16 @@ footer {
 
 .highlight pre code[class*='language-css']::before {
     content: 'css';
-    background: cyan;
     color: black;
 }
 
 .highlight pre code[class*='language-go']::before {
     content: 'Go';
-    background: cyan;
     color: royalblue;
 }
 
 .highlight pre code[class*='language-md']::before,
 .highlight pre code[class*='language-md']::before {
     content: 'Markdown';
-    background: royalblue;
     color: whitesmoke;
 }

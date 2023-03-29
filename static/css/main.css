@@ -83,6 +83,7 @@ ul li {
 ul>li::before {
     content: "-> ";
     font-weight: bold;
+    color: var(--maincolor)
 }
 
 /* Images */
@@ -125,7 +126,7 @@ figure h4::before {
 
 /* Code blocks */
 code {
-    background-color: #f1f1f1;
+    background-color: transparent;
     color: var(--maincolor);
     padding: 0.1em 0.2em;
     font-family: "Fira Code", monospace;
@@ -291,6 +292,7 @@ article .title {
 
 .tags li::before {
     content: "-> ";
+    color: var(--maincolor)
 }
 
 .tags a {
@@ -320,7 +322,7 @@ svg {
 
 pre {
     font-family: "Fira Code", monospace;
-    border-radius: 10px;
+    border-radius: 5px;
     position: relative;
     -webkit-overflow-scrolling: touch;
 }
@@ -329,6 +331,7 @@ pre code[class*="language-"] {
     -webkit-overflow-scrolling: touch;
 }
 
+/* #01242e */
 pre code[class*="language-"]::before {
     border-radius: 0 0 0.25rem 0.25rem;
     color: white;
@@ -359,13 +362,11 @@ pre code[class*="language-shell"]::before,
 pre code[class*="language-bash"]::before,
 pre code[class*="language-sh"]::before {
     content: "shell";
-    background: green;
     color: white;
 }
 
 pre code[class*="language-json"]::before {
     content: "json";
-    background: dodgerblue;
     color: #000000;
 }
 
@@ -377,28 +378,24 @@ pre code[class*="language-py"]::before {
 
 pre code[class*="language-css"]::before {
     content: "css";
-    background: cyan;
     color: black;
 }
 
 pre code[class*="language-go"]::before {
     content: "Go";
-    background: cyan;
     color: royalblue;
 }
 
 pre code[class*="language-md"]::before,
 pre code[class*="language-md"]::before {
     content: "Markdown";
-    background: royalblue;
     color: whitesmoke;
 }
 
 pre code[class*="language-rust"]::before,
 pre code[class*="language-rs"]::before {
     content: "rust";
-    background: #fff8f6;
-    color: #ff4647;
+    color: #cd5909;
 }
 
 /* table */
