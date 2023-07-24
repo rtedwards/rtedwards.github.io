@@ -81,16 +81,17 @@ h6::before {
 
 a {
     color: inherit;
-}
-
-a:hover {
     color: var(--darkMaincolor);
 }
 
+a:hover {
+    color: white;
+}
+
 ul>li::before {
-    content: "-> ";
+    content: "• ";
     font-weight: bold;
-    color: var(--darkMaincolor)
+    color: white
 }
 
 .site-description a {
@@ -102,16 +103,21 @@ ul>li::before {
 }
 
 .tags li::before {
-    content: "-> ";
-    color: var(--darkMaincolor)
+    content: "[";
+    color: white
+}
+
+.tags li::after {
+    content: "]";
+    color: white
 }
 
 .tags a {
-    color: white;
+    color: var(--darkMaincolor)
 }
 
 .tags a:hover {
-    color: var(--darkMaincolor);
+    color: white;
 }
 
 .site-title a {

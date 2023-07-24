@@ -64,11 +64,12 @@ blockquote {
 
 a {
     color: inherit;
+    color: var(--maincolor);
     text-decoration: none;
 }
 
 a:hover {
-    color: var(--maincolor);
+    color: black
 }
 
 ul {
@@ -81,9 +82,9 @@ ul li {
 }
 
 ul>li::before {
-    content: "-> ";
+    content: "• ";
     font-weight: bold;
-    color: var(--maincolor)
+    color: black
 }
 
 /* Images */
@@ -291,16 +292,21 @@ article .title {
 }
 
 .tags li::before {
-    content: "-> ";
-    color: var(--maincolor)
+    content: "[";
+    color: black
+}
+
+.tags li::after {
+    content: "]";
+    color: black
 }
 
 .tags a {
-    color: black;
+    color: var(--maincolor)
 }
 
 .tags a:hover {
-    color: var(--maincolor);
+    color: black;
 }
 
 svg {
@@ -337,7 +343,7 @@ pre code[class*="language-"]::before {
     color: white;
     font-size: 12px;
     letter-spacing: 0.025rem;
-    padding: 0.1rem 0.5rem;
+    padding: 0.25rem 0.0rem 0.0rem 0.0rem;
     position: absolute;
     right: 1rem;
     text-align: right;
