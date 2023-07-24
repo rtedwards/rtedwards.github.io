@@ -228,3 +228,8 @@ url = "https://github.com/rtedwards"
 icon = "linkedin"
 name = "Linkedin"
 url = "https://www.linkedin.com/in/robert-edwards-3b98865/"
+
+[extra.analytics]
+enabled = true
+goatcounter_user = "bobeartoes@gmail.com"
+goatcounter_host = "goatcounter.com"    # default= goatcounter.com # custom=example.com
