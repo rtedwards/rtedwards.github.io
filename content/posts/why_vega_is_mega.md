@@ -1,6 +1,6 @@
 +++
 title = "Why Vega Is Mega"
-date = 2023-03-25
+date = 2023-08-06
 description = "The case for VegaLite as your default plotting engine."
 summary = "The case for VegaLite as your default plotting engine."
 draft = true
@@ -16,7 +16,7 @@ katex = true
 > \
 >  ― John Tukey, 1977
 
-> “Comparisons must be enforced within the scope of the eyespan, a fundamental point occasionally forgotten in practice.”
+> “Comparisons must be enforced within the scope of the eyespan, a fundamental point occasionally forgotten in practice.” \
 > \
 > ― Edward Tufte
 
@@ -24,8 +24,9 @@ katex = true
 \
 \
 
-In statistics (and by the transitive property data science) it's important to visualize the data.  When
-data is visualized, unknown and unseen trends may appear and previously held assumptions may be invalidated.
+In statistics (and by the transitive property data science) it's important to visualize the data so it can literally be
+viewed in fresh perspectives.  When data is visualized, unknown and unseen trends may present themselves and previously
+held assumptions may be invalidated.
 
 - **Sensor analogy**
 - **anecdote**

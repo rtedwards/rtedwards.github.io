@@ -1,6 +1,6 @@
 +++
 title = "The Bears Toes"
-date = "2022-05-12"
+date = "2023-08-06"
 path = "about"
 +++
 

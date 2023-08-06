@@ -1,26 +1,5 @@
-# Personal Website
-Static site generator using Zola.
+# The Bears Toes Blog
+![example workflow](https://github.com/github/docs/actions/workflows/zola-deploy-action.yml/badge.svg)
+![example workflow](https://github.com/github/docs/actions/workflows/zola-deploy-action.yml/badge.svg?branch=gh-pages)
 
-## Resources
-- [HTML Color Codes](https://www.computerhope.com/htmcolor.htm#color-codes)
-
-## Themes
-- [Archie Zola](https://www.getzola.org/themes/archie-zola/)
-- [Anemone](https://www.getzola.org/themes/anemone/)
-    - light / dark mode
-    - RSS?
-    - LaTeX math (need to check)
-
-    **To Pilfer**
-    - RSS feed
-    - Table
-- [Apollo](https://www.getzola.org/themes/apollo/)
-    -  Pagination
-       -  Themes (light, dark, auto)
-       -  Projects page
-       -  Analytics using GoatCounter
-       -  Social Links
-       -  MathJax Rendering
-       -  Meta Tags For Individual Pages
-       -  Search(?)
-       -  Categories(?)
+Personal blog built using [Zola](https://www.getzola.org/) and themed with [Archie Zola](https://www.getzola.org/themes/archie-zola/)
