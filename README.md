@@ -1,26 +1,26 @@
+# Personal Website
+Static site generator using Zola.
+
 ## Resources
-- https://franklinjl.org/
+- [HTML Color Codes](https://www.computerhope.com/htmcolor.htm#color-codes)
 
-## Websites built with Franklin.jl
-- https://seqstat.com/
-- https://ifihan.github.io/blogue/
-- https://aperiodic.dev/https://aperiodic.dev/ (not really but great template)
-    - https://adidoks.netlify.app/
+## Themes
+- [Archie Zola](https://www.getzola.org/themes/archie-zola/)
+- [Anemone](https://www.getzola.org/themes/anemone/)
+    - light / dark mode
+    - RSS?
+    - LaTeX math (need to check)
 
-## Libraries
-- Franklin.jl
-- NodeJS
-
-## CSS
-- https://www.madcapsoftware.com/blog/css-tip-creating-styled-boxes-notes-warnings-examples-tips/
-
-## Icons
-- https://flaticons.net/free-icons
-
-## To Start Website
-```julia
-~/git/rtedwards.github.io/RobertEdwards$ julia # start Julia
-] activate. # activate environment
-> using Franklin
-> serve() # Website should start at http://localhost:8000/
-```
+    **To Pilfer**
+    - RSS feed
+    - Table
+- [Apollo](https://www.getzola.org/themes/apollo/)
+    -  Pagination
+       -  Themes (light, dark, auto)
+       -  Projects page
+       -  Analytics using GoatCounter
+       -  Social Links
+       -  MathJax Rendering
+       -  Meta Tags For Individual Pages
+       -  Search(?)
+       -  Categories(?)

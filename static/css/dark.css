@@ -1,0 +1,197 @@
+body {
+    color: white;
+    background-color: var(--darkBackgroundColor);
+}
+
+::-moz-selection {
+    background: var(--darkMaincolor);
+    color: white;
+    text-shadow: none;
+}
+
+::selection {
+    background: var(--darkMaincolor);
+    color: white;
+    text-shadow: none;
+}
+
+hr {
+    border-top: 3px dotted blue;
+}
+
+/* wanted background color for code blocks.  can;t find where to set */
+/* background-color: #01242e; */
+code {
+    background-color: transparent;
+    color: var(--darkMaincolor);
+    text-decoration: bold;
+    padding: 0.1em 0.2em;
+}
+
+pre {
+    background-color: #01242e;
+    line-height: 1.4;
+    overflow-x: auto;
+    padding: 1em;
+    border-radius: 5px;
+}
+
+blockquote {
+    border-color: var(--darkMaincolor);
+    background-color: var(--darkBlockQuoteColor);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #ddd;
+}
+
+h1::before {
+    color: var(--darkMaincolor);
+    content: "# ";
+}
+
+h2::before {
+    color: var(--darkMaincolor);
+    content: "## ";
+}
+
+h3::before {
+    color: var(--darkMaincolor);
+    content: "### ";
+}
+
+h4::before {
+    color: var(--darkMaincolor);
+    content: "#### ";
+}
+
+h5::before {
+    color: var(--darkMaincolor);
+    content: "##### ";
+}
+
+h6::before {
+    color: var(--darkMaincolor);
+    content: "###### ";
+}
+
+a {
+    color: inherit;
+    color: var(--darkMaincolor);
+}
+
+a:hover {
+    color: white;
+}
+
+ul>li::before {
+    content: "• ";
+    font-weight: bold;
+    color: white
+}
+
+.site-description a {
+    color: #ddd;
+}
+
+.site-description a:hover {
+    color: black;
+}
+
+.tags li::before {
+    content: "[";
+    color: white
+}
+
+.tags li::after {
+    content: "]";
+    color: white
+}
+
+.tags a {
+    color: var(--darkMaincolor)
+}
+
+.tags a:hover {
+    color: white;
+}
+
+.site-title a {
+    color: white;
+    text-decoration: none !important;
+}
+
+.header nav,
+/* Footer */
+footer {
+    display: flex;
+    align-items: center;
+    border-top: 0.1rem solid var(--darkMaincolor);
+    padding: 2rem 0rem;
+    margin-top: 2rem;
+}
+
+.highlight {
+    background-color: #333;
+}
+
+.soc:hover {
+    color: var(--darkMaincolor);
+}
+
+.draft-label {
+    color: var(--darkMaincolor);
+}
+
+.highlight pre code[class=language-javaScript]::before,
+.highlight pre code[class="language-js"]::before {
+    content: "js";
+    color: black;
+}
+
+.highlight pre code[class*='language-yml']::before,
+.highlight pre code[class*='language-yaml']::before {
+    content: 'yaml';
+    background: #f71e6a;
+    color: white;
+}
+
+.highlight pre code[class*='language-shell']::before,
+.highlight pre code[class*='language-bash']::before,
+.highlight pre code[class*='language-sh']::before {
+    content: 'shell';
+    background: green;
+    color: white
+}
+
+.highlight pre code[class*='language-json']::before {
+    content: 'json';
+    color: #000000
+}
+
+.highlight pre code[class*='language-python']::before,
+.highlight pre code[class*='language-py']::before {
+    content: 'py';
+    color: #2B65EC;
+}
+
+.highlight pre code[class*='language-css']::before {
+    content: 'css';
+    color: black;
+}
+
+.highlight pre code[class*='language-go']::before {
+    content: 'Go';
+    color: royalblue;
+}
+
+.highlight pre code[class*='language-md']::before,
+.highlight pre code[class*='language-md']::before {
+    content: 'Markdown';
+    color: whitesmoke;
+}
