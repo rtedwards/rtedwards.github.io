@@ -2,6 +2,7 @@
 title = "When Eye-Balling It Is Good Enough"
 date = 2023-07-29
 description = "Which distribution is a sample from?"
+draft = true
 
 [taxonomies]
 tags = ["data science", "pandas", "python", "statistics"]
@@ -41,10 +42,33 @@ which distributions were sampled from?  Which look Normally distributed?
         alt="eye-balling some distributions"
     >
 </p>
+<center>
+    <font size="1">
+        The means of each sample have been centered on zero, otherwise some would quite obviously not
+        be from a Normal distribution.
+    </font>
+</center>
 
-Just so it wasn't obvious due in some cases due to bounds, the means of each sample have been centered on zero.
-
-
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
 
 Now which are which
 
@@ -55,25 +79,32 @@ Now which are which
         alt="eye-balling some distributions"
     >
 </p>
+<center>
+    <font size="1">Eye-balling some distributions</font>
+</center>
 
 By taking the [z-score normalization](https://en.wikipedia.org/wiki/Standard_score) of each we can visually
 compare within the same plot.  We already set the means to zero so the only difference here is transforming
 each to have a standard deviation of 1.
 
 <center>
-<iframe
-    src="/assets/eye_balling_it/normalized-combined-1000.html"
-    style="border:0px #ffffff none; border-radius: 10px;"
-    name="myiFrame"
-    scrolling="no"
-    frameborder="1"
-    marginheight="0px"
-    marginwidth="0px"
-    height="385px"
-    width="675px"
-    allowfullscreen>
-</iframe>
+    <iframe
+        src="/assets/eye_balling_it/normalized-combined-1000.html"
+        style="border:0px #ffffff none; border-radius: 10px;"
+        name="myiFrame"
+        scrolling="no"
+        frameborder="1"
+        marginheight="0px"
+        marginwidth="0px"
+        height="385px"
+        width="675px"
+        allowfullscreen>
+    </iframe>
 </center>
+<center>
+    <font size="1">Select a distribution in the legend.</font>
+</center>
+
 
 ## Statistical Tests
 Beyond visual inspection what can we do to check if a sample is from a distribution?  Fortunately for us,

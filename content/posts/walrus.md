@@ -3,13 +3,13 @@ title = "Uses for Python's Walrus Operator"
 date = 2023-03-25
 description = "TOD"
 summary = "How to use the walrus operator for error handling in python"
+draft = true
 
 [taxonomies]
 tags = ["python"]
 
 [extra]
 katex = true
-
 +++
 
 [Python 3.8](https://docs.python.org/3/whatsnew/3.8.html#assignment-expressions) introduced

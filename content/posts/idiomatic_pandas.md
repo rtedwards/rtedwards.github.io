@@ -2,6 +2,7 @@
 title = "Idiomatic Pandas"
 date = 2023-07-23
 description = "How to write idiomatic pandas and how it avoids footguns"
+draft = true
 
 [taxonomies]
 tags = ["python", "performance", "pandas", "data science"]

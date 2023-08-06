@@ -1,6 +1,7 @@
 +++
 title = "Example Usage"
 date = 1970-01-01
+draft = true
 
 [taxonomies]
 tags = ["python", "performance", "pandas"]
@@ -43,7 +44,19 @@ Create deck.gl map and download as html.  Save in known directory `static/assets
     allowfullscreen>
 </iframe>
 
-### Remote file
+### Remote Filte (Google Drive)
+https://drive.google.com/file/d/[image_id]/view?usp=sharing
+https://drive.google.com/uc?export=view&id=[image_id]
+
+<p style="text-align:center;">
+    <img
+        src="https://drive.google.com/uc?export=view&id=1pzaupboVK3_OIxad_gBTBDoLeAJrP2tB"
+        style="border:0px #ffffff none; border-radius: 10px;"
+        alt="animated vega-lite"
+    >
+</p>
+
+### Remote file (Tiny Host)
 - `https://tiiny.host`
 <iframe
     src="https://rose-clarey-19.tiiny.site/"
