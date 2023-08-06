@@ -204,7 +204,7 @@ favicon = "/icon/profile-circle.png"
 copyright = "robert"
 
 # config your Google Analysis ID
-ga = "XXXX-XXXXX"
+ga = "G-RTR8YLS84R"
 
 # optional: config your i18n entry
 [extra.translations]
