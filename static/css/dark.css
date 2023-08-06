@@ -37,7 +37,8 @@ pre {
 }
 
 blockquote {
-    border-color: blue;
+    border-color: var(--darkMaincolor);
+    background-color: var(--darkBlockQuoteColor);
 }
 
 h1,
@@ -145,7 +146,6 @@ footer {
 
 .draft-label {
     color: var(--darkMaincolor);
-    background-color: blue;
 }
 
 .highlight pre code[class=language-javaScript]::before,

@@ -237,6 +237,11 @@ icon = "linkedin"
 name = "Linkedin"
 url = "https://www.linkedin.com/in/robert-edwards-3b98865/"
 
+[[extra.social]]
+icon = "rss"
+name = "RSS"
+url = ""
+
 [extra.analytics]
 enabled = true
 goatcounter_user = "bobeartoes@gmail.com"
