@@ -1,5 +1,5 @@
 +++
-title = "The Bears Toes"
+title = "The Bear's Toes"
 date = "2023-08-06"
 path = "about"
 +++

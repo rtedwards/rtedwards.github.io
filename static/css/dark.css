@@ -195,3 +195,15 @@ footer {
     content: 'Markdown';
     color: whitesmoke;
 }
+
+table th {
+    padding: 6px 13px;
+    border: 1px solid var(--backgroundColor);
+    font-size: small;
+}
+
+table td {
+    padding: 6px 13px;
+    border: 1px solid var(--backgroundColor);
+    font-size: x-small;
+}

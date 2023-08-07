@@ -15,7 +15,8 @@
 
 html {
     color: #232333;
-    font-family: "Fira Code", monospace;
+    font-family: "Fira Sans";
+    /* font-family: "Fira Code", monospace; */
     font-size: 15px;
     line-height: 1.6em;
 }
@@ -339,7 +340,8 @@ svg {
 }
 
 pre {
-    font-family: "Fira Code", monospace;
+    font-family: "Fira Sans";
+    /* font-family: "Fira Code", monospace; */
     border-radius: 5px;
     position: relative;
     -webkit-overflow-scrolling: touch;
@@ -424,13 +426,14 @@ table {
 
 table th {
     padding: 6px 13px;
-    border: 1px solid #dfe2e5;
-    font-size: large;
+    border: 1px solid var(--darkBackgroundColor);
+    font-size: small;
 }
 
 table td {
     padding: 6px 13px;
-    border: 1px solid #dfe2e5;
+    border: 1px solid var(--darkBackgroundColor);
+    font-size: x-small;
 }
 
 .footnote-definition {
