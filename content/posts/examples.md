@@ -10,6 +10,11 @@ tags = ["python", "performance", "pandas"]
 katex = true
 +++
 
+## Markdown
+&nbsp; - 1 space \
+&ensp; - 2 spaces \
+&emsp; - 4 spaces \
+
 ## Code
 Let there be Rust! `let var = 10u32;`
 
@@ -44,7 +49,7 @@ Create deck.gl map and download as html.  Save in known directory `static/assets
     allowfullscreen>
 </iframe>
 
-### Remote Filte (Google Drive)
+### Remote File (Google Drive)
 https://drive.google.com/file/d/[image_id]/view?usp=sharing
 https://drive.google.com/uc?export=view&id=[image_id]
 

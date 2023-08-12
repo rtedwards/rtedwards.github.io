@@ -1,6 +1,6 @@
 +++
 title = "My second post"
-date = 2023-03-25
+date = 1970-01-01
 draft = true
 
 [taxonomies]
