@@ -17,7 +17,7 @@ html {
     color: #232333;
     font-family: "Fira Sans";
     /* font-family: "Fira Code", monospace; */
-    font-size: 15px;
+    font-size: 20px; /* Size of text in page */
     line-height: 1.6em;
 }
 
@@ -190,9 +190,15 @@ header .main {
     font-size: 1.5rem;
 }
 
-h1,
-h2,
-h3,
+h1{
+    font-size: 2rem;
+},
+h2{
+    font-size: 1.5rem;
+},
+h3{
+    font-size: 1.25rem;
+},
 h4,
 h5,
 h6 {
