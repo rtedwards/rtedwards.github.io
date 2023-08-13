@@ -84,7 +84,8 @@
     <link href={{ get_url(path="css/fonts.css" ) }} rel="stylesheet" />
     {% endif %}
 
-    <link rel="stylesheet" type="text/css" media="screen" href={{ get_url(path="css/main.css" ) }} />
+    <link rel="stylesheet" id="lightModeStyle" type="text/css" media="screen" href={{ get_url(path="css/main.css" )
+        }} />
 
     {% if config.extra.mode == "auto" or config.extra.mode == "dark" or config.extra.mode == "toggle" %}
     <link rel="stylesheet" id="darkModeStyle" type="text/css" href={{ get_url(path="css/dark.css" ) }} {% if

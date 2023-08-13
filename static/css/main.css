@@ -1,4 +1,7 @@
 /* Markdown */
+
+@import url("syntax-theme-light.css") (prefers-color-scheme: light);
+
 :root {
     --maincolor: #368BC1;
     --backgroundColor: #dfdedb;
@@ -274,7 +277,7 @@ time {
 /* font color of code blocks */
 /* TODO: change to black once there are light and dark code highlight_themes*/
 span {
-    color: white;
+    color: black;
 }
 
 
@@ -447,15 +450,16 @@ table {
 }
 
 table th {
-    padding: 6px 13px;
+    padding: 0px 8px;
     border: 1px solid var(--darkBackgroundColor);
     font-size: small;
+    font-weight: bold;
 }
 
 table td {
-    padding: 6px 13px;
+    padding: 0px 8px;
     border: 1px solid var(--darkBackgroundColor);
-    font-size: x-small;
+    font-size: small;
 }
 
 .footnote-definition {
