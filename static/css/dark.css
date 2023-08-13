@@ -95,6 +95,16 @@ ul>li::before {
     color: white
 }
 
+/* font color for date */
+time {
+    color: grey;
+}
+
+/* font color of code blocks */
+span {
+    color: white;
+}
+
 .site-description a {
     color: #ddd;
 }

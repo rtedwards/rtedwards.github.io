@@ -10,7 +10,6 @@ default_language = "en"
 
 # The site theme to use.
 theme = "archie-zola"
-# theme = "after-dark"
 
 # For overriding the default output directory `public`, set it to another value (e.g.: "docs")
 output_dir = "docs"
@@ -78,15 +77,17 @@ build_search_index = true
 highlight_code = true
 
 # A list of directories used to search for additional `.sublime-syntax` and `.tmTheme` files.
-extra_syntaxes_and_themes = []
+# theme editor: https://tmtheme-editor.glitch.me/#!/editor/theme/Tomorrow
+extra_syntaxes_and_themes = ["highlight_themes"]
 
 # The theme to use for code highlighting.
 # See below for list of allowed values.
 # highlight_theme = "base16-ocean-dark"
-# highlight_theme = "boron"
-highlight_theme = "ayu-mirage"
+highlight_theme = "boron"
+# highlight_theme = "ayu-mirage"
 # highlight_theme = "charcoal"
 # highlight_theme = "css"
+# highlight_theme = "tomorrow-dark"
 # highlight_themes_css = [
 #   { theme = "ayu-dark", filename = "css/syntax-theme-dark.css" },
 #   { theme = "ayu-light", filename = "css/syntax-theme-light.css" },

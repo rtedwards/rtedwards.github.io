@@ -162,7 +162,8 @@ pre {
 
 pre code {
     background-color: transparent;
-    color: inherit;
+    color: #FFFFFF;
+    /* color: inherit; */
     font-size: 100%;
     padding: 0;
 }
@@ -265,12 +266,15 @@ footer {
     margin-bottom: 0;
 }
 
+/* font color for date */
 time {
     color: grey;
 }
 
+/* font color of code blocks */
+/* TODO: change to black once there are light and dark code highlight_themes*/
 span {
-    color: grey;
+    color: white;
 }
 
 
