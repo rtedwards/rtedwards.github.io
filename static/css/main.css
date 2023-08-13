@@ -363,7 +363,7 @@ pre code[class*="language-"]::before {
     letter-spacing: 0.025rem;
     padding: 0.25rem 0.0rem 0.0rem 0.0rem;
     position: absolute;
-    right: 1rem;
+    right: 0.5em;
     text-align: right;
     top: 0;
 }
@@ -385,19 +385,25 @@ pre code[class*="language-yaml"]::before {
 pre code[class*="language-shell"]::before,
 pre code[class*="language-bash"]::before,
 pre code[class*="language-sh"]::before {
-    content: "shell";
-    color: white;
+    content: "Bash";
+    color: lightgreen;
 }
 
 pre code[class*="language-json"]::before {
-    content: "json";
+    content: "JSON";
     color: #000000;
 }
 
 pre code[class*="language-python"]::before,
 pre code[class*="language-py"]::before {
-    content: "python";
-    color: var(--maincolor);
+    content: "Python";
+    color: #4584b6;
+}
+
+pre code[class*="language-jl"]::before,
+pre code[class*="language-julia"]::before {
+    content: "Julia";
+    color: #9558B2;
 }
 
 pre code[class*="language-css"]::before {
@@ -405,9 +411,10 @@ pre code[class*="language-css"]::before {
     color: black;
 }
 
-pre code[class*="language-go"]::before {
+pre code[class*="language-go"]::before,
+pre code[class*="language-golang"]::before {
     content: "Go";
-    color: royalblue;
+    color: #00ADD8;
 }
 
 pre code[class*="language-md"]::before,
@@ -418,8 +425,19 @@ pre code[class*="language-md"]::before {
 
 pre code[class*="language-rust"]::before,
 pre code[class*="language-rs"]::before {
-    content: "rust";
-    color: #cd5909;
+    content: "Rust";
+    color: #CE412B;
+}
+
+pre code[class*="language-C"]::before {
+    content: "C";
+    color: white;
+}
+
+pre code[class*="language-C++"]::before,
+pre code[class*="language-Cpp"]::before {
+    content: "C++";
+    color: white;
 }
 
 /* table */

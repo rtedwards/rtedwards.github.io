@@ -22,8 +22,28 @@ Let there be Rust! `let var = 10u32;`
 let var = vec!["1", "2", "3"]
 ```
 
-```jl
+```julia
 var = ["1", "2", "3"]
+```
+
+```python
+var = ["1", "2", "3"]
+```
+
+```golang
+var = ["1", "2", "3"]
+```
+
+```C
+var uint_8 = 1;
+```
+
+```Cpp
+var uint_8 = 1;
+```
+
+```bash
+pip list | grep jupyter
 ```
 
 ## LaTeX

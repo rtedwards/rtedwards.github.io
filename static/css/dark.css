@@ -175,7 +175,7 @@ footer {
 .highlight pre code[class*='language-shell']::before,
 .highlight pre code[class*='language-bash']::before,
 .highlight pre code[class*='language-sh']::before {
-    content: 'shell';
+    content: 'Bash';
     background: green;
     color: white
 }
@@ -188,7 +188,11 @@ footer {
 .highlight pre code[class*='language-python']::before,
 .highlight pre code[class*='language-py']::before {
     content: 'py';
-    color: #2B65EC;
+    color: #4584b6;
+}
+.highlight pre code[class*="language-julia"]::before {
+    content: "Julia";
+    color: #9558B2;
 }
 
 .highlight pre code[class*='language-css']::before {
@@ -198,7 +202,7 @@ footer {
 
 .highlight pre code[class*='language-go']::before {
     content: 'Go';
-    color: royalblue;
+    color: #00ADD8;
 }
 
 .highlight pre code[class*='language-md']::before,
