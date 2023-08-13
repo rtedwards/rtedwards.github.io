@@ -47,7 +47,8 @@ h3,
 h4,
 h5,
 h6 {
-    color: #ddd;
+    color: white;
+    margin-top: 2em;
 }
 
 h1::before {
