@@ -1,17 +1,29 @@
 +++
-title = "The Bear's Toes"
+title = "About the Bear's Toes"
 date = "2023-08-06"
 path = "about"
+
+[extra]
+katex = true
 +++
 
-## About Me
-
-<p style="font-family: Fira Code", monospace;">
+<p style="font-family: Fira Code, monospace; text-align: left;">
 DS  &nbsp;|> Geospatial                               &nbsp;|> Cartographer <br>
 MLE       |> Statistics                               &nbsp;|> Recommender  <br>
 SWE       |> Out of Core                                    |> Innovator    <br>
 Viz       |> Data &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|> Story Teller <br>
 </p>
+
+Ahoy! I'm Robert, a DS / MLE / SWE interested in all things data:
+exploring data, crunching data, searching data, and turning data into actions.
+
+> _“If you want to master something, teach it. Teaching is a powerful tool for learning.”_ \
+> \
+> ― Feynman
+
+I started this blog to practice writing and solidify my knowledge through teaching.  Here, you'll find topics that
+got me itching to learn more about and $n=1$ topics had me squirming until I could think through and explain better.
+
 
 <br><br><br>
 <img
