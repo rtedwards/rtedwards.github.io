@@ -71,11 +71,14 @@ blockquote {
     border-left: 3px solid var(--bordercl);
     border-right: 3px solid var(--bordercl);
     */
-    color: #737373;
+    /*  color: #737373; */
+    color: var(--maincolor);
     background-color: var(--blockQuoteColor);
-    margin: 0;
-    padding-left: 2em;
-    padding-right: 2em;
+    margin: 2em;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
     border-radius: 5px;
 }
 

@@ -39,6 +39,7 @@ pre {
 }
 
 blockquote {
+    color: var(--darkMaincolor);
     border-color: var(--darkMaincolor);
     background-color: var(--darkBlockQuoteColor);
 }
