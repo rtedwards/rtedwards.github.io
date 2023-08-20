@@ -7,13 +7,6 @@ path = "about"
 katex = true
 +++
 
-<p style="font-family: Fira Code, monospace; text-align: left;">
-DS  &nbsp;|> Geospatial                               &nbsp;|> Cartographer <br>
-MLE       |> Statistics                               &nbsp;|> Recommender  <br>
-SWE       |> Out of Core                                    |> Innovator    <br>
-Viz       |> Data &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|> Story Teller <br>
-</p>
-
 Ahoy! I'm Robert, a DS / MLE / SWE interested in all things data:
 exploring data, crunching data, searching data, and turning data into actions.
 
@@ -24,6 +17,12 @@ exploring data, crunching data, searching data, and turning data into actions.
 I started this blog to practice writing and solidify my knowledge through teaching.  Here, you'll find topics that
 got me itching to learn more about and $n=1$ topics had me squirming until I could think through and explain better.
 
+<p style="font-family: Fira Code, monospace; text-align: left;">
+DS  &nbsp;|> Geospatial                               &nbsp;|> Cartographer <br>
+MLE       |> Statistics                               &nbsp;|> Recommender  <br>
+SWE       |> Out of Core                                    |> Innovator    <br>
+Viz       |> Data &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|> Story Teller <br>
+</p>
 
 <br><br><br>
 <img
@@ -46,7 +45,13 @@ got me itching to learn more about and $n=1$ topics had me squirming until I cou
 >
 <img
     src="/icon/c-lang.png"
-    style="border:0px #ffffff none; width:25px; height:100%"
+    style="border:0px #ffffff none; width:27px; height:100%"
     title="C"
     alt="c-lang"
+>
+<img
+    src="/icon/cpp.png"
+    style="border:0px #ffffff none; width:23px; height:100%"
+    title="C++"
+    alt="cpp"
 >
