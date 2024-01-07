@@ -1,0 +1,15 @@
+---
+title: "About"
+image: icon/profile-circle.png
+about:
+  template: jolla
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/robert-edwards-3b98865/
+    - icon: github
+      text: Github
+      href: https://github.com/rtedwards
+---
+
+About this blog

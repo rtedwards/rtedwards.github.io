@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>The Bear&#39;s Toes</title>
+<link>https://rtedwards.github.io/</link>
+<atom:link href="https://rtedwards.github.io/index.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.4.537</generator>
+<lastBuildDate>Sat, 12 Aug 2023 23:00:00 GMT</lastBuildDate>
+<item>
+  <title>Waltzing with Python’s Walrus Operator</title>
+  <link>https://rtedwards.github.io/posts/waltzing_with_the_walrus/</link>
+  <description><![CDATA[ 
+
+
+
+
+<p><a href="https://docs.python.org/3/whatsnew/3.8.html#assignment-expressions">Python 3.8</a> introduced a new assignment operator with <a href="https://peps.python.org/pep-0572/">PEP 572</a> called <strong>assignment expressions</strong>, a.k.a the <strong>walrus operator</strong>. The walrus operator uses the new walrus-like syntax <code>:=</code>, to assign variables within an expression.</p>
+<p>It’s been out for a few years at this point (at the time of writing Python 3.12 is around the corner) and I’ve found some joy in how it’s helped elegantly shorten some parts of my code. Here are the ways I’ve made use of the walrus operator.</p>
+<section id="error-handling" class="level2">
+<h2 class="anchored" data-anchor-id="error-handling">Error Handling</h2>
+<p>The walrus operator can help reduce repetition and make error handling a bit more streamlined. In the following snippet, <code>func()</code> will return <code>None</code> to represent an error occurred.</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1">x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> func()</span>
+<span id="cb1-2"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> x:</span>
+<span id="cb1-3">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Error message"</span>)</span>
+<span id="cb1-4">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span></span></code></pre></div>
+<p>Using the walrus operator, the call to <code>func()</code> can be inlined.</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:=</span> func():</span>
+<span id="cb2-2">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Error message"</span>)</span>
+<span id="cb2-3">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span></span></code></pre></div>
+<p>Shaving off a single line may seem trivial but those saved lines can add up. For example, when parsing user inputs and performing validation. In the following snippet, we want to validate user inputs <code>x</code>, <code>y</code>, and <code>z</code>. If there’s a validation problem, <code>validate</code> will return a string with a message explaining what is wrong with the input and a message of how to fix. These messages get appended to a list so all validation messages can be printed out together.</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">validation_errors <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb3-2"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> msg <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:=</span> validate(x):</span>
+<span id="cb3-3">    validation_errors <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+=</span> msg</span>
+<span id="cb3-4"></span>
+<span id="cb3-5"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> msg <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:=</span> validate(y):</span>
+<span id="cb3-6">    validation_errors <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+=</span> msg</span>
+<span id="cb3-7"></span>
+<span id="cb3-8"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> msg <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:=</span> validate(z):</span>
+<span id="cb3-9">    validation_errors <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+=</span> msg</span>
+<span id="cb3-10"></span>
+<span id="cb3-11"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> validation_errors: <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># a non-empty list resolves to True</span></span>
+<span id="cb3-12">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> error <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> validation_errors:</span>
+<span id="cb3-13">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(error)</span>
+<span id="cb3-14">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">return</span></span></code></pre></div>
+</section>
+<section id="comprehensions" class="level2">
+<h2 class="anchored" data-anchor-id="comprehensions">Comprehensions</h2>
+<p>Let’s say we wanted to create a list of results from expensive function call but only results that aren’t <code>None</code>. With a list comprehension, the expensive function would need to be called twice. Not ideal.</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [</span>
+<span id="cb4-2">    expensive_function(i) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> expensive_function(i) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>)</span>
+<span id="cb4-3">]</span></code></pre></div>
+<p>Of course, you could use normal for loop syntax but it’s a fair bit more verbose, and for illustrative purposes, we’re allergic to verbose.</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb5-2"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> a <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>):</span>
+<span id="cb5-3">    x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> expensive_function(i)</span>
+<span id="cb5-4">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>:</span>
+<span id="cb5-5">        y.append(x)</span></code></pre></div>
+<p>The walrus operator plops to the rescue here and allows us to use a list comprehension.</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [</span>
+<span id="cb6-2">    x <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:=</span> expensive_function(i)) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>)</span>
+<span id="cb6-3">]</span></code></pre></div>
+<p>This also applies to dictionary comprehensions.</p>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1">y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {</span>
+<span id="cb7-2">    i: x <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:=</span> expensive_function(i)) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>)</span>
+<span id="cb7-3">}</span></code></pre></div>
+</section>
+<section id="do-while-loops" class="level2">
+<h2 class="anchored" data-anchor-id="do-while-loops">Do While Loops</h2>
+<p>A do-while loop was proposed for Python in <a href="https://peps.python.org/pep-0315/">PEP 315</a> but was rejected for not providing a material improvement over the following:</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">while</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>:</span>
+<span id="cb8-2">    x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> f(a, b) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># setup code</span></span>
+<span id="cb8-3">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">not</span> x:   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># condition</span></span>
+<span id="cb8-4">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">break</span></span>
+<span id="cb8-5">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># loop body using x</span></span></code></pre></div>
+<p>A shortened version of do-while loop can be accomplished by having setup code execute once before the loop and moving the condition into a while loop. However, this is error-prone; <code>x = f(a, b)</code> is duplicated for both the setup code and the loop body, and if it needs changing there are now multiple places that must be updated.</p>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> f(a, b) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># setup code</span></span>
+<span id="cb9-2"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">while</span> x:    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># condition</span></span>
+<span id="cb9-3">    x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> f(a, b)</span>
+<span id="cb9-4">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># loop body using x</span></span></code></pre></div>
+<p>With the walrus operator, it can all be inlined to the while condition.</p>
+<div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">while</span> x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:=</span> f(a, b): <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># setup code and condition</span></span>
+<span id="cb10-2">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># loop body using x</span></span></code></pre></div>
+</section>
+<section id="pattern-matching" class="level2">
+<h2 class="anchored" data-anchor-id="pattern-matching">Pattern Matching</h2>
+<p>The walrus operator can also be useful in Pattern Matching. Structural Pattern Matching was introduced in Python 3.10 with <a href="https://peps.python.org/pep-0622/">PEP 622</a>. If you’re not yet familiar see <a href="https://peps.python.org/pep-0636/">PEP 363</a> for a tutorial. The walrus can be useful to inline a function call and store the return value in a variable for use in the cases.</p>
+<div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">match</span> x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:=</span> f(a, b):</span>
+<span id="cb11-2">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">case</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>:</span>
+<span id="cb11-3">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># do stuff with x</span></span>
+<span id="cb11-4">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">case</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>:</span>
+<span id="cb11-5">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># do more stuff with x</span></span>
+<span id="cb11-6">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">case</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>:</span>
+<span id="cb11-7">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># even more doing with x</span></span></code></pre></div>
+</section>
+<section id="an-over-the-top-overuse-example" class="level2">
+<h2 class="anchored" data-anchor-id="an-over-the-top-overuse-example">An Over-the-Top Overuse Example</h2>
+<p>While the walrus operator is handy for shaving off a few lines of code, inlining too much can make code difficult to reason about. Use it sparingly, especially with other code-golfing operators. For example, with the ternary operator.</p>
+<div class="sourceCode" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">height <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> get_height(name) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:=</span> get_name(user_id)) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span></span></code></pre></div>
+<p>I think this can be okay but I also think it’s clearer written long-form,</p>
+<div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:=</span> get_name(user_id):</span>
+<span id="cb13-2">    height <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> get_height(name)</span>
+<span id="cb13-3"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span>:</span>
+<span id="cb13-4">    height <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span></span></code></pre></div>
+<p>It could be formatted over multiple lines so it’s just as readible as a normal <code>if</code> / <code>else</code> and to keep the benefits of the ternary usage by only assigning <code>height</code> once, but it’s now a whopping 5 lines.</p>
+<div class="sourceCode" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1">height <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (</span>
+<span id="cb14-2">    get_height(name)</span>
+<span id="cb14-3">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:=</span> get_name(user_id))</span>
+<span id="cb14-4">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span></span>
+<span id="cb14-5">)</span></code></pre></div>
+<p>And remember, just because you can doesn’t mean you should write code like below, if you can avoid it. This example is modified from my own code.</p>
+<div class="sourceCode" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1">params: Dict[<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span>, Dict[<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span>, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>]]</span>
+<span id="cb15-2"></span>
+<span id="cb15-3">sampler_weights <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (</span>
+<span id="cb15-4">    {</span>
+<span id="cb15-5">        ModeEnum(mode): weight</span>
+<span id="cb15-6">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> mode, weight <span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> normalize_weights(weights).items()</span>
+<span id="cb15-7">    }</span>
+<span id="cb15-8">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (weights <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:=</span> params.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"sampler"</span>, {}).get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"weights"</span>))</span>
+<span id="cb15-9">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> {<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"x"</span>: <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"y"</span>: <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>}</span>
+<span id="cb15-10">)</span></code></pre></div>
+<p>Here, I’ve slapped a dictionary comprehension, a ternary operator, and a walrus operator into the same expression. There’s a lot going on, but it’s formatted over multiple lines to help delineate what’s happening. The variable, <code>params</code>, holds the contents of a configuration <code>.toml</code> that I needed to parse some weights from and convert into an dictionary of <code>{enum: weight}</code>.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>python</category>
+  <guid>https://rtedwards.github.io/posts/waltzing_with_the_walrus/</guid>
+  <pubDate>Sat, 12 Aug 2023 23:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>

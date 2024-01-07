@@ -1,0 +1,17 @@
+---
+title: "The Bear's Toes"
+listing:
+  contents: posts/**/*.qmd
+  sort: "date desc"
+  type: table
+  date-format: iso
+  categories: true
+  sort-ui: true
+  filter-ui: true
+  fields: [date, title, description, categories]
+  feed: true
+  # feed:
+  #   categories: [news, posts]
+page-layout: full
+title-block-banner: true
+---

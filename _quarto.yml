@@ -1,0 +1,55 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "The Bear's Toes"
+  site-url: https://rtedwards.github.io/
+  favicon: icon/profile-circle.png
+  page-navigation: true
+  twitter-card: true
+  open-graph: true
+  google-analytics: 
+    tracking-id: G-RTR8YLS84R
+    storage: none
+    anonymize-ip: true
+  cookie-consent: implied
+  search:
+    location: navbar
+    type: textbox
+  navbar:
+    left:
+      - text: About
+        href: about.qmd
+      - text: Blog
+        href: index.qmd
+    right:
+      - icon: github
+        href: https://rtedwards.github.io/
+        aria-label: GitHub
+      - icon: linkedin
+        href: https://www.linkedin.com/in/robert-edwards-3b98865/
+        aria-label: Linkedin
+      - icon: rss
+        href: index.xml
+        aria-label: RSS
+  page-footer:
+    center: 
+      - text: "About"
+        href: about.qmd
+      # - text: "License"
+      #   href: license.qmd
+      # - text: "Trademark"
+      #   href: trademark.qmd
+      # - text: ☕️
+        # href: coffee.qmd
+format:
+  html:
+    theme:
+      dark: css/dark.scss
+      light: css/light.scss
+
+highlight-style: breeze
+
+
+
