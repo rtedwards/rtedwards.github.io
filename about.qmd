@@ -1,15 +1,17 @@
 ---
-title: "About"
+title: "Robert"
 image: icon/profile-circle.png
 about:
   template: jolla
-  links:
-    - icon: linkedin
-      text: LinkedIn
-      href: https://www.linkedin.com/in/robert-edwards-3b98865/
-    - icon: github
-      text: Github
-      href: https://github.com/rtedwards
+  # links:
+  #   - icon: linkedin
+  #     text: LinkedIn
+  #     href: https://www.linkedin.com/in/robert-edwards-3b98865/
+  #   - icon: github
+  #     text: Github
+  #     href: https://github.com/rtedwards
 ---
 
-About this blog
+I was once nicknamed Beartoes through a chain of thought multiple links long.  It's grown on me.
+
+Robert |> Bert |> Berto |> Beartoes
