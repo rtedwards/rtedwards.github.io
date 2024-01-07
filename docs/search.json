@@ -1,0 +1,58 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this blog"
+  },
+  {
+    "objectID": "posts/waltzing_with_the_walrus/index.html",
+    "href": "posts/waltzing_with_the_walrus/index.html",
+    "title": "Waltzing with Python’s Walrus Operator",
+    "section": "",
+    "text": "Python 3.8 introduced a new assignment operator with PEP 572 called assignment expressions, a.k.a the walrus operator. The walrus operator uses the new walrus-like syntax :=, to assign variables within an expression.\nIt’s been out for a few years at this point (at the time of writing Python 3.12 is around the corner) and I’ve found some joy in how it’s helped elegantly shorten some parts of my code. Here are the ways I’ve made use of the walrus operator."
+  },
+  {
+    "objectID": "posts/waltzing_with_the_walrus/index.html#error-handling",
+    "href": "posts/waltzing_with_the_walrus/index.html#error-handling",
+    "title": "Waltzing with Python’s Walrus Operator",
+    "section": "Error Handling",
+    "text": "Error Handling\nThe walrus operator can help reduce repetition and make error handling a bit more streamlined. In the following snippet, func() will return None to represent an error occurred.\nx = func()\nif not x:\n    print(\"Error message\")\n    return\nUsing the walrus operator, the call to func() can be inlined.\nif not x := func():\n    print(\"Error message\")\n    return\nShaving off a single line may seem trivial but those saved lines can add up. For example, when parsing user inputs and performing validation. In the following snippet, we want to validate user inputs x, y, and z. If there’s a validation problem, validate will return a string with a message explaining what is wrong with the input and a message of how to fix. These messages get appended to a list so all validation messages can be printed out together.\nvalidation_errors = []\nif msg := validate(x):\n    validation_errors += msg\n\nif msg := validate(y):\n    validation_errors += msg\n\nif msg := validate(z):\n    validation_errors += msg\n\nif validation_errors: # a non-empty list resolves to True\n    for error in validation_errors:\n        print(error)\n    return"
+  },
+  {
+    "objectID": "posts/waltzing_with_the_walrus/index.html#comprehensions",
+    "href": "posts/waltzing_with_the_walrus/index.html#comprehensions",
+    "title": "Waltzing with Python’s Walrus Operator",
+    "section": "Comprehensions",
+    "text": "Comprehensions\nLet’s say we wanted to create a list of results from expensive function call but only results that aren’t None. With a list comprehension, the expensive function would need to be called twice. Not ideal.\ny = [\n    expensive_function(i) if expensive_function(i) for i in range(0, 10)\n]\nOf course, you could use normal for loop syntax but it’s a fair bit more verbose, and for illustrative purposes, we’re allergic to verbose.\ny = []\nfor a in range(0, 10):\n    x = expensive_function(i)\n    if x == 0:\n        y.append(x)\nThe walrus operator plops to the rescue here and allows us to use a list comprehension.\ny = [\n    x if (x := expensive_function(i)) for i in range(0, 10)\n]\nThis also applies to dictionary comprehensions.\ny = {\n    i: x if (x := expensive_function(i)) for i in range(0, 10)\n}"
+  },
+  {
+    "objectID": "posts/waltzing_with_the_walrus/index.html#do-while-loops",
+    "href": "posts/waltzing_with_the_walrus/index.html#do-while-loops",
+    "title": "Waltzing with Python’s Walrus Operator",
+    "section": "Do While Loops",
+    "text": "Do While Loops\nA do-while loop was proposed for Python in PEP 315 but was rejected for not providing a material improvement over the following:\nwhile True:\n    x = f(a, b) # setup code\n    if not x:   # condition\n        break\n    # loop body using x\nA shortened version of do-while loop can be accomplished by having setup code execute once before the loop and moving the condition into a while loop. However, this is error-prone; x = f(a, b) is duplicated for both the setup code and the loop body, and if it needs changing there are now multiple places that must be updated.\nx = f(a, b) # setup code\nwhile x:    # condition\n    x = f(a, b)\n    # loop body using x\nWith the walrus operator, it can all be inlined to the while condition.\nwhile x := f(a, b): # setup code and condition\n    # loop body using x"
+  },
+  {
+    "objectID": "posts/waltzing_with_the_walrus/index.html#pattern-matching",
+    "href": "posts/waltzing_with_the_walrus/index.html#pattern-matching",
+    "title": "Waltzing with Python’s Walrus Operator",
+    "section": "Pattern Matching",
+    "text": "Pattern Matching\nThe walrus operator can also be useful in Pattern Matching. Structural Pattern Matching was introduced in Python 3.10 with PEP 622. If you’re not yet familiar see PEP 363 for a tutorial. The walrus can be useful to inline a function call and store the return value in a variable for use in the cases.\nmatch x := f(a, b):\n    case 0:\n        # do stuff with x\n    case 1:\n        # do more stuff with x\n    case 2:\n        # even more doing with x"
+  },
+  {
+    "objectID": "posts/waltzing_with_the_walrus/index.html#an-over-the-top-overuse-example",
+    "href": "posts/waltzing_with_the_walrus/index.html#an-over-the-top-overuse-example",
+    "title": "Waltzing with Python’s Walrus Operator",
+    "section": "An Over-the-Top Overuse Example",
+    "text": "An Over-the-Top Overuse Example\nWhile the walrus operator is handy for shaving off a few lines of code, inlining too much can make code difficult to reason about. Use it sparingly, especially with other code-golfing operators. For example, with the ternary operator.\nheight = get_height(name) if (name := get_name(user_id)) else None\nI think this can be okay but I also think it’s clearer written long-form,\nif name := get_name(user_id):\n    height = get_height(name)\nelse:\n    height = None\nIt could be formatted over multiple lines so it’s just as readible as a normal if / else and to keep the benefits of the ternary usage by only assigning height once, but it’s now a whopping 5 lines.\nheight = (\n    get_height(name)\n    if (name := get_name(user_id))\n    else None\n)\nAnd remember, just because you can doesn’t mean you should write code like below, if you can avoid it. This example is modified from my own code.\nparams: Dict[str, Dict[str, float]]\n\nsampler_weights = (\n    {\n        ModeEnum(mode): weight\n        for mode, weight in normalize_weights(weights).items()\n    }\n    if (weights := params.get(\"sampler\", {}).get(\"weights\"))\n    else {\"x\": 0.5, \"y\": 0.5}\n)\nHere, I’ve slapped a dictionary comprehension, a ternary operator, and a walrus operator into the same expression. There’s a lot going on, but it’s formatted over multiple lines to help delineate what’s happening. The variable, params, holds the contents of a configuration .toml that I needed to parse some weights from and convert into an dictionary of {enum: weight}."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "The Bear’s Toes",
+    "section": "",
+    "text": "Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nDate\n\n\nTitle\n\n\nDescription\n\n\nCategories\n\n\n\n\n\n\n2023-08-13\n\n\nWaltzing with Python’s Walrus Operator\n\n\nUsing the walrus operator := to make life simpler.\n\n\npython\n\n\n\n\n\nNo matching items"
+  }
+]

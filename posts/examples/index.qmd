@@ -1,0 +1,176 @@
+---
+title: "Examples"
+date: "2020-01-01"
+categories: [test]
+draft: true
+description: "Examples of rendered markdown and html elements."
+---
+
+This post provides examples of rendered markdown and html elements.
+
+::: {.callout-note}
+Note that there are five types of callouts, including:
+`note`, `warning`, `important`, `tip`, and `caution`.
+:::
+
+::: {.callout-tip}
+## Tip with Title
+
+This is an example of a callout with a title.
+:::
+
+::: {.callout-caution}
+Caution
+:::
+
+::: {.callout-important}
+Important
+:::
+
+::: {.callout-warning}
+Warning
+:::
+
+::: {.callout-note collapse="true"}
+## Expand To Learn About Collapse
+
+This is an example of a 'folded' caution callout that can be expanded by the user. You can use `collapse="true"` to collapse it by default or `collapse="false"` to make a collapsible callout that is expanded by default.
+:::
+
+> This is a quote
+
+## Markdown
+&nbsp; - 1 space \
+&ensp; - 2 spaces \
+&emsp; - 4 spaces \
+
+## Code
+Let there be Rust! `let var = 10u32;`
+
+
+```python
+def func() -> None:
+    """docstring"""
+    string = "hello"
+    return string
+```
+
+```julia
+function f(x, y)
+    x[1] = 42    # mutates x
+    y = 7 + y    # new binding for y, no mutation
+    return y
+end
+```
+
+```rust
+let var = vec!["1", "2", "3"]
+```
+
+```julia
+var = ["1", "2", "3"]
+```
+
+```python
+var = ["1", "2", "3"]
+```
+
+```golang
+var = ["1", "2", "3"]
+```
+
+```C
+var uint_8 = 1;
+```
+
+```Cpp
+var uint_8 = 1;
+```
+
+```bash
+pip list | grep jupyter
+```
+
+## LaTeX
+$e^x$
+
+$x = 1 + y$
+
+$$ x = 1 + y$$
+
+## Embedding Interactive Maps with Deck.gl
+### Local file
+Create deck.gl map and download as html.  Save in known directory `static/assets/`
+<iframe
+    src="/assets/test/geojson_layer.html"
+    style="border:0px #ffffff none; border-radius: 10px;"
+    name="myiFrame"
+    scrolling="no"
+    frameborder="1"
+    marginheight="0px"
+    marginwidth="0px"
+    height="600px"
+    width="800px"
+    allowfullscreen>
+</iframe>
+
+### Remote File (Google Drive)
+https://drive.google.com/file/d/[image_id]/view?usp=sharing
+https://drive.google.com/uc?export=view&id=[image_id]
+
+<p style="text-align:center;">
+    <img
+        src="https://drive.google.com/uc?export=view&id=1pzaupboVK3_OIxad_gBTBDoLeAJrP2tB"
+        style="border:0px #ffffff none; border-radius: 10px;"
+        alt="animated vega-lite"
+    >
+</p>
+
+### Remote file (Tiny Host)
+- `https://tiiny.host`
+<iframe
+    src="https://rose-clarey-19.tiiny.site/"
+    style="border:0px #ffffff none; border-radius: 10px;"
+    name="myiFrame"
+    scrolling="no"
+    frameborder="1"
+    marginheight="0px"
+    marginwidth="0px"
+    height="300px"
+    width="600px"
+    allowfullscreen>
+</iframe>
+
+### Youtube
+<iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/eGUEAvNpz48"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer;
+        autoplay;
+        clipboard-write;
+        encrypted-media;
+        gyroscope;
+        picture-in-picture"
+    allowfullscreen>
+</iframe>
+
+# Header 1
+This is header 1.
+
+## Header 2
+This is header 2.
+
+### Header 3
+This is header 3.
+
+#### Header 4
+This is header 4.
+
+##### Header 5
+This is header 5.
+
+###### Header 6
+This is header 6.

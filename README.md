@@ -1,11 +1,25 @@
-# The Bears Toes Blog
-![example workflow](https://github.com/github/docs/actions/workflows/zola-deploy-action.yml/badge.svg)
-![example workflow](https://github.com/github/docs/actions/workflows/zola-deploy-action.yml/badge.svg?branch=gh-pages)
+# Blog
 
-Personal blog built using [Zola](https://www.getzola.org/) and themed with [Archie Zola](https://www.getzola.org/themes/archie-zola/)
+## Resources
+- https://quarto.org/
+- https://albert-rapp.de/posts/13_quarto_blog_writing_guide/13_quarto_blog_writing_guide.html
 
-## Themes
-- archie-zola
-- [serene](https://www.getzola.org/themes/serene/)
-    - light / dark katex font changes
-    - comments via giscus
+**theming**
+- https://quarto.org/docs/output-formats/html-themes.html
+- https://quarto.org/docs/output-formats/html-themes-more.html
+- https://quarto.org/docs/output-formats/html-code.html#appearance
+
+## Tooling
+- Quarto
+
+## Developing
+
+### Hot Reloading
+```bash
+quarto preview index.qmd --to html
+```
+
+### Render
+```bash
+quarto render
+```
