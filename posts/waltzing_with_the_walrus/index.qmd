@@ -3,6 +3,7 @@ title: "Waltzing with Python's Walrus Operator"
 date: "2023-08-13"
 categories: [python]
 description: "Using the walrus operator `:=` to make life simpler."
+reading-time: true
 ---
 
 [Python 3.8](https://docs.python.org/3/whatsnew/3.8.html#assignment-expressions) introduced

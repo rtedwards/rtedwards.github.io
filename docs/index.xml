@@ -10,7 +10,148 @@
 <atom:link href="https://rtedwards.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.4.537</generator>
-<lastBuildDate>Sat, 12 Aug 2023 23:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 13 Jan 2024 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Pub Quiz: Summing Two Random Variables</title>
+  <link>https://rtedwards.github.io/posts/summing_random_variables/</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="pub-quiz" class="level2">
+<h2 class="anchored" data-anchor-id="pub-quiz"># Pub Quiz</h2>
+<p>Last week, my company held a pub quiz. This was no ordinary pub quiz, it was designed in a way for teams to learn about other teams. One person from each team submitted four questions about their team. We ended up wtih about 60 questions from all across the company. And when I say “all” I mean <em>all</em>. We had questions about Data Science, Commercial, Operations, Engineering, Product, Marketing, Leadership, Human Resources, you name it. As someone who is fairly familiar with all aspects of our products and engineering teams (but by no means an expert in all these areas) by having been here over four years and written my share of documentation, I came into the pub quiz <em>with confidence</em>. Much of that confidence due to expecting to not need to know British pop culture back through the 70s as is standard in an actual pub quiz.</p>
+<p>That confidence was quickly smashed with questions like:</p>
+<ul>
+<li><em>What was the 2023 Coca Cola Christmas commercial slogan?</em></li>
+<li><em>What is the collective age of the Customer Support team?</em></li>
+<li><em>What month was repo XXX created?</em></li>
+</ul>
+<p>The Data Science round was the trickiest of them all, in no small part because reading the question took up almost all of the response time! After the quiz, my teammate who wrote the Data Science questions shared one that didn’t quite make the cut.</p>
+<p>I share the question with the reader here, with only some minor rewording. My answer follows.</p>
+<p><br>
+</p>
+</section>
+<section id="question" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="question"># Question</h2>
+<section id="the-preamble" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="the-preamble">## The preamble</h3>
+<p>You fit the following univariate regression model using Ordinary Least Squares (OLS)</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>In the original question, the OLS abbreviation was given without the unabbreviated form. Not sure it would have made the question any easier.</p>
+</div></div><p><img src="https://latex.codecogs.com/png.latex?%0Ay%20=%20%5Calpha%20+%20%5Cbeta%20x%20+%20%5Cepsilon%0A"></p>
+<p>Where the residual, <img src="https://latex.codecogs.com/png.latex?%5Cepsilon">, is Normally distributed with mean 0 and standard deviation 1, that is:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cepsilon%20%5Csim%20%7BN%7D(0,%201)%0A"></p>
+<p>From OLS, you determine:</p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?%5Calpha=3"></li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cbeta=2"></li>
+</ul>
+<hr>
+<p>The next month, your colleague reruns the experiement and collects the same size dataset. They forgot to check the callibration of the machine used to collect the data and as a result the dataset now has a measurement error, <img src="https://latex.codecogs.com/png.latex?u">. That is,</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cdisplaylines%7B%0A%20%20%20%20%5Cbegin%7Balign%7D%0A%20%20%20%20y%5E*%20&amp;%5Cequiv%20y%20+%20u%20%5C%5C%0A%20%20%20%20y%5E*%20&amp;=%20%5Calpha%5E*%20+%20%5Cbeta%5E*x%20+%20%5Cepsilon%5E*%0A%20%20%20%20%5Cend%7Balign%7D%0A%7D%0A"></p>
+<p>The measurement error has mean 2 and standard deviation 2.<br>
+<img src="https://latex.codecogs.com/png.latex?%0Au%20%5Csim%20N(2,2)%0A"></p>
+<p>The residuals in the new sample dataset are also normally distributed.<br>
+<img src="https://latex.codecogs.com/png.latex?%0A%5Cepsilon%5E*%20%5Csim%20%7BN%7D(%5Cmu%5E*,%20%5Csigma%5E*)%0A"><br>
+</p>
+</section>
+<section id="and-finally-the-question" class="level3">
+<h3 class="anchored" data-anchor-id="and-finally-the-question">## And finally the question</h3>
+<p>What values does your colleague find when running a regression with OLS? (Try solving with a pen and paper):</p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?%5Calpha%5E*%20=%20%5Ctext%7B%20??%7D"></li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cbeta%5E*%20=%20%5Ctext%7B%20??%7D"></li>
+<li><img src="https://latex.codecogs.com/png.latex?u%5E*%20=%20%5Ctext%7B%20??%7D"></li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Csigma%5E*%20=%20%5Ctext%7B%20??%7D"><br>
+</li>
+</ul>
+</section>
+</section>
+<section id="analytical-solution" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="analytical-solution"># Analytical solution</h2>
+<p>There’s a few things to immediately note:</p>
+<ol type="1">
+<li>The <em>hell</em> this is a pub quiz question!<br>
+</li>
+<li>We assume <img src="https://latex.codecogs.com/png.latex?y%5E*">, <img src="https://latex.codecogs.com/png.latex?%5Cepsilon">, <img src="https://latex.codecogs.com/png.latex?u">, and <img src="https://latex.codecogs.com/png.latex?%5Cepsilon%5E*"> are independent random variables. If they weren’t, this would be a wee bit trickier (we would need to have information about the joint distributions, i.e.&nbsp;covariances).</li>
+<li>We recognize that the new residuals are going to include the previous residuals as well as the new measurement error, <img src="https://latex.codecogs.com/png.latex?%5Cepsilon%5E*%20=%20%5Cepsilon%20+%20u">.</li>
+<li>Whether it was a typo or meant to be tricky, the question states the standard deviation rather than the variance for the Normal distribution. Typically, the notation is <img src="https://latex.codecogs.com/png.latex?N(%5Cmu,%20%5Csigma%5E2)">. Rewriting into the standard notation:</li>
+</ol>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>I’ve highly probably in all likelihood had the same question on a Probability exam during my Statistics postgrad.</p>
+</div></div><p><img src="https://latex.codecogs.com/png.latex?%0A%5Cdisplaylines%7B%0A%20%20%20%20%5Cbegin%7Balignat*%7D%7B2%7D%0A%20%20%20%20%5Cepsilon%20&amp;%5Csim%20N(0,%201)%20&amp;&amp;%20%5Crightarrow%20N(0,%201)%20%5C%5C%0A%20%20%20%20u%20&amp;%5Csim%20N(2,%202)%20&amp;&amp;%20%5Crightarrow%20N(2,%204)%20%5C%5C%0A%20%20%20%20%5Cepsilon%5E*%20&amp;%5Csim%20N(%5Cmu%5E*,%20%5Csigma%5E%7B*%7D)%20&amp;&amp;%20%5Crightarrow%20N(%5Cmu%5E*,%20%5Csigma%5E%7B*2%7D)%0A%20%20%20%20%5Cend%7Balignat*%7D%0A%7D%0A"><br>
+</p>
+<p>The problem boils down to realizing that we have a summation of two independent Normally distributed random variables, <img src="https://latex.codecogs.com/png.latex?y"> and <img src="https://latex.codecogs.com/png.latex?u">. How do independent Normally distributed random variables sum? If you don’t remember, don’t worry, neither did I. After some revision we know that <span class="citation" data-cites="ross2010">(Ross 2010)</span>:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cdisplaylines%7B%0A%20%20%20%20%5Cbegin%7Balign%7D%0A%20%20%20%20%5Ctext%7BE%7D%5BX%20+%20Y%5D%20%20%20&amp;=%20%5Ctext%7BE%7D%5BX%5D%20+%20%5Ctext%7BE%7D%5BY%5D%20%5C%5C%0A%20%20%20%20%5Ctext%7BVar%7D%5BX%20+%20Y%5D%20&amp;=%20%5Ctext%7BVar%7D%5BX%5D%20+%20%5Ctext%7BVar%7D%5BY%5D%20+%202%5Ctext%7BCov%7D%5BX,Y%5D%0A%20%20%20%20%5Cend%7Balign%7D%0A%7D%0A"></p>
+<p>The assumption that the random variables are independent means the covariance is zero, <img src="https://latex.codecogs.com/png.latex?2%5Ctext%7BCov%7D%5BX,Y%5D%20=%200">. We can simply add the means and variances <span class="citation" data-cites="ross2010">(Ross 2010, 256–57)</span> giving:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cdisplaylines%7B%0A%20%20%20%20%5Cbegin%7Balignat*%7D%7B2%7D%0A%20%20%20%20y%5E*%20&amp;=%20y%20&amp;&amp;+%20u%20%5C%5C%0A%20%20%20%20%20%20%20%20&amp;=%20%5Calpha%20+%20%5Cbeta%20x%20&amp;&amp;+%20%5Cepsilon%20+%20u%20%5C%5C%0A%20%20%20%20%20%20%20%20&amp;=%20%5Calpha%20+%20%5Cbeta%20x%20&amp;&amp;+%20%5Cepsilon%5E*%20%5C%5C%0A%20%20%20%20%20%20%20%20&amp;=%20%5Calpha%20+%20%5Cbeta%20x%20&amp;&amp;+%20%5CBig(%20N(%5Cmu_%7B%5Cepsilon%7D,%20%5Csigma_%7B%5Cepsilon%7D%5E2)%20+%20N(%5Cmu_u,%20%5Csigma_u%5E2)%20%5CBig)%20%5C%5C%0A%20%20%20%20%20%20%20%20&amp;=%20%5Calpha%20+%20%5Cbeta%20x%20&amp;&amp;+%20%5CBig(%20N(%5Cmu_%7B%5Cepsilon%7D%20+%20%5Cmu_u,%20%5Csigma_%7B%5Cepsilon%7D%5E2%20+%20%5Csigma_u%5E2)%20%5CBig)%20%5C%5C%0A%20%20%20%20%20%20%20%20&amp;=%20%5Calpha%20+%20%5Cbeta%20x%20&amp;&amp;+%20N(0%20+%202,%201%20+%204)%20%5C%5C%0A%20%20%20%20%20%20%20%20&amp;=%20%5Calpha%20+%20%5Cbeta%20x%20&amp;&amp;+%20N(2,%205)%20%5C%5C%0A%20%20%20%20%5Cend%7Balignat*%7D%0A%7D%0A"></p>
+<p>where,</p>
+<div class="columns">
+<div class="column" style="width:20%;">
+<!-- empty column to create gap -->
+</div><div class="column" style="width:30%;">
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cdisplaylines%7B%0A%20%20%20%20%5Cbegin%7Balignat*%7D%7B2%7D%0A%20%20%20%20%5Cmu_%7B%5Cepsilon%5E*%7D%20&amp;=%20%5Cmu_%7B%5Cepsilon%7D%20&amp;&amp;+%20%5Cmu_u%20%5C%5C%0A%20%20%20%20%20%20%20%20&amp;=%200%20&amp;&amp;+%202%20%5C%5C%0A%20%20%20%20%20%20%20%20&amp;=%202%0A%20%20%20%20%5Cend%7Balignat*%7D%0A%7D%0A"></p>
+</div><div class="column" style="width:30%;">
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cdisplaylines%7B%0A%20%20%20%20%5Cbegin%7Balignat*%7D%7B2%7D%0A%20%20%20%20%5Csigma_%7B%5Cepsilon%5E*%7D%5E2%20&amp;=%20%5Csigma_%7B%5Cepsilon%7D%5E2%20&amp;&amp;+%20%5Csigma_u%5E2%20%5C%5C%0A%20%20%20%20%20%20%20%20&amp;=%201%20&amp;&amp;+%204%20%5C%5C%0A%20%20%20%20%20%20%20%20&amp;=%205%0A%20%20%20%20%5Cend%7Balignat*%7D%0A%7D%0A"></p>
+</div><div class="column" style="width:20%;">
+<!-- empty column to create gap -->
+</div>
+</div>
+<p>Plugging in the values for <img src="https://latex.codecogs.com/png.latex?%5Calpha"> and <img src="https://latex.codecogs.com/png.latex?%5Cbeta">, we find the following solution: <img src="https://latex.codecogs.com/png.latex?%0Ay%5E*%20=%203%20+%202x%20+%20N(2,%205)%0A"></p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?%5Calpha%5E*%20=%203"></li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cbeta%5E*%20=%202"></li>
+<li><img src="https://latex.codecogs.com/png.latex?u%5E*%20=%202"></li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Csigma%5E*%20=%20%5Csqrt%7B5%7D"><br>
+</li>
+</ul>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Remember, we were asked for <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E*"> not <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E%7B*2%7D">.</p>
+</div></div><p>We can arguably simplify this a bit further by noting that the bias, <img src="https://latex.codecogs.com/png.latex?%5Calpha">, and the mean of the residuals, <img src="https://latex.codecogs.com/png.latex?%5Cmu_%7B%5Cepsilon%5E*%7D">, are both constants that shift the intercept and can be grouped. Subtracting the mean of the error from the bias…</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cdisplaylines%7B%0A%20%20%20%20%5Cbegin%7Balignat*%7D%7B3%7D%0A%20%20%20%20y%5E*%20&amp;=%20%5Calpha%20&amp;&amp;+%20%5Cbeta%20x%20&amp;&amp;&amp;+%20N(2,%205)%20%5C%5C%0A%20%20%20%20%20%20%20%20&amp;=%203%20%20%20%20%20%20&amp;&amp;+%202x%20%20%20%20%20%20&amp;&amp;&amp;+%20N(2,%205)%20%5C%5C%0A%20%20%20%20%20%20%20%20&amp;=%20(3-2)%20%20&amp;&amp;+%202x%20%20%20%20%20%20&amp;&amp;&amp;+%20N(0,%205)%20%5C%5C%0A%20%20%20%20%20%20%20%20&amp;=%201%20%20%20%20%20%20&amp;&amp;+%202x%20%20%20%20%20%20&amp;&amp;&amp;+%20N(0,5)%0A%20%20%20%20%5Cend%7Balignat*%7D%0A%7D%0A"></p>
+<p>And rewritting using the standard deviation rather than the variance (like in the original question) we arrive at:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ay%20=%201%20+%202x%20+%20N(0,%5Csqrt%7B5%7D)%0A"></p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?%5Calpha%5E*%20=%201"></li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cbeta%5E*%20=%202"></li>
+<li><img src="https://latex.codecogs.com/png.latex?u%5E*%20=%202"></li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Csigma%5E*%20=%20%5Csqrt%7B5%7D"><br>
+</li>
+</ul>
+</section>
+<section id="quantative-solution" class="level2">
+<h2 class="anchored" data-anchor-id="quantative-solution"># Quantative solution</h2>
+</section>
+<section id="in-the-end-it-didnt-even-matter" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="in-the-end-it-didnt-even-matter"># In the end, it didn’t even matter</h2>
+<p>Thankfully, this question didn’t make it into our company pub quiz. Even if it had, I think everyone (sans the author) would have had to ultimately guess the answer. We only had 30 seconds per question. I didn’t even finish reading the problem statement let alone begin tackling it in that time!</p>
+<p>In the end, whether this question would have been included or not, wouldn’t have changed the outcome. The quiz was neck and neck between 3 teams for most of the game. My team bouncing between <img src="https://latex.codecogs.com/png.latex?%5Ctext%7B1%7D%5E%7Bst%7D"> and <img src="https://latex.codecogs.com/png.latex?%5Ctext%7B3%7D%5E%7Brd%7D"> place. That is until the final round of questions from the Leadership team, which were highly specific to a certain someone.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>If we have another pub quiz, I’ll make sure to sling in some equally maladjusted questions. But I’ll post the answers beforehand here.<br>
+<br>
+Watch this space.</p>
+</div></div><p>Good thing I had the CEO on my team 🥇</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-ross2010" class="csl-entry">
+Ross, Sheldon. 2010. <em>A First Course in Probability</em>. 8th ed. Pearson Prentice Hall.
+</div>
+</div></section></div> ]]></description>
+  <category>probability</category>
+  <category>pub quiz</category>
+  <guid>https://rtedwards.github.io/posts/summing_random_variables/</guid>
+  <pubDate>Sat, 13 Jan 2024 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Waltzing with Python’s Walrus Operator</title>
   <link>https://rtedwards.github.io/posts/waltzing_with_the_walrus/</link>

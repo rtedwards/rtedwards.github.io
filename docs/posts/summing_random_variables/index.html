@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2024-01-13">
+<meta name="description" content="My company’s holiday pub quiz almost had a question about summing two random variables.">
 
-<title>The Bear’s Toes</title>
+<title>The Bear’s Toes - Pub Quiz: Summing Two Random Variables</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,32 +22,50 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./icon/profile-circle.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/cookie-consent/cookie-consent.js"></script>
-<link href="site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../icon/profile-circle.png" rel="icon" type="image/png">
+<script src="../../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -72,35 +92,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-RTR8YLS84R"></script>
 
 <script type="text/plain" cookie-consent="tracking">
@@ -164,20 +155,22 @@ window.Quarto = {
 };
 </script>
 
-<link rel="alternate" type="application/rss+xml" title="The Bear's Toes" href="index.xml" data-external="1"><meta property="og:title" content="The Bear’s Toes">
+<meta property="og:title" content="The Bear’s Toes - Pub Quiz: Summing Two Random Variables">
+<meta property="og:description" content="My company’s holiday pub quiz almost had a question about summing two random variables.">
 <meta property="og:site_name" content="The Bear's Toes">
-<meta name="twitter:title" content="The Bear’s Toes">
+<meta name="twitter:title" content="The Bear’s Toes - Pub Quiz: Summing Two Random Variables">
+<meta name="twitter:description" content="My company’s holiday pub quiz almost had a question about summing two random variables.">
 <meta name="twitter:card" content="summary">
 </head>
 
 <body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">The Bear’s Toes</span>
     </a>
   </div>
@@ -188,11 +181,11 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
 </ul>
@@ -208,7 +201,7 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img" aria-label="RSS">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img" aria-label="RSS">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -221,114 +214,262 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">The Bear’s Toes</h1>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta column-page-left">
-
-      
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div><div class="category" data-category="probability">probability <span class="quarto-category-count">(1)</span></div><div class="category" data-category="pub quiz">pub quiz <span class="quarto-category-count">(1)</span></div><div class="category" data-category="python">python <span class="quarto-category-count">(1)</span></div></div></div>
-<!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
-
-
-
-
-
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-     <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-     <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-       <option value="" disabled="" selected="" hidden="">Order By</option>
-       <option value="index" data-direction="asc">Default</option>
-         <option value="listing-date-sort" data-direction="asc">
-          Date - Oldest
-        </option>
-         <option value="listing-date-sort" data-direction="desc">
-          Date - Newest
-        </option>
-         <option value="listing-title-sort" data-direction="asc">
-          Title
-        </option>
-     </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#pub-quiz" id="toc-pub-quiz" class="nav-link active" data-scroll-target="#pub-quiz"># Pub Quiz</a></li>
+  <li><a href="#question" id="toc-question" class="nav-link" data-scroll-target="#question"># Question</a>
+  <ul class="collapse">
+  <li><a href="#the-preamble" id="toc-the-preamble" class="nav-link" data-scroll-target="#the-preamble">## The preamble</a></li>
+  <li><a href="#and-finally-the-question" id="toc-and-finally-the-question" class="nav-link" data-scroll-target="#and-finally-the-question">## And finally the question</a></li>
+  </ul></li>
+  <li><a href="#analytical-solution" id="toc-analytical-solution" class="nav-link" data-scroll-target="#analytical-solution"># Analytical solution</a></li>
+  <li><a href="#quantative-solution" id="toc-quantative-solution" class="nav-link" data-scroll-target="#quantative-solution"># Quantative solution</a></li>
+  <li><a href="#in-the-end-it-didnt-even-matter" id="toc-in-the-end-it-didnt-even-matter" class="nav-link" data-scroll-target="#in-the-end-it-didnt-even-matter"># In the end, it didn’t even matter</a></li>
+  </ul>
+</nav>
     </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Pub Quiz: Summing Two Random Variables</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">probability</div>
+    <div class="quarto-category">pub quiz</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    My company’s holiday pub quiz almost had a question about summing two random variables.
+  </div>
 </div>
-<table class="quarto-listing-table table">
-<thead>
-<tr>
-<th>
-<a class="sort" data-sort="listing-date-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Date</a>
-</th>
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
-<th>
-Description
-</th>
-<th>
-Categories
-</th>
-</tr>
-</thead>
-<tbody class="list">
-<tr data-index="0" data-categories="probability,pub quiz" data-listing-date-sort="1705104000000" data-listing-file-modified-sort="1705163069928" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1344" data-listing-title-sort="Pub Quiz: Summing Two Random Variables" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2024-01-13</span>
-</td>
-<td>
-<a href="./posts/summing_random_variables/index.html" class="title listing-title">Pub Quiz: Summing Two Random Variables</a>
-</td>
-<td>
-<span class="listing-description">My company’s holiday pub quiz almost had a question about summing two random variables.</span>
-</td>
-<td>
-<span class="listing-categories">probability, pub quiz</span>
-</td>
-</tr>
-<tr data-index="1" data-categories="python" data-listing-date-sort="1691881200000" data-listing-file-modified-sort="1705162613370" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="978" data-listing-title-sort="Waltzing with Python's Walrus Operator" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">2023-08-13</span>
-</td>
-<td>
-<a href="./posts/waltzing_with_the_walrus/index.html" class="title listing-title">Waltzing with Python’s Walrus Operator</a>
-</td>
-<td>
-<span class="listing-description">Using the walrus operator <code>:=</code> to make life simpler.</span>
-</td>
-<td>
-<span class="listing-categories">python</span>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="listing-no-matching d-none">
-No matching items
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 13, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="pub-quiz" class="level2">
+<h2 class="anchored" data-anchor-id="pub-quiz"># Pub Quiz</h2>
+<p>Last week, my company held a pub quiz. This was no ordinary pub quiz, it was designed in a way for teams to learn about other teams. One person from each team submitted four questions about their team. We ended up wtih about 60 questions from all across the company. And when I say “all” I mean <em>all</em>. We had questions about Data Science, Commercial, Operations, Engineering, Product, Marketing, Leadership, Human Resources, you name it. As someone who is fairly familiar with all aspects of our products and engineering teams (but by no means an expert in all these areas) by having been here over four years and written my share of documentation, I came into the pub quiz <em>with confidence</em>. Much of that confidence due to expecting to not need to know British pop culture back through the 70s as is standard in an actual pub quiz.</p>
+<p>That confidence was quickly smashed with questions like:</p>
+<ul>
+<li><em>What was the 2023 Coca Cola Christmas commercial slogan?</em></li>
+<li><em>What is the collective age of the Customer Support team?</em></li>
+<li><em>What month was repo XXX created?</em></li>
+</ul>
+<p>The Data Science round was the trickiest of them all, in no small part because reading the question took up almost all of the response time! After the quiz, my teammate who wrote the Data Science questions shared one that didn’t quite make the cut.</p>
+<p>I share the question with the reader here, with only some minor rewording. My answer follows.</p>
+<p><br>
+</p>
+</section>
+<section id="question" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="question"># Question</h2>
+<section id="the-preamble" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="the-preamble">## The preamble</h3>
+<p>You fit the following univariate regression model using Ordinary Least Squares (OLS)</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>In the original question, the OLS abbreviation was given without the unabbreviated form. Not sure it would have made the question any easier.</p>
+</div></div><p><span class="math display">\[
+y = \alpha + \beta x + \epsilon
+\]</span></p>
+<p>Where the residual, <span class="math inline">\(\epsilon\)</span>, is Normally distributed with mean 0 and standard deviation 1, that is:</p>
+<p><span class="math display">\[
+\epsilon \sim {N}(0, 1)
+\]</span></p>
+<p>From OLS, you determine:</p>
+<ul>
+<li><span class="math inline">\(\alpha=3\)</span></li>
+<li><span class="math inline">\(\beta=2\)</span></li>
+</ul>
+<hr>
+<p>The next month, your colleague reruns the experiement and collects the same size dataset. They forgot to check the callibration of the machine used to collect the data and as a result the dataset now has a measurement error, <span class="math inline">\(u\)</span>. That is,</p>
+<p><span class="math display">\[
+\displaylines{
+    \begin{align}
+    y^* &amp;\equiv y + u \\
+    y^* &amp;= \alpha^* + \beta^*x + \epsilon^*
+    \end{align}
+}
+\]</span></p>
+<p>The measurement error has mean 2 and standard deviation 2.<br>
+<span class="math display">\[
+u \sim N(2,2)
+\]</span></p>
+<p>The residuals in the new sample dataset are also normally distributed.<br>
+<span class="math display">\[
+\epsilon^* \sim {N}(\mu^*, \sigma^*)
+\]</span><br>
+</p>
+</section>
+<section id="and-finally-the-question" class="level3">
+<h3 class="anchored" data-anchor-id="and-finally-the-question">## And finally the question</h3>
+<p>What values does your colleague find when running a regression with OLS? (Try solving with a pen and paper):</p>
+<ul>
+<li><span class="math inline">\(\alpha^* = \text{ ??}\)</span></li>
+<li><span class="math inline">\(\beta^* = \text{ ??}\)</span></li>
+<li><span class="math inline">\(u^* = \text{ ??}\)</span></li>
+<li><span class="math inline">\(\sigma^* = \text{ ??}\)</span><br>
+</li>
+</ul>
+</section>
+</section>
+<section id="analytical-solution" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="analytical-solution"># Analytical solution</h2>
+<p>There’s a few things to immediately note:</p>
+<ol type="1">
+<li>The <em>hell</em> this is a pub quiz question!<br>
+</li>
+<li>We assume <span class="math inline">\(y^*\)</span>, <span class="math inline">\(\epsilon\)</span>, <span class="math inline">\(u\)</span>, and <span class="math inline">\(\epsilon^*\)</span> are independent random variables. If they weren’t, this would be a wee bit trickier (we would need to have information about the joint distributions, i.e.&nbsp;covariances).</li>
+<li>We recognize that the new residuals are going to include the previous residuals as well as the new measurement error, <span class="math inline">\(\epsilon^* = \epsilon + u\)</span>.</li>
+<li>Whether it was a typo or meant to be tricky, the question states the standard deviation rather than the variance for the Normal distribution. Typically, the notation is <span class="math inline">\(N(\mu, \sigma^2)\)</span>. Rewriting into the standard notation:</li>
+</ol>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>I’ve highly probably in all likelihood had the same question on a Probability exam during my Statistics postgrad.</p>
+</div></div><p><span class="math display">\[
+\displaylines{
+    \begin{alignat*}{2}
+    \epsilon &amp;\sim N(0, 1) &amp;&amp; \rightarrow N(0, 1) \\
+    u &amp;\sim N(2, 2) &amp;&amp; \rightarrow N(2, 4) \\
+    \epsilon^* &amp;\sim N(\mu^*, \sigma^{*}) &amp;&amp; \rightarrow N(\mu^*, \sigma^{*2})
+    \end{alignat*}
+}
+\]</span><br>
+</p>
+<p>The problem boils down to realizing that we have a summation of two independent Normally distributed random variables, <span class="math inline">\(y\)</span> and <span class="math inline">\(u\)</span>. How do independent Normally distributed random variables sum? If you don’t remember, don’t worry, neither did I. After some revision we know that <span class="citation" data-cites="ross2010">(<a href="#ref-ross2010" role="doc-biblioref">Ross 2010</a>)</span>:</p>
+<p><span class="math display">\[
+\displaylines{
+    \begin{align}
+    \text{E}[X + Y]   &amp;= \text{E}[X] + \text{E}[Y] \\
+    \text{Var}[X + Y] &amp;= \text{Var}[X] + \text{Var}[Y] + 2\text{Cov}[X,Y]
+    \end{align}
+}
+\]</span></p>
+<p>The assumption that the random variables are independent means the covariance is zero, <span class="math inline">\(2\text{Cov}[X,Y] = 0\)</span>. We can simply add the means and variances <span class="citation" data-cites="ross2010">(<a href="#ref-ross2010" role="doc-biblioref">Ross 2010, 256–57</a>)</span> giving:</p>
+<p><span class="math display">\[
+\displaylines{
+    \begin{alignat*}{2}
+    y^* &amp;= y &amp;&amp;+ u \\
+        &amp;= \alpha + \beta x &amp;&amp;+ \epsilon + u \\
+        &amp;= \alpha + \beta x &amp;&amp;+ \epsilon^* \\
+        &amp;= \alpha + \beta x &amp;&amp;+ \Big( N(\mu_{\epsilon}, \sigma_{\epsilon}^2) + N(\mu_u, \sigma_u^2) \Big) \\
+        &amp;= \alpha + \beta x &amp;&amp;+ \Big( N(\mu_{\epsilon} + \mu_u, \sigma_{\epsilon}^2 + \sigma_u^2) \Big) \\
+        &amp;= \alpha + \beta x &amp;&amp;+ N(0 + 2, 1 + 4) \\
+        &amp;= \alpha + \beta x &amp;&amp;+ N(2, 5) \\
+    \end{alignat*}
+}
+\]</span></p>
+<p>where,</p>
+<div class="columns">
+<div class="column" style="width:20%;">
+<!-- empty column to create gap -->
+</div><div class="column" style="width:30%;">
+<p><span class="math display">\[
+\displaylines{
+    \begin{alignat*}{2}
+    \mu_{\epsilon^*} &amp;= \mu_{\epsilon} &amp;&amp;+ \mu_u \\
+        &amp;= 0 &amp;&amp;+ 2 \\
+        &amp;= 2
+    \end{alignat*}
+}
+\]</span></p>
+</div><div class="column" style="width:30%;">
+<p><span class="math display">\[
+\displaylines{
+    \begin{alignat*}{2}
+    \sigma_{\epsilon^*}^2 &amp;= \sigma_{\epsilon}^2 &amp;&amp;+ \sigma_u^2 \\
+        &amp;= 1 &amp;&amp;+ 4 \\
+        &amp;= 5
+    \end{alignat*}
+}
+\]</span></p>
+</div><div class="column" style="width:20%;">
+<!-- empty column to create gap -->
 </div>
-</div></main> <!-- /main -->
+</div>
+<p>Plugging in the values for <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>, we find the following solution: <span class="math display">\[
+y^* = 3 + 2x + N(2, 5)
+\]</span></p>
+<ul>
+<li><span class="math inline">\(\alpha^* = 3\)</span></li>
+<li><span class="math inline">\(\beta^* = 2\)</span></li>
+<li><span class="math inline">\(u^* = 2\)</span></li>
+<li><span class="math inline">\(\sigma^* = \sqrt{5}\)</span><br>
+</li>
+</ul>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Remember, we were asked for <span class="math inline">\(\sigma^*\)</span> not <span class="math inline">\(\sigma^{*2}\)</span>.</p>
+</div></div><p>We can arguably simplify this a bit further by noting that the bias, <span class="math inline">\(\alpha\)</span>, and the mean of the residuals, <span class="math inline">\(\mu_{\epsilon^*}\)</span>, are both constants that shift the intercept and can be grouped. Subtracting the mean of the error from the bias…</p>
+<p><span class="math display">\[
+\displaylines{
+    \begin{alignat*}{3}
+    y^* &amp;= \alpha &amp;&amp;+ \beta x &amp;&amp;&amp;+ N(2, 5) \\
+        &amp;= 3      &amp;&amp;+ 2x      &amp;&amp;&amp;+ N(2, 5) \\
+        &amp;= (3-2)  &amp;&amp;+ 2x      &amp;&amp;&amp;+ N(0, 5) \\
+        &amp;= 1      &amp;&amp;+ 2x      &amp;&amp;&amp;+ N(0,5)
+    \end{alignat*}
+}
+\]</span></p>
+<p>And rewritting using the standard deviation rather than the variance (like in the original question) we arrive at:</p>
+<p><span class="math display">\[
+y = 1 + 2x + N(0,\sqrt{5})
+\]</span></p>
+<ul>
+<li><span class="math inline">\(\alpha^* = 1\)</span></li>
+<li><span class="math inline">\(\beta^* = 2\)</span></li>
+<li><span class="math inline">\(u^* = 2\)</span></li>
+<li><span class="math inline">\(\sigma^* = \sqrt{5}\)</span><br>
+</li>
+</ul>
+</section>
+<section id="quantative-solution" class="level2">
+<h2 class="anchored" data-anchor-id="quantative-solution"># Quantative solution</h2>
+</section>
+<section id="in-the-end-it-didnt-even-matter" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="in-the-end-it-didnt-even-matter"># In the end, it didn’t even matter</h2>
+<p>Thankfully, this question didn’t make it into our company pub quiz. Even if it had, I think everyone (sans the author) would have had to ultimately guess the answer. We only had 30 seconds per question. I didn’t even finish reading the problem statement let alone begin tackling it in that time!</p>
+<p>In the end, whether this question would have been included or not, wouldn’t have changed the outcome. The quiz was neck and neck between 3 teams for most of the game. My team bouncing between <span class="math inline">\(\text{1}^{st}\)</span> and <span class="math inline">\(\text{3}^{rd}\)</span> place. That is until the final round of questions from the Leadership team, which were highly specific to a certain someone.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>If we have another pub quiz, I’ll make sure to sling in some equally maladjusted questions. But I’ll post the answers beforehand here.<br>
+<br>
+Watch this space.</p>
+</div></div><p>Good thing I had the CEO on my team 🥇</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-ross2010" class="csl-entry" role="listitem">
+Ross, Sheldon. 2010. <em>A First Course in Probability</em>. 8th ed. Pearson Prentice Hall.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -855,6 +996,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<script src="https://giscus.app/client.js" data-repo="rtedwards/blog_comments" data-repo-id="R_kgDOLBw-mg" data-category="General" data-category-id="" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="dark" data-lang="en" crossorigin="anonymous" async="">
+</script>
+<input type="hidden" id="giscus-base-theme" value="dark">
+<input type="hidden" id="giscus-alt-theme" value="light">
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -864,7 +1009,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-center">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="./about.html">
+    <a class="nav-link" href="../../about.html">
 <p>About</p>
 </a>
   </li>  
