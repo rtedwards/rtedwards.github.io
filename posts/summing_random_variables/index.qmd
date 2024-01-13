@@ -1,6 +1,6 @@
 ---
 title: "Pub Quiz: Summing Two Random Variables"
-date: "2024-01-13"
+date: "2024-01-14"
 categories: [probability, pub quiz]
 description: "My company's holiday pub quiz almost had a question about summing two random variables."
 reading-time: true
@@ -9,6 +9,12 @@ reference-location: document
 citation-location: document
 bibliography: references.bib
 citations-hover: true
+
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    code-summary: ""
 ---
 
 ## # Pub Quiz
@@ -24,7 +30,6 @@ That confidence was quickly smashed with questions like:
 The Data Science round was the trickiest of them all, in no small part because reading the question took up almost all of the response time!  After the quiz, my teammate who wrote the Data Science questions shared one that didn't quite make the cut.  
 
 I share the question with the reader here, with only some minor rewording.  My answer follows.
-
 \
 
 ## # Question
@@ -53,7 +58,7 @@ From OLS, you determine:
 
 ---
 
-The next month, your colleague reruns the experiement and collects the same size dataset.  They forgot to check the callibration of the machine used to collect the data and as a result the dataset now has a measurement error, $u$.  That is,
+The next month, your colleague reruns the experiment and collects the same size dataset.  They forgot to check the callibration of the machine used to collect the data and as a result the dataset now has a measurement error, $u$.  That is,
 
 $$
 \displaylines{
@@ -80,7 +85,7 @@ What values does your colleague find when running a regression with OLS? (Try so
 
 - $\alpha^* = \text{ ??}$
 - $\beta^* = \text{ ??}$
-- $u^* = \text{ ??}$
+- $\mu^* = \text{ ??}$
 - $\sigma^* = \text{ ??}$
 \
 
@@ -91,7 +96,7 @@ There's a few things to immediately note:
 1. The _hell_ this is a pub quiz question!  
 2. We assume $y^*$, $\epsilon$, $u$, and $\epsilon^*$ are independent random variables.  If they weren't, this would be a wee bit trickier (we would need to have information about the joint distributions, i.e. covariances).
 3. We recognize that the new residuals are going to include the previous residuals as well as the new measurement error, $\epsilon^* = \epsilon + u$.
-4. Whether it was a typo or meant to be tricky, the question states the standard deviation rather than the variance for the Normal distribution.  Typically, the notation is $N(\mu, \sigma^2)$.  Rewriting into the standard notation:
+4. Whether it was a typo or meant to be tricky, the question states the standard deviation rather than the variance for the Normal distribution.  Typically, the notation is uses the variance, $N(\mu, \sigma^2)$.  Rewriting into the standard notation:
 
 ::: {.column-margin}
 I've highly probably in all likelihood had the same question on a Probability exam during my Statistics postgrad.
@@ -101,7 +106,7 @@ $$
 \displaylines{
     \begin{alignat*}{2}
     \epsilon &\sim N(0, 1) && \rightarrow N(0, 1) \\
-    u &\sim N(2, 2) && \rightarrow N(2, 4) \\
+    u &\sim N(2, 2) && \rightarrow N(2, \sqrt{2}) \\
     \epsilon^* &\sim N(\mu^*, \sigma^{*}) && \rightarrow N(\mu^*, \sigma^{*2})
     \end{alignat*}
 }
@@ -175,12 +180,12 @@ $$
 
 - $\alpha^* = 3$
 - $\beta^* = 2$
-- $u^* = 2$
+- $\mu^* = 2$
 - $\sigma^* = \sqrt{5}$
 \
 
 ::: {.column-margin}
-Remember, we were asked for $\sigma^*$ not $\sigma^{*2}$.
+Remember, we were asked for $\sigma^*$ not $\sigma^{*2}$:
 :::
 
 We can arguably simplify this a bit further by noting that the bias, $\alpha$, and the mean of the residuals, $\mu_{\epsilon^*}$, are both constants that shift the intercept and can be grouped.  Subtracting the mean of the error from the bias...  
@@ -190,8 +195,8 @@ $$
     \begin{alignat*}{3}
     y^* &= \alpha &&+ \beta x &&&+ N(2, 5) \\
         &= 3      &&+ 2x      &&&+ N(2, 5) \\
-        &= (3-2)  &&+ 2x      &&&+ N(0, 5) \\
-        &= 1      &&+ 2x      &&&+ N(0,5)
+        &= (3+2)  &&+ 2x      &&&+ N(0, 5) \\
+        &= 5      &&+ 2x      &&&+ N(0,5)
     \end{alignat*}
 }
 $$
@@ -199,22 +204,230 @@ $$
 And rewritting using the standard deviation rather than the variance (like in the original question) we arrive at:
 
 $$
-y = 1 + 2x + N(0,\sqrt{5})
+y = 5 + 2x + N(0,\sqrt{5})
 $$
 
-- $\alpha^* = 1$
+- $\alpha^* = 5$
 - $\beta^* = 2$
-- $u^* = 2$
+- $\mu^* = 2$
 - $\sigma^* = \sqrt{5}$
+
+::: {.column-margin}
+If instead we took 2 as the var in $u \sim N(2,2)$:
+
+- $\alpha^* = 5$
+- $\beta^* = 2$
+- $\mu^* = 2$
+- $\sigma^* = \sqrt{3}$
+:::
 \
 
-## # Quantative solution
+## # Computational verification
+
+Let's check our analytical solution through computational methods.  First let's check that we can indeed simply add the means and variances of independent random variables.
+
+```{python}
+# | label: normal-rv-sum-check
+# | code-fold: show
+import torch
+
+n = 1_000
+
+err = torch.normal(0, 1, size=(n,))
+u = torch.normal(2, 2, size=(n,))
+
+err_computational = err + u
+err_analytical = torch.normal(2, 5 ** (0.5), size=(n,))
+
+print(
+    f"""
+    mean: {err_computational.mean()} - {err_analytical.mean()} = {err_computational.mean() - err_analytical.mean()}
+    var:  {err_computational.var()}  - {err_analytical.var()}  = {err_computational.var()  - err_analytical.var()}
+    """
+)
+```
+
+The error between the means and variances is small.  If we increase the sample size these errors go closer towards 0.
+
+Now that we're confident in random variable arithmetic, let's check the full analytical solution to a comutational one.  Below we plot the first measured sample, $y_1$, with the original signal, $y_{\text{signal}}$, as a backdrop for reference:
+
+:::: {.columns}
+::: {.column width="10%"}
+<!-- empty column to create gap -->
+:::
+::: {.column width="40%"}
+$$
+\displaylines{
+    \begin{alignat*}{2}
+    y_{\text{\scriptsize{signal}}} &= \alpha &&+ \beta x \\
+                      &= 3      &&+ 2 x 
+    \end{alignat*}
+}
+$$
+:::
+::: {.column width="40%"}
+$$
+\displaylines{
+    \begin{alignat*}{3}
+    y_{\text{1}} &= \alpha &&+ \beta x + \epsilon \\
+                 &= 3      &&+ 2 x     + N(\mu, \sigma^2) \\
+                 &= 3      &&+ 2 x     + N(0, 1)
+    \end{alignat*}
+}
+$$
+:::
+::: {.column width="10%"}
+<!-- empty column to create gap -->
+:::
+::::
+
+:::: {.columns}
+::: {.column width="10%"}
+<!-- empty column to create gap -->
+:::
+::: {.column width="40%"}
+$$
+\displaylines{
+    \begin{alignat*}{4}
+    y^*_{\text{\scriptsize{analytical}}} &= y      &&+ u \\
+        &= \alpha &&+ \beta x + \epsilon^* \\
+        &= 1      &&+ 2 x     + N(\mu^*, \sigma^{*2}) \\
+        &= 5      &&+ 2 x     + N(0, 5) \\
+    \end{alignat*}
+}
+$$
+:::
+::: {.column width="40%"}
+$$
+\displaylines{
+    \begin{alignat*}{4}
+    y^*_{\text{\scriptsize{computational}}} &= y      &&+ u \\
+        &= \alpha &&+ \beta x + \epsilon &&&+ u \\
+        &= 3      &&+ 2 x     + N(0, 1)   &&&+ N(2, 4)
+    \end{alignat*}
+}
+$$
+:::
+::: {.column width="10%"}
+<!-- empty column to create gap -->
+:::
+::::
+
+```{python}
+# | label: plotted-signal
+
+import altair as alt
+import pandas as pd
+import torch
+
+alt.data_transformers.disable_max_rows()
+
+x = torch.arange(0, 10, 0.01)
+
+# Original Signal
+a = 3
+b = 2
+signal = a + (b * x)
+
+# y Our measured sample
+err_mean = 0
+err_std = 1
+err = torch.normal(err_mean, err_std**2, size=(len(x),))
+y = a + (b * x) + err
+
+# y* Analytical
+a = 5
+b = 2
+err_mean = 0
+err_std = 5 ** (0.5)
+err_analytical = torch.normal(err_mean, err_std, size=(len(x),))
+y_analytical = a + (b * x) + err_analytical
+
+# y* Computational
+a = 3
+b = 2
+err_mean = 2
+err_std = 5 ** (0.5)
+err_computational = torch.normal(err_mean, err_std, size=(len(x),))
+y_computational = a + (b * x) + (err + err_computational)
+
+# Data munging
+df0 = pd.DataFrame({"x": x, "y": signal, "dataset": ["signal (original)"] * len(x)})
+df1 = pd.DataFrame({"x": x, "y": y, "dataset": ["y"] * len(x)})
+df2 = pd.DataFrame(
+    {"x": x, "y": y_computational, "dataset": ["y* (computational)"] * len(x)}
+)
+df3 = pd.DataFrame({"x": x, "y": y_analytical, "dataset": ["y* (analytical)"] * len(x)})
+
+df = pd.concat([df0, df1, df2, df3])
+
+# Plot
+colorscheme = [
+    "#368BC1",  # blue
+    "#F2BB18",  # yellow
+    "#BB4430",  # red
+    "#8A9A67",  # green
+    "#CC771F",  # orange
+    "#8B5260",  # purple
+]
+selection = alt.selection_point(fields=["dataset"], bind="legend")
+chart = (
+    alt.Chart(
+        df,
+        title="Computational simulation of the problem matches the analytical solution",
+    )
+    .mark_circle(size=10)
+    .encode(
+        x="x:Q",
+        y="y:Q",
+        color=alt.Color(
+            "dataset:N", title=None, scale=alt.Scale(range=colorscheme)
+        ).legend(orient="top-left"),
+        opacity=alt.condition(selection, alt.value(0.75), alt.value(0.2)),
+    )
+    .configure(background="#f8f9fa")
+    .properties(width=650, padding=10)
+    .add_params(selection)
+)  # .interactive()
+
+chart.display()
+
+stats_df = pd.DataFrame(
+    {
+        "mean": [
+            err.mean().item(),
+            err_computational.mean().item(),
+            err_analytical.mean().item()
+            + 2,  # un grouping biases to reflect the contribution of the mean of residuals to the bias
+        ],
+        "var": [
+            err.var().item(),
+            err_computational.var().item(),
+            err_analytical.var().item(),
+        ],
+    },
+    index=["y (original)", "y* (computational)", "y* (analytical)"],
+)
+
+print(stats_df)
+```
+
+::: {.column-margin}
+Note, `torch.normal` takes the std dev instead of the variance.
+:::
+
+::: {.column-margin}
+To see each series more clearly, click on one in the legend.
+:::
+
+The chart shows both the computational analysis verifies the analytical solution while the table above shows the mean and variance of the residuals of the computational anlysis is the same as the analytical solution.  The table of statistics for each series also reflects these findings.  
+
 
 ## # In the end, it didn't even matter
 
-Thankfully, this question didn't make it into our company pub quiz.  Even if it had, I think everyone (sans the author) would have had to ultimately guess the answer.  We only had 30 seconds per question.  I didn't even finish reading the problem statement let alone begin tackling it in that time!
+That took a bit of work.  Thankfully, this question didn't make it into our company pub quiz.  Even if it had, I think everyone (sans the author) would have had to ultimately guess the answer.  We only had 30 seconds per question.  I didn't even finish reading the problem statement let alone begin tackling it in that time!
 
-In the end, whether this question would have been included or not, wouldn't have changed the outcome.  The quiz was neck and neck between 3 teams for most of the game.  My team bouncing between $\text{1}^{st}$ and $\text{3}^{rd}$ place.  That is until the final round of questions from the Leadership team, which were highly specific to a certain someone.   
+In the end, whether this question would have been included or not, wouldn't have changed the outcome.  The quiz was neck and neck between 3 teams for most of the game.  My team bouncing between 1$^{st}$ and 3$^{rd}$ place.  That is until the final round of questions from the Leadership team, which were highly specific to a certain someone.   
 
 ::: {.column-margin}
 If we have another pub quiz, I'll make sure to sling in some equally maladjusted questions.  But I'll post the answers beforehand here.  
