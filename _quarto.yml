@@ -37,8 +37,8 @@ website:
     center: 
       - text: "About"
         href: about.qmd
-      # - text: "License"
-      #   href: license.qmd
+      - text: "License"
+        href: LICENSE.md
       # - text: "Trademark"
       #   href: trademark.qmd
       # - text: ☕️
@@ -49,7 +49,7 @@ format:
       dark: css/dark.scss
       light: css/light.scss
 
-highlight-style: breeze
+highlight-style: atom-one #github #gruvbox #breeze
 
 
 

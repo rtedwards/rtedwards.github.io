@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/summing_random_variables/index.html",
       "/posts/waltzing_with_the_walrus/index.html"
     ]
   }

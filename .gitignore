@@ -1,3 +1,8 @@
 /.quarto/
-_site/
+
 .DS_Store
+venv
+
+# Quarto
+_site/
+_freeze
