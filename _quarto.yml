@@ -9,11 +9,12 @@ website:
   page-navigation: true
   twitter-card: true
   open-graph: true
+  reader-mode: true
   google-analytics: 
     tracking-id: G-RTR8YLS84R
     storage: none
     anonymize-ip: true
-  cookie-consent: implied
+  cookie-consent: express #implied
   search:
     location: navbar
     type: textbox
