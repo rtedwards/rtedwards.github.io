@@ -227,11 +227,14 @@ If instead we took 2 as the var in $u \sim N(2,2)$:
 Let's check our analytical solution through computational methods.  First let's check that we can indeed simply add the means and variances of independent random variables.
 
 ```{python}
-# | label: normal-rv-sum-check
+# | label: normal-rv-sum-verification
 # | code-fold: show
+import altair as alt
+import pandas as pd
 import torch
+from sklearn.neighbors import KernelDensity
 
-n = 1_000
+n = 100_000
 
 err = torch.normal(0, 1, size=(n,))
 u = torch.normal(2, 2, size=(n,))
@@ -239,15 +242,108 @@ u = torch.normal(2, 2, size=(n,))
 err_computational = err + u
 err_analytical = torch.normal(2, 5 ** (0.5), size=(n,))
 
-print(
-    f"""
-    mean: {err_computational.mean()} - {err_analytical.mean()} = {err_computational.mean() - err_analytical.mean()}
-    var:  {err_computational.var()}  - {err_analytical.var()}  = {err_computational.var()  - err_analytical.var()}
-    """
+# torch.histogram returns the endpoints of each bin, we want the middle value
+# so we find the mean of each bin range
+y, x = torch.histogram(err, density=True)
+x = torch.tensor([x[i : i + 2].mean() for i in range(0, len(x) - 1)])
+df0 = pd.DataFrame(
+    {
+        "x": x,
+        "density": y,
+        "series": ["err"] * len(x),
+    }
 )
+
+y, x = torch.histogram(u, density=True)
+x = torch.tensor([x[i : i + 2].mean() for i in range(0, len(x) - 1)])
+df1 = pd.DataFrame(
+    {
+        "x": x,
+        "density": y,
+        "series": ["u"] * len(x),
+    }
+)
+
+y, x = torch.histogram(err_computational, density=True)
+x = torch.tensor([x[i : i + 2].mean() for i in range(0, len(x) - 1)])
+df2 = pd.DataFrame(
+    {
+        "x": x,
+        "density": y,
+        "series": ["err* (computational)"] * len(x),
+    }
+)
+
+y, x = torch.histogram(err_analytical, density=True)
+x = torch.tensor([x[i : i + 2].mean() for i in range(0, len(x) - 1)])
+df3 = pd.DataFrame(
+    {
+        "x": x,
+        "density": y,
+        "series": ["err* (analytical)"] * len(x),
+    }
+)
+df = pd.concat([df0, df1, df2, df3])
+
+# Plot
+colorscheme = [
+    "#368BC1",  # blue
+    "#F2BB18",  # yellow
+    "#BB4430",  # red
+    "#8A9A67",  # green
+    "#CC771F",  # orange
+    "#8B5260",  # purple
+]
+selection = alt.selection_point(fields=["series"], bind="legend")
+
+chart = (
+    alt.Chart(df)
+    .mark_line()
+    .encode(
+        x="x:Q",
+        y="density:Q",
+        color=alt.Color(
+            "series:N", title="Random Variable", scale=alt.Scale(range=colorscheme)
+        ).legend(orient="top-right"),
+        opacity=alt.condition(selection, alt.value(0.75), alt.value(0.2)),
+    )
+    .configure(background="#f8f9fa")
+    .properties(
+        width=650,
+        padding=10,
+        title={
+            "text": f"Summing Two Independent Random Variables (n={n} samples)",
+            "subtitle": "err + u = err*",
+        },
+    )
+    .add_params(selection)
+)
+chart.display()
+
+stats_df = pd.DataFrame(
+    {
+        "mean": [
+            err.mean().item(),
+            u.mean().item(),
+            err_computational.mean().item(),
+            err_analytical.mean().item(),
+        ],
+        "var": [
+            err.var().item(),
+            u.var().item(),
+            err_computational.var().item(),
+            err_analytical.var().item(),
+        ],
+    },
+    index=["ϵ", "u", "ϵ* (computational)", "ϵ* (analytical)"],
+)
+
+print(stats_df)
 ```
 
-The error between the means and variances is small.  If we increase the sample size these errors go closer towards 0.
+In the chart, we can see $\epsilon \sim N(0,1)$ is centered on 0 while $u \sim N(2,2)$, $\epsilon^*_{\text{analytical}} \sim N(2, 5)$, and $\epsilon^*_{\text{computational}} \sim N(0, 1) + \sim N(2, 5)$  are all centered on 2.  Summing the means worked!  
+
+The variance is a bit more difficult to verify from the chart.  We can see that $\epsilon^*_{\text{analytical}}$ and $\epsilon^*_{\text{computational}}$ have the same distribution, slightly wider than $u$.  The tableThe error between the means and variances is small.  If we increase the sample size these errors move closer towards 0.
 
 Now that we're confident in random variable arithmetic, let's check the full analytical solution to a comutational one.  Below we plot the first measured sample, $y_1$, with the original signal, $y_{\text{signal}}$, as a backdrop for reference:
 
@@ -388,28 +484,9 @@ chart = (
     .configure(background="#f8f9fa")
     .properties(width=650, padding=10)
     .add_params(selection)
-)  # .interactive()
-
-chart.display()
-
-stats_df = pd.DataFrame(
-    {
-        "mean": [
-            err.mean().item(),
-            err_computational.mean().item(),
-            err_analytical.mean().item()
-            + 2,  # un grouping biases to reflect the contribution of the mean of residuals to the bias
-        ],
-        "var": [
-            err.var().item(),
-            err_computational.var().item(),
-            err_analytical.var().item(),
-        ],
-    },
-    index=["y (original)", "y* (computational)", "y* (analytical)"],
 )
 
-print(stats_df)
+chart.display()
 ```
 
 ::: {.column-margin}
