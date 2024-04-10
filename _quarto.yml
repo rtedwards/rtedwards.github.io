@@ -14,7 +14,7 @@ website:
     tracking-id: G-RTR8YLS84R
     storage: cookies
     anonymize-ip: true
-  cookie-consent: express #implied
+  cookie-consent: implied
   search:
     location: navbar
     type: textbox
