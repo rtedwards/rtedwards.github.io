@@ -12,7 +12,7 @@ website:
   reader-mode: true
   google-analytics: 
     tracking-id: G-RTR8YLS84R
-    storage: none
+    storage: cookies
     anonymize-ip: true
   cookie-consent: express #implied
   search:
