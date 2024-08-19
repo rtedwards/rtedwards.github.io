@@ -1,0 +1,237 @@
+---
+title: "Statistics on Stream Data"
+date: "2024-08-18"
+categories: [probability, machine learning, streaming]
+description: "How to calculate statistics on stream data"
+reading-time: true
+
+reference-location: document
+citation-location: document
+bibliography: references.bib
+citations-hover: true
+
+draft: true
+draft-mode: visible
+
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    code-summary: ""
+---
+
+## # Statistics on Stream Data
+
+Simple statistics are common in a number of software and data domains because they are simple to calculate and simple to understand.  Most common are the arithmetic mean and variance.  For a given set of values, $X$, the mean, $\mu$, is a measure of central tendency and locates a central value of the distribution.  The variance, $\sigma^2$, provides a measure of the dispersion of the observed values of $x$ about the central value $\mu$ [@schott2016, pp. 20-25].
+$$
+\begin{alignat*}{2}
+\text{E}(X)   &= \mu        &&= \frac{1}{N} \sum^N_{i=1} x_i \tag{mean} \\
+\text{Var}(X) &= \sigma^2   &&= \frac{1}{N} \sum^N_{i=1} (x_i - \mu)^2 \tag{population variance}
+\end{alignat*}
+$$
+
+Suppose we have a set of $N=6$ values, $X = [1, 2, 1, 2, 4, 5]$; then:
+$$
+\begin{aligned}
+\mu      &= \frac{1 + 2 + 1 + 2 + 4 + 5}{6} \\[10pt]
+\sigma^2 &= \frac{(1-2.5)^2 + (2-2.5)^2 + (1-2.5)^2 + (2-2.5)^2 + (4-2.5)^2 + (5-2.5)^2}{6}
+\end{aligned}
+$$
+
+```{python}
+# | label: mean and variance
+# | code-fold: show
+import torch
+
+X = torch.tensor([1.0, 2.0, 1.0, 2.0, 4.0, 5.0])
+
+print(f"mean = {X.mean()}")
+print(f"var  = {X.var(correction=0)}")
+print(f"sample_var = {X.var()}")
+```
+This should be no surprise if you've worked with data before and in theory, the mean and variance are straightforward to calculate.  But in practice, datasets nowadays have become very large in the age of "Big Data".  Not only are datasets now too big to fit into memory, datasets are ever growing and constantly being updated.  How do we calculate these measures if the data is too large to process in memory?  How can we update these measures when new data is added to the dataset?  Do we have to reprocess every value?  Storing large datasets can become costly but reprocessing large datasets just to recalculate a simple statistic can be prohibitive.  Many datasets have a temporal component and simple statistics can be calculated on a moving or sliding window because the most important data is the most recent data.  Many other datasets can't just calculate over a lsiding window.  For example, deep learning models are now being trained on very large datasets, i.e. the whole of the internet.Since the entire internet can't fit into memory of even the largest compute instance, these models are trained in batches.  Typically, the mean is computed over a batch ([BatchNorm](https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html)) but when evaluating the model on a hold-out dataset, we want to compute statistics over the whole of the hold-out dataset.
+
+We could just keep a running sum of the numerator and running count of the denominator but there are some drawbacks.  Calculating the numerator of the mean could result in an [arithmetic overflow](https://en.wikipedia.org/wiki/Integer_overflow) when dealing with large numbers. Calculating the numerator of the variance involves recalculating the mean for each new batch of data and involves calculating the sums of squares, which can lead to [numerical instability](https://en.wikipedia.org/wiki/Numerical_stability). 
+
+Suppose our dataset arrives in batches of 2: $X = [[1, 2], [1, 2], [4, 5]]$.  We can update the mean and sample variance as:
+
+::: {.callout-tip}
+## Use the sample variance
+
+Since most datasets don't truely sample the whole population and because each batch is effectively a sample, we'll want to compute the sample variance, $s^2$, rather than the population variance.
+
+$$
+\text{Var}(X) = s^2 = \frac{1}{n-1} \sum^N_{i=1} (x_i - \mu)^2 \tag{sample variance}
+$$
+:::
+
+$$
+\boxed{
+\begin{align}
+\mu &= \frac{a}{a+b} \mu_a + \frac{b}{a+b} \mu_b \\[10pt]
+s^2 &= \underbrace{\frac{1}{a+b-1}}_{\text{Bessel's correction}} \Bigg[ \underbrace{\frac{a-1}{a+b} s_a^2 + \frac{b-1}{a+b} s_b^2}_{\text{within sample variance}} + \underbrace{\frac{ab}{a+b}(\mu_a - \mu_b)^2}_{\text{between sample variance}} \Bigg]
+\end{align}
+}
+$$
+
+where: 
+
+- $a$ is the running count of all values seen so far
+- $b$ is the count of the values in the new batch of data
+- $\mu_a$ is the mean of all values seen so far
+- $\mu_b$ is the mean of the new batch of data
+- $s_a^2$ is the sample variance of all the values seen so far
+- $s_b^2$ is the sample variance of the new batch of data
+
+
+The updated mean is a linear combination of the mean over the seen data and the mean over new data.  The updated variance is a linear combination of the seen data variance and new data variance plus a correction by the means.
+
+```{python}
+# | label: batch update mean and variance
+# | code-fold: show
+import torch
+
+def update_mean(a: int, b: int, mean_a: float, mean_b: float) -> float:
+    return (a * mean_a + b * mean_b) / (a + b)
+
+def update_variance(a: int, b: int, mean_a: float, mean_b: float, var_a: float, var_b: float) -> float:
+    
+    within_sample_var = (a - 1) * var_a + (b - 1) * var_b
+    between_sample_var = (a*b) / (a+b) * (mean_a - mean_b)**2
+    
+    return (within_sample_var + between_sample_var) / (a+b-1)
+
+X = torch.tensor([[1.0, 2.0], [1.0, 2.0], [4.0, 5.0]])
+
+# while not strictly correct, we can initialize 
+# the mean and variance to 0 rather than NaN
+count = 0
+mean = 0.0
+var = 0.0
+for x in X:
+    mean_updated = update_mean(count, x.numel(), mean, x.mean())
+    var_updated = update_variance(count, x.numel(), mean, x.mean(), var, x.var())
+    
+    count += x.numel()
+    mean = mean_updated
+    var = var_updated
+
+assert mean == X.mean()
+assert var == X.var()
+
+print(f"mean = {mean}")
+print(f"var  = {var}")
+```
+
+## Derivation
+
+### Batch Update Mean
+
+$$
+\begin{align}
+\mu = \frac{1}{n} \sum_{i=1}^n x_i \tag{1} \\
+n \mu = \sum_{i=1}^n x_i \tag{2}
+\end{align}
+$$
+
+We can think of the two batches we are combining as two ranges that are being combined.  So if batch A is between $[1, a]$ and batch B is between $[1, b]$ and we are starting with batch A and adding batch B, the combined range is then $[1, a+b]$, where the total number of samples observed is $n=a+b$.
+
+$$
+\sum_{i=1}^{a+b} = \sum_{i=1}^{a} + \sum_{i=a+1}^{a+b} \tag{3} 
+$$
+ 
+Knowing this we can express the combined mean as:
+
+$$
+\begin{align}
+\mu &= \frac{1}{a+b} \sum_{i=1}^{a+b} x_i \\
+    &= \frac{1}{a+b} \left( \sum_{i=1}^{a} x_i + \sum_{i=a+1}^{a+b} x_i \right) \tag*{split the sum using eq 3} \\
+    &= \frac{1}{a+b} \Big( a\mu_a + b\mu_b \Big) \tag*{substitute with eq 2} \\
+\Aboxed{
+  \mu &= \frac{a}{a+b} \mu_a + \frac{b}{a+b} \mu_b
+} \tag{4}
+\end{align}
+$$
+
+### Batch Update Variance
+
+For the variance, we'll first derive the population variance and then work out the sample variance.
+
+Let's start by simplifying the variance equation.
+
+$$
+\begin{align}
+\sigma^2 &= \frac{1}{n} \sum_{i=1}^n (x_i - \mu)^2 \\
+  &= \frac{1}{n} \sum_{i=1}^n \left( x_i^2 - 2\mu x_i + \mu^2 \right) \tag*{complete the square} \\
+  &= \frac{1}{n} \left[ \sum_{i=1}^n x_i^2 - 2\mu \sum_{i=1}^n x_i \mu^2 \right] \tag*{distribute the sum} \\
+  &= \frac{1}{n} \sum_{i=1}^n x_i^2 - 2\mu \frac{1}{n} \sum_{i=1}^n x_i + \mu^2  \tag*{substitute eq 1} \\
+  &= \frac{1}{n} \sum_{i=1}^n x_i^2 - 2\mu^2 + \mu^2 \tag*{simplify} \\
+\sigma^2 &= \frac{1}{n} \sum_{i=1}^n x_i^2  - \mu^2 \tag{5} \\
+\sigma^2 + \mu^2 &= \frac{1}{n} \sum_{i=1}^n x_i^2 \tag{6}
+\end{align}
+$$
+
+Now, we can follow a similar process as we did when working out the combined mean, starting from equation 5.
+
+$$
+\begin{align}
+\sigma^2 &= \frac{1}{a+b} \sum_{i=1}^{a+b} x_i^2 - \mu^2 \tag{split the sum using eq 3} \\
+         &= \frac{1}{a+b} \left( \sum_{i=1}^{a} x_i^2 + \sum_{i=a+1}^{a+b} x_i^2 \right) - \mu^2 \tag{distribute} \\
+         &= \frac{1}{a+b} \sum_{i=1}^{a} x_i^2 + \frac{1}{a+b} \sum_{i=a+1}^{a+b} x_i^2 - \mu^2 \tag{multiply by one} \\
+         &= \frac{1}{a+b} \frac{a}{1} \underbrace{\frac{1}{a} \sum_{i=1}^{a} x_i^2}_{\sigma_a^2 + \mu_a^2} + \frac{1}{a+b} \frac{b}{1} \underbrace{\frac{1}{b} \sum_{i=a+1}^{a+b} x_i^2}_{\sigma_b^2 + \mu_b^2} - \mu^2 \tag{substitute using eq 6} \\
+         &= \frac{a}{a+b} \left( \sigma_a^2 + \mu_a^2 \right) + \frac{b}{a+b} \left( \sigma_b^2 + \mu_b^2 \right) - \mu^2 \tag{substitute with eq 4} \\
+         &= \frac{a}{a+b} \left( \sigma_a^2 + \mu_a^2 \right) + \frac{b}{a+b} \left( \sigma_b^2 + \mu_b^2 \right) - \left( \frac{a}{a+b} \mu_a + \frac{b}{a+b} \mu_b \right) \tag{simplify} \\
+\Aboxed{
+  \sigma^2        &= \underbrace{\frac{a}{a+b} \sigma_a^2 + \frac{b}{a+b} \sigma_b^2}_{\text{within group variance}} + \underbrace{\frac{ab}{(a+b)^2} \big( \mu_a - \mu_b \big)^2}_{\text{between group variance}}
+}
+\end{align}
+$$
+
+Now, to find the sample variance, $s^2$, we can use [Bessel's correction](https://en.wikipedia.org/wiki/Bessel%27s_correction), $\frac{n}{n-1}$:
+
+$$
+\begin{align}
+s^2 &= \frac{n}{n-1}\sigma^2 \\
+\frac{n-1}{n} s^2 &= \sigma^2 \tag{7}
+\end{align}
+$$
+
+then we have:
+
+$$
+\begin{align}
+\sigma^2 = \frac{a+b-1}{a+b} s^2 \\
+\sigma_a^2 = \frac{a-1}{a} s_a^2 \\
+\sigma_b^2 = \frac{b-1}{b} s_b^2
+\end{align}
+$$
+
+we can then substitute these in to find the sample variance,
+
+$$
+\begin{align}
+\sigma^2 &= \frac{a}{a+b} \sigma_a^2 + \frac{b}{a+b} \sigma_b^2 + \frac{ab}{(a+b)^2} \big( \mu_a - \mu_b \big)^2 \tag{factor out} \\
+         &= \frac{1}{a+b} \left[ a\sigma_a^2 + b \sigma_b^2 + \frac{ab}{(a+b)} \big( \mu_a - \mu_b \big)^2 \right] \tag{substitute} \\
+ \frac{a+b-1}{a+b}\sigma^2 &= \frac{1}{a+b} \left[ a \left(\frac{a-1}{a}\sigma_a^2 \right) + b \left( \frac{b-1}{b} \sigma_b^2 \right) + \frac{ab}{(a+b)} \big( \mu_a - \mu_b \big)^2 \right] \tag{simplify} \\
+\Aboxed{
+  s^2 &= \frac{1}{a+b-1} \left[ (a-1) s_a^2 + (b-1) s_b^2 + \frac{ab}{(a+b)} \big( \mu_a - \mu_b \big)^2 \right]
+}
+\end{align}
+$$
+
+
+## Excersises Left Up to the Reader
+
+Now that you know how to derive batch updates for the mean and variance, you should be well-equiped to derive the covariance, $\text{Cov}$, and pearson correlation, $r$:
+
+$$
+\begin{align}
+\text{Cov}(X, Y) &= \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y}) \\[10pt]
+\rho(X) &= \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})} {\sqrt{ \sum_{i=1}^n (x_i - \bar{x})^2 \sum_{i=1}^n (y_i - \bar{y})^2 }} \\[10pt]
+\rho(X, Y) &= \frac{\text{Cov}(X, Y)}{\sqrt{\text{Var}(X) \text{Var}(Y)}}
+\end{align}
+$$
+
+## Further Reading
+
+- See this [leetcode problem](https://leetcode.com/problems/find-median-from-data-stream/description/) about calculating the median from a data stream.
