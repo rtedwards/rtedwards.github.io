@@ -2,22 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://rtedwards.github.io/about.html</loc>
-    <lastmod>2024-01-07T23:49:47.575Z</lastmod>
+    <lastmod>2025-04-13T17:43:17.695Z</lastmod>
   </url>
   <url>
     <loc>https://rtedwards.github.io/posts/waltzing_with_the_walrus/index.html</loc>
-    <lastmod>2024-01-13T23:35:21.401Z</lastmod>
+    <lastmod>2024-04-01T11:29:53.344Z</lastmod>
   </url>
   <url>
     <loc>https://rtedwards.github.io/index.html</loc>
-    <lastmod>2024-01-13T23:35:21.407Z</lastmod>
+    <lastmod>2024-04-01T11:29:53.341Z</lastmod>
   </url>
   <url>
     <loc>https://rtedwards.github.io/posts/summing_random_variables/index.html</loc>
-    <lastmod>2024-01-15T21:08:59.835Z</lastmod>
+    <lastmod>2025-04-13T17:34:49.489Z</lastmod>
   </url>
   <url>
     <loc>https://rtedwards.github.io/LICENSE.html</loc>
     <lastmod>2024-01-14T00:32:26.202Z</lastmod>
+  </url>
+  <url>
+    <loc>https://rtedwards.github.io/posts/deep-learning-notes/index.html</loc>
+    <lastmod>2024-06-21T08:05:32.295Z</lastmod>
+  </url>
+  <url>
+    <loc>https://rtedwards.github.io/posts/career_tips/index.html</loc>
+    <lastmod>2024-06-05T13:19:33.957Z</lastmod>
+  </url>
+  <url>
+    <loc>https://rtedwards.github.io/posts/parquet_metadata/index.html</loc>
+    <lastmod>2025-03-10T00:30:48.200Z</lastmod>
+  </url>
+  <url>
+    <loc>https://rtedwards.github.io/notebooks/parquet_metadata.html</loc>
+    <lastmod>2025-03-09T23:49:01.200Z</lastmod>
+  </url>
+  <url>
+    <loc>https://rtedwards.github.io/posts/stream-statistics/index.html</loc>
+    <lastmod>2025-04-13T17:35:02.324Z</lastmod>
   </url>
 </urlset>
