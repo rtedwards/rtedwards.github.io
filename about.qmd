@@ -15,6 +15,7 @@ about:
 Using this blog as a creative writing outlet to explore:
 
 **statistics** | **machine learning** | **distributed systems** | **geospatial**
+
 ---
 I was once nicknamed Beartoes through a chain of thought multiple links long.  It's grown on me.
 

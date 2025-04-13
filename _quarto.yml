@@ -7,7 +7,6 @@ website:
   site-url: https://rtedwards.github.io/
   favicon: icon/profile-circle.png
   page-navigation: true
-  twitter-card: true
   open-graph: true
   reader-mode: true
   google-analytics:
