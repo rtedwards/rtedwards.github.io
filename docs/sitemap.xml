@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://rtedwards.github.io/about.html</loc>
-    <lastmod>2025-04-13T17:43:17.695Z</lastmod>
+    <lastmod>2025-04-13T17:44:16.299Z</lastmod>
   </url>
   <url>
     <loc>https://rtedwards.github.io/posts/waltzing_with_the_walrus/index.html</loc>
@@ -14,7 +14,7 @@
   </url>
   <url>
     <loc>https://rtedwards.github.io/posts/summing_random_variables/index.html</loc>
-    <lastmod>2025-04-13T17:34:49.489Z</lastmod>
+    <lastmod>2025-04-13T17:35:01.513Z</lastmod>
   </url>
   <url>
     <loc>https://rtedwards.github.io/LICENSE.html</loc>
@@ -26,6 +26,10 @@
   </url>
   <url>
     <loc>https://rtedwards.github.io/posts/stream-statistics/index.html</loc>
-    <lastmod>2025-04-13T17:47:19.139Z</lastmod>
+    <lastmod>2025-04-13T17:47:45.260Z</lastmod>
+  </url>
+  <url>
+    <loc>https://rtedwards.github.io/posts/index.html</loc>
+    <lastmod>2025-04-13T18:13:19.434Z</lastmod>
   </url>
 </urlset>

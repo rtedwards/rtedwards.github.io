@@ -10,7 +10,7 @@ website:
   twitter-card: true
   open-graph: true
   reader-mode: true
-  google-analytics: 
+  google-analytics:
     tracking-id: G-RTR8YLS84R
     storage: cookies
     anonymize-ip: true
@@ -35,7 +35,7 @@ website:
         href: index.xml
         aria-label: RSS
   page-footer:
-    center: 
+    center:
       - text: "About"
         href: about.qmd
       - text: "License"
@@ -43,7 +43,7 @@ website:
       # - text: "Trademark"
       #   href: trademark.qmd
       # - text: ☕️
-        # href: coffee.qmd
+      # href: coffee.qmd
 format:
   html:
     theme:
@@ -51,6 +51,3 @@ format:
       light: css/light.scss
 
 highlight-style: atom-one #github #gruvbox #breeze
-
-
-
