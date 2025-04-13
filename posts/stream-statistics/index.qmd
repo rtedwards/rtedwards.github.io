@@ -10,9 +10,6 @@ citation-location: document
 bibliography: references.bib
 citations-hover: true
 
-draft: true
-draft-mode: visible
-
 format:
   html:
     code-fold: true
