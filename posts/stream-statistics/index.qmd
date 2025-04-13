@@ -17,7 +17,7 @@ format:
     code-summary: ""
 ---
 
-## # Simple
+## # Simple Statistics
 
 Simple statistics are common in a number of software and data domains because they are simple to calculate and simple to understand.  Most common are the arithmetic mean and variance.  For a given set of values, $X$, the mean, $\mu$, is a measure of central tendency and locates a central value of the distribution.  The variance, $\sigma^2$, provides a measure of the dispersion of the observed values of $x$ about the central value $\mu$ [@schott2016, pp. 20-25].
 $$
@@ -124,7 +124,7 @@ print(f"var = {var}")
 print(f"sample_var = {sample_var}")
 ```
 
-## Derivation
+## # Derivation
 
 ### Batch Updating the Mean
 
@@ -230,7 +230,7 @@ $$
 
 These formulas for updating the mean and variance are particularly for streaming or large datasets as only the necessary statistics (count, mean, variance) are maintained rather than storing all values, making it memory-efficient and parallelizable and also numerically stable.
 
-## Excersises Left Up to the Reader
+## # Excersises Left Up to the Reader
 
 Now that you know how to derive batch updates for the mean and variance, you should be well-equiped to derive the covariance, $\text{Cov}$, and pearson correlation, $\rho$:
 
@@ -242,7 +242,7 @@ $$
 \end{align}
 $$
 
-## Further Reading
+## # Further Reading
 
 - See this [leetcode problem](https://leetcode.com/problems/find-median-from-data-stream/description/) about calculating the median from a data stream.
 - [torcheval](https://pytorch.org/torcheval/stable/) is a library for calculating metrics are out-of-core datasets.

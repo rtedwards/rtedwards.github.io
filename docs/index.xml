@@ -19,8 +19,8 @@
 
 
 
-<section id="simple" class="level2">
-<h2 class="anchored" data-anchor-id="simple"># Simple</h2>
+<section id="simple-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="simple-statistics"># Simple Statistics</h2>
 <p>Simple statistics are common in a number of software and data domains because they are simple to calculate and simple to understand. Most common are the arithmetic mean and variance. For a given set of values, <img src="https://latex.codecogs.com/png.latex?X">, the mean, <img src="https://latex.codecogs.com/png.latex?%5Cmu">, is a measure of central tendency and locates a central value of the distribution. The variance, <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2">, provides a measure of the dispersion of the observed values of <img src="https://latex.codecogs.com/png.latex?x"> about the central value <img src="https://latex.codecogs.com/png.latex?%5Cmu"> <span class="citation" data-cites="schott2016">(Schott 2016, 20–25)</span>. <img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balignat*%7D%7B2%7D%0A%5Ctext%7BE%7D(X)%20%20%20&amp;=%20%5Cmu%20%20%20%20%20%20%20%20&amp;&amp;=%20%5Cfrac%7B1%7D%7BN%7D%20%5Csum%5EN_%7Bi=1%7D%20x_i%20%5Ctag%7Bmean%7D%20%5C%5C%0A%5Ctext%7BVar%7D(X)%20&amp;=%20%5Csigma%5E2%20%20%20&amp;&amp;=%20%5Cfrac%7B1%7D%7BN%7D%20%5Csum%5EN_%7Bi=1%7D%20(x_i%20-%20%5Cmu)%5E2%20%5Ctag%7Bpopulation%20variance%7D%0A%5Cend%7Balignat*%7D%0A"></p>
 <p>Suppose we have a set of <img src="https://latex.codecogs.com/png.latex?N=6"> values, <img src="https://latex.codecogs.com/png.latex?X%20=%20%5B1,%202,%201,%202,%204,%205%5D">; then: <img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Baligned%7D%0A%5Cmu%20%20%20%20%20%20&amp;=%20%5Cfrac%7B1%20+%202%20+%201%20+%202%20+%204%20+%205%7D%7B6%7D%20%5C%5C%5B10pt%5D%0A%5Csigma%5E2%20&amp;=%20%5Cfrac%7B(1-2.5)%5E2%20+%20(2-2.5)%5E2%20+%20(1-2.5)%5E2%20+%20(2-2.5)%5E2%20+%20(4-2.5)%5E2%20+%20(5-2.5)%5E2%7D%7B6%7D%0A%5Cend%7Baligned%7D%0A"></p>
 <div id="mean-and-variance" class="cell" data-execution_count="1">
@@ -396,7 +396,7 @@ sample_var = 2.700000047683716</code></pre>
 </div>
 </section>
 <section id="derivation" class="level2">
-<h2 class="anchored" data-anchor-id="derivation">Derivation</h2>
+<h2 class="anchored" data-anchor-id="derivation"># Derivation</h2>
 <section id="batch-updating-the-mean" class="level3">
 <h3 class="anchored" data-anchor-id="batch-updating-the-mean">Batch Updating the Mean</h3>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Cmu%20=%20%5Cfrac%7B1%7D%7Bn%7D%20%5Csum_%7Bi=1%7D%5En%20x_i%20%5Ctag%7B1%7D%20%5C%5C%0An%20%5Cmu%20=%20%5Csum_%7Bi=1%7D%5En%20x_i%20%5Ctag%7B2%7D%0A%5Cend%7Balign%7D%0A"></p>
@@ -432,12 +432,12 @@ sample_var = 2.700000047683716</code></pre>
 </section>
 </section>
 <section id="excersises-left-up-to-the-reader" class="level2">
-<h2 class="anchored" data-anchor-id="excersises-left-up-to-the-reader">Excersises Left Up to the Reader</h2>
+<h2 class="anchored" data-anchor-id="excersises-left-up-to-the-reader"># Excersises Left Up to the Reader</h2>
 <p>Now that you know how to derive batch updates for the mean and variance, you should be well-equiped to derive the covariance, <img src="https://latex.codecogs.com/png.latex?%5Ctext%7BCov%7D">, and pearson correlation, <img src="https://latex.codecogs.com/png.latex?%5Crho">:</p>
 <p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Ctext%7BCov%7D(X,%20Y)%20&amp;=%20%5Cfrac%7B1%7D%7Bn%7D%20%5Csum_%7Bi=1%7D%5En%20(x_i%20-%20%5Cbar%7Bx%7D)(y_i%20-%20%5Cbar%7By%7D)%20%5C%5C%5B10pt%5D%0A%5Crho(X)%20&amp;=%20%5Cfrac%7B%5Csum_%7Bi=1%7D%5En%20(x_i%20-%20%5Cbar%7Bx%7D)(y_i%20-%20%5Cbar%7By%7D)%7D%20%7B%5Csqrt%7B%20%5Csum_%7Bi=1%7D%5En%20(x_i%20-%20%5Cbar%7Bx%7D)%5E2%20%5Csum_%7Bi=1%7D%5En%20(y_i%20-%20%5Cbar%7By%7D)%5E2%20%7D%7D%20%5C%5C%5B10pt%5D%0A%5Crho(X,%20Y)%20&amp;=%20%5Cfrac%7B%5Ctext%7BCov%7D(X,%20Y)%7D%7B%5Csqrt%7B%5Ctext%7BVar%7D(X)%20%5Ctext%7BVar%7D(Y)%7D%7D%0A%5Cend%7Balign%7D%0A"></p>
 </section>
 <section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
+<h2 class="anchored" data-anchor-id="further-reading"># Further Reading</h2>
 <ul>
 <li>See this <a href="https://leetcode.com/problems/find-median-from-data-stream/description/">leetcode problem</a> about calculating the median from a data stream.</li>
 <li><a href="https://pytorch.org/torcheval/stable/">torcheval</a> is a library for calculating metrics are out-of-core datasets.</li>
