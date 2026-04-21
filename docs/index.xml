@@ -10,11 +10,1280 @@
 <atom:link href="https://rtedwards.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.37</generator>
-<lastBuildDate>Fri, 31 May 2024 23:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 13 Apr 2025 23:00:00 GMT</lastBuildDate>
+<item>
+  <title></title>
+  <link>https://rtedwards.github.io/posts/torch-distributed-explained/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+
+
+ ]]></description>
+  <category>deep learning</category>
+  <category>pytorch</category>
+  <category>distributed systems</category>
+  <guid>https://rtedwards.github.io/posts/torch-distributed-explained/</guid>
+  <pubDate>Sun, 13 Apr 2025 23:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Statistics on Stream Data</title>
+  <link>https://rtedwards.github.io/posts/stream-statistics/</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="statistics-on-stream-data" class="level2">
+<h2 class="anchored" data-anchor-id="statistics-on-stream-data"># Statistics on Stream Data</h2>
+<p>Simple statistics are common in a number of software and data domains because they are simple to calculate and simple to understand. Most common are the arithmetic mean and variance. For a given set of values, <img src="https://latex.codecogs.com/png.latex?X">, the mean, <img src="https://latex.codecogs.com/png.latex?%5Cmu">, is a measure of central tendency and locates a central value of the distribution. The variance, <img src="https://latex.codecogs.com/png.latex?%5Csigma%5E2">, provides a measure of the dispersion of the observed values of <img src="https://latex.codecogs.com/png.latex?x"> about the central value <img src="https://latex.codecogs.com/png.latex?%5Cmu"> <span class="citation" data-cites="schott2016">(Schott 2016, 20–25)</span>. <img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balignat*%7D%7B2%7D%0A%5Ctext%7BE%7D(X)%20%20%20&amp;=%20%5Cmu%20%20%20%20%20%20%20%20&amp;&amp;=%20%5Cfrac%7B1%7D%7BN%7D%20%5Csum%5EN_%7Bi=1%7D%20x_i%20%5Ctag%7Bmean%7D%20%5C%5C%0A%5Ctext%7BVar%7D(X)%20&amp;=%20%5Csigma%5E2%20%20%20&amp;&amp;=%20%5Cfrac%7B1%7D%7BN%7D%20%5Csum%5EN_%7Bi=1%7D%20(x_i%20-%20%5Cmu)%5E2%20%5Ctag%7Bpopulation%20variance%7D%0A%5Cend%7Balignat*%7D%0A"></p>
+<p>Suppose we have a set of <img src="https://latex.codecogs.com/png.latex?N=6"> values, <img src="https://latex.codecogs.com/png.latex?X%20=%20%5B1,%202,%201,%202,%204,%205%5D">; then: <img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Baligned%7D%0A%5Cmu%20%20%20%20%20%20&amp;=%20%5Cfrac%7B1%20+%202%20+%201%20+%202%20+%204%20+%205%7D%7B6%7D%20%5C%5C%5B10pt%5D%0A%5Csigma%5E2%20&amp;=%20%5Cfrac%7B(1-2.5)%5E2%20+%20(2-2.5)%5E2%20+%20(1-2.5)%5E2%20+%20(2-2.5)%5E2%20+%20(4-2.5)%5E2%20+%20(5-2.5)%5E2%7D%7B6%7D%0A%5Cend%7Baligned%7D%0A"></p>
+<div id="mean-and-variance" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> torch</span>
+<span id="cb1-2"></span>
+<span id="cb1-3">X <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.tensor([<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5.0</span>])</span>
+<span id="cb1-4"></span>
+<span id="cb1-5"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"mean = </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>X<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>mean()<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb1-6"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"var  = </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>X<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>var(correction<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb1-7"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"sample_var = </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>X<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>var()<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>mean = 2.5
+var  = 2.25
+sample_var = 2.700000047683716</code></pre>
+</div>
+</div>
+<p>This should be no surprise if you’ve worked with data before and in theory, the mean and variance are straightforward to calculate. But in practice, datasets nowadays have become very large in the age of “Big Data”. Not only are datasets now too big to fit into memory, datasets are ever growing and constantly being updated. How do we calculate these measures if the data is too large to process in memory? How can we update these measures when new data is added to the dataset? Do we have to reprocess every value? Storing large datasets can become costly but reprocessing large datasets just to recalculate a simple statistic can be prohibitive. Many datasets have a temporal component and simple statistics can be calculated on a moving or sliding window because the most important data is the most recent data. Many other datasets can’t just calculate over a lsiding window. For example, deep learning models are now being trained on very large datasets, i.e.&nbsp;the whole of the internet.Since the entire internet can’t fit into memory of even the largest compute instance, these models are trained in batches. Typically, the mean is computed over a batch (<a href="https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html">BatchNorm</a>) but when evaluating the model on a hold-out dataset, we want to compute statistics over the whole of the hold-out dataset.</p>
+<p>We could just keep a running sum of the numerator and running count of the denominator but there are some drawbacks. Calculating the numerator of the mean could result in an <a href="https://en.wikipedia.org/wiki/Integer_overflow">arithmetic overflow</a> when dealing with large numbers. Calculating the numerator of the variance involves recalculating the mean for each new batch of data and involves calculating the sums of squares, which can lead to <a href="https://en.wikipedia.org/wiki/Numerical_stability">numerical instability</a>.</p>
+<p>Suppose our dataset arrives in batches of 2: <img src="https://latex.codecogs.com/png.latex?X%20=%20%5B%5B1,%202%5D,%20%5B1,%202%5D,%20%5B4,%205%5D%5D">. We can update the mean and sample variance as:</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Use the sample variance
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Since most datasets don’t truely sample the whole population and because each batch is effectively a sample, we’ll want to compute the sample variance, <img src="https://latex.codecogs.com/png.latex?s%5E2">, rather than the population variance.</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctext%7BVar%7D(X)%20=%20s%5E2%20=%20%5Cfrac%7B1%7D%7Bn-1%7D%20%5Csum%5EN_%7Bi=1%7D%20(x_i%20-%20%5Cmu)%5E2%20%5Ctag%7Bsample%20variance%7D%0A"></p>
+</div>
+</div>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cboxed%7B%0A%5Cbegin%7Balign%7D%0A%5Cmu%20&amp;=%20%5Cfrac%7Ba%7D%7Ba+b%7D%20%5Cmu_a%20+%20%5Cfrac%7Bb%7D%7Ba+b%7D%20%5Cmu_b%20%5C%5C%5B10pt%5D%0As%5E2%20&amp;=%20%5Cunderbrace%7B%5Cfrac%7B1%7D%7Ba+b-1%7D%7D_%7B%5Ctext%7BBessel's%20correction%7D%7D%20%5CBigg%5B%20%5Cunderbrace%7B%5Cfrac%7Ba-1%7D%7Ba+b%7D%20s_a%5E2%20+%20%5Cfrac%7Bb-1%7D%7Ba+b%7D%20s_b%5E2%7D_%7B%5Ctext%7Bwithin%20sample%20variance%7D%7D%20+%20%5Cunderbrace%7B%5Cfrac%7Bab%7D%7Ba+b%7D(%5Cmu_a%20-%20%5Cmu_b)%5E2%7D_%7B%5Ctext%7Bbetween%20sample%20variance%7D%7D%20%5CBigg%5D%0A%5Cend%7Balign%7D%0A%7D%0A"></p>
+<p>where:</p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?a"> is the running count of all values seen so far</li>
+<li><img src="https://latex.codecogs.com/png.latex?b"> is the count of the values in the new batch of data</li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cmu_a"> is the mean of all values seen so far</li>
+<li><img src="https://latex.codecogs.com/png.latex?%5Cmu_b"> is the mean of the new batch of data</li>
+<li><img src="https://latex.codecogs.com/png.latex?s_a%5E2"> is the sample variance of all the values seen so far</li>
+<li><img src="https://latex.codecogs.com/png.latex?s_b%5E2"> is the sample variance of the new batch of data</li>
+</ul>
+<p>The updated mean is a linear combination of the mean over the seen data and the mean over new data. The updated variance is a linear combination of the seen data variance and new data variance plus a correction by the means.</p>
+<div id="batch-update-mean-and-variance" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> torch</span>
+<span id="cb3-2"></span>
+<span id="cb3-3"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> update_mean(a: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>, b: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>, mean_a: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>, mean_b: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>:</span>
+<span id="cb3-4">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> (a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> mean_a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> b <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> mean_b) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> (a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> b)</span>
+<span id="cb3-5"></span>
+<span id="cb3-6"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> update_variance(a: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>, b: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>, mean_a: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>, mean_b: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>, var_a: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>, var_b: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>:</span>
+<span id="cb3-7">    </span>
+<span id="cb3-8">    within_sample_var <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> var_a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> (b <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> var_b</span>
+<span id="cb3-9">    between_sample_var <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (a<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>b) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> (a<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span>b) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> (mean_a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> mean_b)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span></span>
+<span id="cb3-10">    </span>
+<span id="cb3-11">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> (within_sample_var <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> between_sample_var) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> (a<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span>b<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb3-12"></span>
+<span id="cb3-13">X <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> torch.tensor([[<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.0</span>], [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.0</span>], [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5.0</span>]])</span>
+<span id="cb3-14"></span>
+<span id="cb3-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># while not strictly correct, we can initialize </span></span>
+<span id="cb3-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the mean and variance to 0 rather than NaN</span></span>
+<span id="cb3-17">count <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span></span>
+<span id="cb3-18">mean <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span></span>
+<span id="cb3-19">var <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span></span>
+<span id="cb3-20"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> x <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> X:</span>
+<span id="cb3-21">    mean_updated <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> update_mean(count, x.numel(), mean, x.mean())</span>
+<span id="cb3-22">    var_updated <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> update_variance(count, x.numel(), mean, x.mean(), var, x.var())</span>
+<span id="cb3-23">    </span>
+<span id="cb3-24">    count <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+=</span> x.numel()</span>
+<span id="cb3-25">    mean <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> mean_updated</span>
+<span id="cb3-26">    var <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> var_updated</span>
+<span id="cb3-27"></span>
+<span id="cb3-28"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">assert</span> mean <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> X.mean()</span>
+<span id="cb3-29"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">assert</span> var <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> X.var()</span>
+<span id="cb3-30"></span>
+<span id="cb3-31"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"mean = </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>mean<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb3-32"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"var  = </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>var<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>mean = 2.5
+var  = 2.700000047683716</code></pre>
+</div>
+</div>
+</section>
+<section id="derivation" class="level2">
+<h2 class="anchored" data-anchor-id="derivation">Derivation</h2>
+<section id="batch-update-mean" class="level3">
+<h3 class="anchored" data-anchor-id="batch-update-mean">Batch Update Mean</h3>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Cmu%20=%20%5Cfrac%7B1%7D%7Bn%7D%20%5Csum_%7Bi=1%7D%5En%20x_i%20%5Ctag%7B1%7D%20%5C%5C%0An%20%5Cmu%20=%20%5Csum_%7Bi=1%7D%5En%20x_i%20%5Ctag%7B2%7D%0A%5Cend%7Balign%7D%0A"></p>
+<p>We can think of the two batches we are combining as two ranges that are being combined. So if batch A is between <img src="https://latex.codecogs.com/png.latex?%5B1,%20a%5D"> and batch B is between <img src="https://latex.codecogs.com/png.latex?%5B1,%20b%5D"> and we are starting with batch A and adding batch B, the combined range is then <img src="https://latex.codecogs.com/png.latex?%5B1,%20a+b%5D">, where the total number of samples observed is <img src="https://latex.codecogs.com/png.latex?n=a+b">.</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Csum_%7Bi=1%7D%5E%7Ba+b%7D%20=%20%5Csum_%7Bi=1%7D%5E%7Ba%7D%20+%20%5Csum_%7Bi=a+1%7D%5E%7Ba+b%7D%20%5Ctag%7B3%7D%0A"></p>
+<p>Knowing this we can express the combined mean as:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Cmu%20&amp;=%20%5Cfrac%7B1%7D%7Ba+b%7D%20%5Csum_%7Bi=1%7D%5E%7Ba+b%7D%20x_i%20%5C%5C%0A%20%20%20%20&amp;=%20%5Cfrac%7B1%7D%7Ba+b%7D%20%5Cleft(%20%5Csum_%7Bi=1%7D%5E%7Ba%7D%20x_i%20+%20%5Csum_%7Bi=a+1%7D%5E%7Ba+b%7D%20x_i%20%5Cright)%20%5Ctag*%7Bsplit%20the%20sum%20using%20eq%203%7D%20%5C%5C%0A%20%20%20%20&amp;=%20%5Cfrac%7B1%7D%7Ba+b%7D%20%5CBig(%20a%5Cmu_a%20+%20b%5Cmu_b%20%5CBig)%20%5Ctag*%7Bsubstitute%20with%20eq%202%7D%20%5C%5C%0A%5CAboxed%7B%0A%20%20%5Cmu%20&amp;=%20%5Cfrac%7Ba%7D%7Ba+b%7D%20%5Cmu_a%20+%20%5Cfrac%7Bb%7D%7Ba+b%7D%20%5Cmu_b%0A%7D%20%5Ctag%7B4%7D%0A%5Cend%7Balign%7D%0A"></p>
+</section>
+<section id="batch-update-variance" class="level3">
+<h3 class="anchored" data-anchor-id="batch-update-variance">Batch Update Variance</h3>
+<p>For the variance, we’ll first derive the population variance and then work out the sample variance.</p>
+<p>Let’s start by simplifying the variance equation.</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Csigma%5E2%20&amp;=%20%5Cfrac%7B1%7D%7Bn%7D%20%5Csum_%7Bi=1%7D%5En%20(x_i%20-%20%5Cmu)%5E2%20%5C%5C%0A%20%20&amp;=%20%5Cfrac%7B1%7D%7Bn%7D%20%5Csum_%7Bi=1%7D%5En%20%5Cleft(%20x_i%5E2%20-%202%5Cmu%20x_i%20+%20%5Cmu%5E2%20%5Cright)%20%5Ctag*%7Bcomplete%20the%20square%7D%20%5C%5C%0A%20%20&amp;=%20%5Cfrac%7B1%7D%7Bn%7D%20%5Cleft%5B%20%5Csum_%7Bi=1%7D%5En%20x_i%5E2%20-%202%5Cmu%20%5Csum_%7Bi=1%7D%5En%20x_i%20%5Cmu%5E2%20%5Cright%5D%20%5Ctag*%7Bdistribute%20the%20sum%7D%20%5C%5C%0A%20%20&amp;=%20%5Cfrac%7B1%7D%7Bn%7D%20%5Csum_%7Bi=1%7D%5En%20x_i%5E2%20-%202%5Cmu%20%5Cfrac%7B1%7D%7Bn%7D%20%5Csum_%7Bi=1%7D%5En%20x_i%20+%20%5Cmu%5E2%20%20%5Ctag*%7Bsubstitute%20eq%201%7D%20%5C%5C%0A%20%20&amp;=%20%5Cfrac%7B1%7D%7Bn%7D%20%5Csum_%7Bi=1%7D%5En%20x_i%5E2%20-%202%5Cmu%5E2%20+%20%5Cmu%5E2%20%5Ctag*%7Bsimplify%7D%20%5C%5C%0A%5Csigma%5E2%20&amp;=%20%5Cfrac%7B1%7D%7Bn%7D%20%5Csum_%7Bi=1%7D%5En%20x_i%5E2%20%20-%20%5Cmu%5E2%20%5Ctag%7B5%7D%20%5C%5C%0A%5Csigma%5E2%20+%20%5Cmu%5E2%20&amp;=%20%5Cfrac%7B1%7D%7Bn%7D%20%5Csum_%7Bi=1%7D%5En%20x_i%5E2%20%5Ctag%7B6%7D%0A%5Cend%7Balign%7D%0A"></p>
+<p>Now, we can follow a similar process as we did when working out the combined mean, starting from equation 5.</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Csigma%5E2%20&amp;=%20%5Cfrac%7B1%7D%7Ba+b%7D%20%5Csum_%7Bi=1%7D%5E%7Ba+b%7D%20x_i%5E2%20-%20%5Cmu%5E2%20%5Ctag%7Bsplit%20the%20sum%20using%20eq%203%7D%20%5C%5C%0A%20%20%20%20%20%20%20%20%20&amp;=%20%5Cfrac%7B1%7D%7Ba+b%7D%20%5Cleft(%20%5Csum_%7Bi=1%7D%5E%7Ba%7D%20x_i%5E2%20+%20%5Csum_%7Bi=a+1%7D%5E%7Ba+b%7D%20x_i%5E2%20%5Cright)%20-%20%5Cmu%5E2%20%5Ctag%7Bdistribute%7D%20%5C%5C%0A%20%20%20%20%20%20%20%20%20&amp;=%20%5Cfrac%7B1%7D%7Ba+b%7D%20%5Csum_%7Bi=1%7D%5E%7Ba%7D%20x_i%5E2%20+%20%5Cfrac%7B1%7D%7Ba+b%7D%20%5Csum_%7Bi=a+1%7D%5E%7Ba+b%7D%20x_i%5E2%20-%20%5Cmu%5E2%20%5Ctag%7Bmultiply%20by%20one%7D%20%5C%5C%0A%20%20%20%20%20%20%20%20%20&amp;=%20%5Cfrac%7B1%7D%7Ba+b%7D%20%5Cfrac%7Ba%7D%7B1%7D%20%5Cunderbrace%7B%5Cfrac%7B1%7D%7Ba%7D%20%5Csum_%7Bi=1%7D%5E%7Ba%7D%20x_i%5E2%7D_%7B%5Csigma_a%5E2%20+%20%5Cmu_a%5E2%7D%20+%20%5Cfrac%7B1%7D%7Ba+b%7D%20%5Cfrac%7Bb%7D%7B1%7D%20%5Cunderbrace%7B%5Cfrac%7B1%7D%7Bb%7D%20%5Csum_%7Bi=a+1%7D%5E%7Ba+b%7D%20x_i%5E2%7D_%7B%5Csigma_b%5E2%20+%20%5Cmu_b%5E2%7D%20-%20%5Cmu%5E2%20%5Ctag%7Bsubstitute%20using%20eq%206%7D%20%5C%5C%0A%20%20%20%20%20%20%20%20%20&amp;=%20%5Cfrac%7Ba%7D%7Ba+b%7D%20%5Cleft(%20%5Csigma_a%5E2%20+%20%5Cmu_a%5E2%20%5Cright)%20+%20%5Cfrac%7Bb%7D%7Ba+b%7D%20%5Cleft(%20%5Csigma_b%5E2%20+%20%5Cmu_b%5E2%20%5Cright)%20-%20%5Cmu%5E2%20%5Ctag%7Bsubstitute%20with%20eq%204%7D%20%5C%5C%0A%20%20%20%20%20%20%20%20%20&amp;=%20%5Cfrac%7Ba%7D%7Ba+b%7D%20%5Cleft(%20%5Csigma_a%5E2%20+%20%5Cmu_a%5E2%20%5Cright)%20+%20%5Cfrac%7Bb%7D%7Ba+b%7D%20%5Cleft(%20%5Csigma_b%5E2%20+%20%5Cmu_b%5E2%20%5Cright)%20-%20%5Cleft(%20%5Cfrac%7Ba%7D%7Ba+b%7D%20%5Cmu_a%20+%20%5Cfrac%7Bb%7D%7Ba+b%7D%20%5Cmu_b%20%5Cright)%20%5Ctag%7Bsimplify%7D%20%5C%5C%0A%5CAboxed%7B%0A%20%20%5Csigma%5E2%20%20%20%20%20%20%20%20&amp;=%20%5Cunderbrace%7B%5Cfrac%7Ba%7D%7Ba+b%7D%20%5Csigma_a%5E2%20+%20%5Cfrac%7Bb%7D%7Ba+b%7D%20%5Csigma_b%5E2%7D_%7B%5Ctext%7Bwithin%20group%20variance%7D%7D%20+%20%5Cunderbrace%7B%5Cfrac%7Bab%7D%7B(a+b)%5E2%7D%20%5Cbig(%20%5Cmu_a%20-%20%5Cmu_b%20%5Cbig)%5E2%7D_%7B%5Ctext%7Bbetween%20group%20variance%7D%7D%0A%7D%0A%5Cend%7Balign%7D%0A"></p>
+<p>Now, to find the sample variance, <img src="https://latex.codecogs.com/png.latex?s%5E2">, we can use <a href="https://en.wikipedia.org/wiki/Bessel%27s_correction">Bessel’s correction</a>, <img src="https://latex.codecogs.com/png.latex?%5Cfrac%7Bn%7D%7Bn-1%7D">:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0As%5E2%20&amp;=%20%5Cfrac%7Bn%7D%7Bn-1%7D%5Csigma%5E2%20%5C%5C%0A%5Cfrac%7Bn-1%7D%7Bn%7D%20s%5E2%20&amp;=%20%5Csigma%5E2%20%5Ctag%7B7%7D%0A%5Cend%7Balign%7D%0A"></p>
+<p>then we have:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Csigma%5E2%20=%20%5Cfrac%7Ba+b-1%7D%7Ba+b%7D%20s%5E2%20%5C%5C%0A%5Csigma_a%5E2%20=%20%5Cfrac%7Ba-1%7D%7Ba%7D%20s_a%5E2%20%5C%5C%0A%5Csigma_b%5E2%20=%20%5Cfrac%7Bb-1%7D%7Bb%7D%20s_b%5E2%0A%5Cend%7Balign%7D%0A"></p>
+<p>we can then substitute these in to find the sample variance,</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Csigma%5E2%20&amp;=%20%5Cfrac%7Ba%7D%7Ba+b%7D%20%5Csigma_a%5E2%20+%20%5Cfrac%7Bb%7D%7Ba+b%7D%20%5Csigma_b%5E2%20+%20%5Cfrac%7Bab%7D%7B(a+b)%5E2%7D%20%5Cbig(%20%5Cmu_a%20-%20%5Cmu_b%20%5Cbig)%5E2%20%5Ctag%7Bfactor%20out%7D%20%5C%5C%0A%20%20%20%20%20%20%20%20%20&amp;=%20%5Cfrac%7B1%7D%7Ba+b%7D%20%5Cleft%5B%20a%5Csigma_a%5E2%20+%20b%20%5Csigma_b%5E2%20+%20%5Cfrac%7Bab%7D%7B(a+b)%7D%20%5Cbig(%20%5Cmu_a%20-%20%5Cmu_b%20%5Cbig)%5E2%20%5Cright%5D%20%5Ctag%7Bsubstitute%7D%20%5C%5C%0A%5Cfrac%7Ba+b-1%7D%7Ba+b%7D%5Csigma%5E2%20&amp;=%20%5Cfrac%7B1%7D%7Ba+b%7D%20%5Cleft%5B%20a%20%5Cleft(%5Cfrac%7Ba-1%7D%7Ba%7D%5Csigma_a%5E2%20%5Cright)%20+%20b%20%5Cleft(%20%5Cfrac%7Bb-1%7D%7Bb%7D%20%5Csigma_b%5E2%20%5Cright)%20+%20%5Cfrac%7Bab%7D%7B(a+b)%7D%20%5Cbig(%20%5Cmu_a%20-%20%5Cmu_b%20%5Cbig)%5E2%20%5Cright%5D%20%5Ctag%7Bsimplify%7D%20%5C%5C%0A%5CAboxed%7B%0A%20%20s%5E2%20&amp;=%20%5Cfrac%7B1%7D%7Ba+b-1%7D%20%5Cleft%5B%20(a-1)%20s_a%5E2%20+%20(b-1)%20s_b%5E2%20+%20%5Cfrac%7Bab%7D%7B(a+b)%7D%20%5Cbig(%20%5Cmu_a%20-%20%5Cmu_b%20%5Cbig)%5E2%20%5Cright%5D%0A%7D%0A%5Cend%7Balign%7D%0A"></p>
+</section>
+</section>
+<section id="excersises-left-up-to-the-reader" class="level2">
+<h2 class="anchored" data-anchor-id="excersises-left-up-to-the-reader">Excersises Left Up to the Reader</h2>
+<p>Now that you know how to derive batch updates for the mean and variance, you should be well-equiped to derive the covariance, <img src="https://latex.codecogs.com/png.latex?%5Ctext%7BCov%7D">, and pearson correlation, <img src="https://latex.codecogs.com/png.latex?r">:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Balign%7D%0A%5Ctext%7BCov%7D(X,%20Y)%20&amp;=%20%5Cfrac%7B1%7D%7Bn%7D%20%5Csum_%7Bi=1%7D%5En%20(x_i%20-%20%5Cbar%7Bx%7D)(y_i%20-%20%5Cbar%7By%7D)%20%5C%5C%5B10pt%5D%0A%5Crho(X)%20&amp;=%20%5Cfrac%7B%5Csum_%7Bi=1%7D%5En%20(x_i%20-%20%5Cbar%7Bx%7D)(y_i%20-%20%5Cbar%7By%7D)%7D%20%7B%5Csqrt%7B%20%5Csum_%7Bi=1%7D%5En%20(x_i%20-%20%5Cbar%7Bx%7D)%5E2%20%5Csum_%7Bi=1%7D%5En%20(y_i%20-%20%5Cbar%7By%7D)%5E2%20%7D%7D%20%5C%5C%5B10pt%5D%0A%5Crho(X,%20Y)%20&amp;=%20%5Cfrac%7B%5Ctext%7BCov%7D(X,%20Y)%7D%7B%5Csqrt%7B%5Ctext%7BVar%7D(X)%20%5Ctext%7BVar%7D(Y)%7D%7D%0A%5Cend%7Balign%7D%0A"></p>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
+<ul>
+<li>See this <a href="https://leetcode.com/problems/find-median-from-data-stream/description/">leetcode problem</a> about calculating the median from a data stream.</li>
+</ul>
+
+
+<!-- -->
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-schott2016" class="csl-entry">
+Schott, James R. 2016. <em>Matrix Analysis for Statistics</em>. 3rd ed. Wiley.
+</div>
+</div></section></div> ]]></description>
+  <category>probability</category>
+  <category>machine learning</category>
+  <category>streaming</category>
+  <guid>https://rtedwards.github.io/posts/stream-statistics/</guid>
+  <pubDate>Sat, 12 Apr 2025 23:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Creating Memory Leaks with Parquet Metadata</title>
+  <link>https://rtedwards.github.io/posts/parquet_metadata/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="the-setup" class="level2">
+<h2 class="anchored" data-anchor-id="the-setup"># The Setup</h2>
+<p>In my day job, I develop computer vision models to detect methane emissions in satellite images. We have a training dataset of a few million chips (a subset of the full image from the satellite) that is about 2.5TB on disk stored in a couple thousand parquet files. Now, there’s not a lot of real labelled data for us to use, so a big part of my work is how to generate synthetic methane data.</p>
+<p>Recently, our training jobs started running out of CPU memory. Each training epoch takes about 30 minutes, so we try to saturate the GPUs with large batches to train faster. The main bottleneck is data loading and keeping the GPUs saturated with data. To saturate the GPUs, we have multiple workers prefetching batches so the GPUs have high utilization. This means that the CPU needs to hold many extra batches in memory ready and waiting. Suffice to say, our training jobs run with fairly high memory usage; a small change to our training script can OOM (Out of Memory) the whole job.</p>
+</section>
+<section id="the-situation" class="level2">
+<h2 class="anchored" data-anchor-id="the-situation"># The Situation</h2>
+<p>Recently, our training jobs started OOMing in the first epoch, running out of CPU memory. We tried adjusting the obvious levers: batch size, the number of workers, and prefetching but the jobs were still running out of memory.</p>
+<p>O.K. so what changed? Our training data had changed in two ways: 1. We started tracking additional metadata about our generated training dataset, going from ~15 columns to ~150 columns. The additional columns were mostly float64 data type with a few string or list of string columns. 2. The row group size in the parquet files decreased from 10 to 1, meaning, each row group has a single row.</p>
+<p>The new columns aren’t loaded during the training loop, so this couldn’t be the cause of the memory explosion.</p>
+<p>We decreased the row group size to 1 so that random sampling of training examples could be truly random. For performance reasons, we were randomly sampling row groups because Parquet does not support partial row group reads. It’s much faster to use the whole row group as a “sample” rather than an individual row because it avoids additional IO from loading the same row group multiple times. With row groups of 10 rows, we used all 10 rows, but then the model always saw those 10 rows together. This is actually even worse because due to how the data is generated, all the samples in a file are from the same MGRS tile. So the rows in a row group are correlated. With row groups of 1, we can still sample by row groups but now batches are composed of truly random samples.</p>
+<p>We had benchmarked data loading with row groups of 10 and row groups of 1 and found them comparable. So why not switch and have better randomization?</p>
+</section>
+<section id="finding-the-source" class="level2">
+<h2 class="anchored" data-anchor-id="finding-the-source"># Finding the Source</h2>
+</section>
+<section id="experimenting" class="level2">
+<h2 class="anchored" data-anchor-id="experimenting"># Experimenting</h2>
+<p>Let’s inspect the metadata for a file of 200 rows, 15 columns, and row group size of 10.</p>
+<div id="dataset-15-columns-row-group-size-10" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> numpy <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> np</span>
+<span id="cb1-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pyarrow <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pa</span>
+<span id="cb1-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pyarrow.parquet <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pq</span>
+<span id="cb1-5"></span>
+<span id="cb1-6">num_cols <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span></span>
+<span id="cb1-7">num_rows <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1_000</span></span>
+<span id="cb1-8">data <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>x<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>: np.random.rand(num_rows) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> x <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(num_cols)}</span>
+<span id="cb1-9">df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.DataFrame(data)</span>
+<span id="cb1-10">df.head()</span>
+<span id="cb1-11"></span>
+<span id="cb1-12">file_path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"data.parquet"</span></span>
+<span id="cb1-13">df.to_parquet(</span>
+<span id="cb1-14">    file_path,</span>
+<span id="cb1-15">    compression<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"zstd"</span>,</span>
+<span id="cb1-16">    compression_level<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>,</span>
+<span id="cb1-17">    row_group_size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>,</span>
+<span id="cb1-18">)</span>
+<span id="cb1-19"></span>
+<span id="cb1-20"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pq.ParquetFile(file_path)</span>
+<span id="cb1-21"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span>.metadata)</span></code></pre></div></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;pyarrow._parquet.FileMetaData object at 0x103c73ec0&gt;
+  created_by: parquet-cpp-arrow version 23.0.1
+  num_columns: 15
+  num_rows: 1000
+  num_row_groups: 100
+  format_version: 2.6
+  serialized_size: 163754</code></pre>
+</div>
+</div>
+<p><br>
+The metadata for this parquet file is 14,895 bytes or ~0.14 MB. Now let’s see a file of 150 columns with row group size of 1.</p>
+<div id="dataset-150-columns-row-group-size-1" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">num_cols <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">150</span></span>
+<span id="cb3-2">num_rows <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1_000</span></span>
+<span id="cb3-3">data <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>x<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>: np.random.rand(num_rows) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> x <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(num_cols)}</span>
+<span id="cb3-4">df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.DataFrame(data)</span>
+<span id="cb3-5">df.head()</span>
+<span id="cb3-6"></span>
+<span id="cb3-7">file_path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"data.parquet"</span></span>
+<span id="cb3-8">df.to_parquet(</span>
+<span id="cb3-9">    file_path,</span>
+<span id="cb3-10">    compression<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"zstd"</span>,</span>
+<span id="cb3-11">    compression_level<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>,</span>
+<span id="cb3-12">    row_group_size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb3-13">)</span>
+<span id="cb3-14"></span>
+<span id="cb3-15"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pq.ParquetFile(file_path)</span>
+<span id="cb3-16"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span>.metadata)</span></code></pre></div></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;pyarrow._parquet.FileMetaData object at 0x1088eeb10&gt;
+  created_by: parquet-cpp-arrow version 23.0.1
+  num_columns: 150
+  num_rows: 1000
+  num_row_groups: 1000
+  format_version: 2.6
+  serialized_size: 16139711</code></pre>
+</div>
+</div>
+<p><br>
+The metadata for this parquet file is 14,642,267 or 14MB, that’s <em>massive</em> for just metadata!</p>
+<p>O.K. we’ve discovered that the metadata of our Parquet files had increased, but that should only be held in memory when reading from the file. To randomly sample from our dataset, we create an mapping of the index to the file and row group and then randomly sample the index. Each time a <code>ParquetFile</code> is initialized, it reads the file metadata into memory. This is expensive to do each time we read from the file, so we cache the object.</p>
+<div id="caching-parquet-metadata" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> functools</span>
+<span id="cb5-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> dataclasses <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> dataclass</span>
+<span id="cb5-3"></span>
+<span id="cb5-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> torch.utils.data <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Dataset</span>
+<span id="cb5-5"></span>
+<span id="cb5-6"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@dataclass</span></span>
+<span id="cb5-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">class</span> Partition:</span>
+<span id="cb5-8">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""Store information about the partition for faster retrieval."""</span></span>
+<span id="cb5-9"></span>
+<span id="cb5-10">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span>: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span></span>
+<span id="cb5-11">    row_group: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span></span>
+<span id="cb5-12"></span>
+<span id="cb5-13"></span>
+<span id="cb5-14"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">@functools.cache</span></span>
+<span id="cb5-15"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> create_parquet_file(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span>: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span> pq.ParquetFile:</span>
+<span id="cb5-16">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""Caches the creation of the ParquetFile."""</span></span>
+<span id="cb5-17">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> pq.ParquetFile(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span>)</span>
+<span id="cb5-18"></span>
+<span id="cb5-19"></span>
+<span id="cb5-20"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">class</span> ArrowDataset(Dataset):</span>
+<span id="cb5-21"></span>
+<span id="cb5-22">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__init__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, dataset: ds.FileSystemDataset) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>:</span>
+<span id="cb5-23">    <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.dataset <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> dataset</span>
+<span id="cb5-24">        <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.partitions: <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">list</span>[Partition] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.create_partition_mapping(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.dataset)</span>
+<span id="cb5-25"></span>
+<span id="cb5-26">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> create_partition_mapping(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>, dataset: ds.Dataset) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">list</span>[Partition]:</span>
+<span id="cb5-27">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""Create a mapping of partition number to the file and row_group."""</span></span>
+<span id="cb5-28">        partitions <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb5-29"></span>
+<span id="cb5-30">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> dataset.files:</span>
+<span id="cb5-31">            parquet_file <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> create_parquet_file(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span>)</span>
+<span id="cb5-32"></span>
+<span id="cb5-33">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> row_group <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(parquet_file.num_row_groups):</span>
+<span id="cb5-34">                partitions.append(Partition(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span>, row_group))</span>
+<span id="cb5-35"></span>
+<span id="cb5-36">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> partitions</span>
+<span id="cb5-37"></span>
+<span id="cb5-38"></span>
+<span id="cb5-39">    <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">__len__</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>:</span>
+<span id="cb5-40">        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""Return the number of row_groups in the dataset.  This should correspond to RecordBatches."""</span></span>
+<span id="cb5-41">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">self</span>.partitions)</span></code></pre></div></div>
+</details>
+</div>
+<p><br>
+Our training data is roughly 2,000 files with 1,000 rows per file. At 14MB per file, that’s 27GB of memory just for metadata! But it gets worse! Since we train with 4 GPUs and have 2 workers per GPU and each of those workers has its own process, that means we’re holding roughly 27GB * 4 * 2 = 216GB of metadata in memory! That’s atrocious!</p>
+<p>As it turns out, there are three variables that contribute to most of the metadata size (the number of rows being constant): the row group size, the number of columns, and the column name length.</p>
+<div id="batch-update-mean-and-variance" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> pathlib <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Path</span>
+<span id="cb6-2"></span>
+<span id="cb6-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> altair <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> alt</span>
+<span id="cb6-4"></span>
+<span id="cb6-5">num_rows <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1_000</span></span>
+<span id="cb6-6">num_columns <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb6-7">num_rg <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb6-8">col_name_lengths <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb6-9">metadata_size <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb6-10"></span>
+<span id="cb6-11"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> num_cols <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> [<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">150</span>]:</span>
+<span id="cb6-12">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> name_length <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> [<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>]:</span>
+<span id="cb6-13">        col_name <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"x"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>  name_length</span>
+<span id="cb6-14">        data <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>x<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}{</span>col_name<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>: np.random.rand(num_rows) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> x <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(num_cols)}</span>
+<span id="cb6-15">        df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.DataFrame(data)</span>
+<span id="cb6-16"></span>
+<span id="cb6-17">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> row_group_size <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> [<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1_000</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]:</span>
+<span id="cb6-18">            path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"file_</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>num_cols<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">cols_</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>row_group_size<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">rgsize_</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>name_length<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">namelen.parquet"</span></span>
+<span id="cb6-19">            df.to_parquet(</span>
+<span id="cb6-20">                path,</span>
+<span id="cb6-21">                compression<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"zstd"</span>,</span>
+<span id="cb6-22">                compression_level<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>,</span>
+<span id="cb6-23">                row_group_size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>row_group_size,</span>
+<span id="cb6-24">            )</span>
+<span id="cb6-25">            <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pq.ParquetFile(path)</span>
+<span id="cb6-26"></span>
+<span id="cb6-27">            num_columns.append(num_cols)</span>
+<span id="cb6-28">            num_rg.append(row_group_size)</span>
+<span id="cb6-29">            metadata_size.append(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span>.metadata.serialized_size)</span>
+<span id="cb6-30">            col_name_lengths.append(name_length)</span>
+<span id="cb6-31"></span>
+<span id="cb6-32">df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.DataFrame({</span>
+<span id="cb6-33">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"num_cols"</span>: num_columns,</span>
+<span id="cb6-34">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"row_group_size"</span>: num_rg,</span>
+<span id="cb6-35">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"col_name_lengths"</span>: col_name_lengths,</span>
+<span id="cb6-36">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"metadata_size_b"</span>: metadata_size,</span>
+<span id="cb6-37">}).assign(</span>
+<span id="cb6-38">    metadata_size_mb<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">lambda</span> df: df.metadata_size_b <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1024</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,</span>
+<span id="cb6-39">)</span></code></pre></div></div>
+</details>
+</div>
+<div id="8aa77e63" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="3">
+
+<style>
+  #altair-viz-d3d174c43d534f91a278e0eead5ef919.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-d3d174c43d534f91a278e0eead5ef919.vega-embed details,
+  #altair-viz-d3d174c43d534f91a278e0eead5ef919.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-d3d174c43d534f91a278e0eead5ef919"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-d3d174c43d534f91a278e0eead5ef919") {
+      outputDiv = document.getElementById("altair-viz-d3d174c43d534f91a278e0eead5ef919");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.1.0?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.1.0"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}, "background": "#f8f9fa"}, "data": {"name": "data-b415568c2642fc3edcb2afddce2c466c"}, "mark": {"type": "line", "point": true, "size": 2}, "encoding": {"color": {"field": "row_group_size", "scale": {"range": ["#368BC1", "#F2BB18", "#BB4430", "#8A9A67", "#CC771F", "#8B5260"]}, "title": "Row Group Size", "type": "nominal"}, "opacity": {"value": 1.0}, "strokeDash": {"field": "col_name_lengths", "title": "Column Name Length (chars)", "type": "nominal"}, "x": {"field": "num_cols", "title": "Number of Columns", "type": "quantitative"}, "y": {"field": "metadata_size_mb", "scale": {"type": "log"}, "title": "Metadata Size (MB)", "type": "quantitative"}}, "padding": 10, "title": {"text": ["Parquet metadata sizes for a single file of float columns"], "subtitle": [""]}, "width": 650, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-b415568c2642fc3edcb2afddce2c466c": [{"num_cols": 1, "row_group_size": 1000, "col_name_lengths": 1, "metadata_size_b": 1459, "file_size_b": 10365, "metadata_size_mb": 0.0013914108276367188, "file_size_mb": 0.009884834289550781}, {"num_cols": 1, "row_group_size": 100, "col_name_lengths": 1, "metadata_size_b": 2458, "file_size_b": 12470, "metadata_size_mb": 0.0023441314697265625, "file_size_mb": 0.011892318725585938}, {"num_cols": 1, "row_group_size": 10, "col_name_lengths": 1, "metadata_size_b": 12452, "file_size_b": 31564, "metadata_size_mb": 0.011875152587890625, "file_size_mb": 0.030101776123046875}, {"num_cols": 1, "row_group_size": 1, "col_name_lengths": 1, "metadata_size_b": 114056, "file_size_b": 224068, "metadata_size_mb": 0.10877227783203125, "file_size_mb": 0.21368789672851562}, {"num_cols": 1, "row_group_size": 1000, "col_name_lengths": 10, "metadata_size_b": 1539, "file_size_b": 10452, "metadata_size_mb": 0.0014677047729492188, "file_size_mb": 0.009967803955078125}, {"num_cols": 1, "row_group_size": 100, "col_name_lengths": 10, "metadata_size_b": 2619, "file_size_b": 12631, "metadata_size_mb": 0.0024976730346679688, "file_size_mb": 0.012045860290527344}, {"num_cols": 1, "row_group_size": 10, "col_name_lengths": 10, "metadata_size_b": 13423, "file_size_b": 32535, "metadata_size_mb": 0.012801170349121094, "file_size_mb": 0.031027793884277344}, {"num_cols": 1, "row_group_size": 1, "col_name_lengths": 10, "metadata_size_b": 123127, "file_size_b": 233139, "metadata_size_mb": 0.11742305755615234, "file_size_mb": 0.22233867645263672}, {"num_cols": 1, "row_group_size": 1000, "col_name_lengths": 50, "metadata_size_b": 1859, "file_size_b": 10774, "metadata_size_mb": 0.0017728805541992188, "file_size_mb": 0.010274887084960938}, {"num_cols": 1, "row_group_size": 100, "col_name_lengths": 50, "metadata_size_b": 3299, "file_size_b": 13311, "metadata_size_mb": 0.0031461715698242188, "file_size_mb": 0.012694358825683594}, {"num_cols": 1, "row_group_size": 10, "col_name_lengths": 50, "metadata_size_b": 17703, "file_size_b": 36815, "metadata_size_mb": 0.016882896423339844, "file_size_mb": 0.035109519958496094}, {"num_cols": 1, "row_group_size": 1, "col_name_lengths": 50, "metadata_size_b": 163407, "file_size_b": 273419, "metadata_size_mb": 0.1558370590209961, "file_size_mb": 0.26075267791748047}, {"num_cols": 1, "row_group_size": 1000, "col_name_lengths": 100, "metadata_size_b": 2251, "file_size_b": 11170, "metadata_size_mb": 0.0021467208862304688, "file_size_mb": 0.010652542114257812}, {"num_cols": 1, "row_group_size": 100, "col_name_lengths": 100, "metadata_size_b": 4141, "file_size_b": 14153, "metadata_size_mb": 0.003949165344238281, "file_size_mb": 0.013497352600097656}, {"num_cols": 1, "row_group_size": 10, "col_name_lengths": 100, "metadata_size_b": 23045, "file_size_b": 42157, "metadata_size_mb": 0.02197742462158203, "file_size_mb": 0.04020404815673828}, {"num_cols": 1, "row_group_size": 1, "col_name_lengths": 100, "metadata_size_b": 213749, "file_size_b": 323761, "metadata_size_mb": 0.20384693145751953, "file_size_mb": 0.3087625503540039}, {"num_cols": 10, "row_group_size": 1000, "col_name_lengths": 1, "metadata_size_b": 5186, "file_size_b": 94210, "metadata_size_mb": 0.0049457550048828125, "file_size_mb": 0.08984565734863281}, {"num_cols": 10, "row_group_size": 100, "col_name_lengths": 1, "metadata_size_b": 13971, "file_size_b": 113983, "metadata_size_mb": 0.013323783874511719, "file_size_mb": 0.1087026596069336}, {"num_cols": 10, "row_group_size": 10, "col_name_lengths": 1, "metadata_size_b": 100835, "file_size_b": 291847, "metadata_size_mb": 0.09616374969482422, "file_size_mb": 0.27832698822021484}, {"num_cols": 10, "row_group_size": 1, "col_name_lengths": 1, "metadata_size_b": 972948, "file_size_b": 2072960, "metadata_size_mb": 0.9278755187988281, "file_size_mb": 1.9769287109375}, {"num_cols": 10, "row_group_size": 1000, "col_name_lengths": 10, "metadata_size_b": 5898, "file_size_b": 94901, "metadata_size_mb": 0.0056247711181640625, "file_size_mb": 0.09050464630126953}, {"num_cols": 10, "row_group_size": 100, "col_name_lengths": 10, "metadata_size_b": 15493, "file_size_b": 115505, "metadata_size_mb": 0.014775276184082031, "file_size_mb": 0.1101541519165039}, {"num_cols": 10, "row_group_size": 10, "col_name_lengths": 10, "metadata_size_b": 110457, "file_size_b": 301469, "metadata_size_mb": 0.10534000396728516, "file_size_mb": 0.2875032424926758}, {"num_cols": 10, "row_group_size": 1, "col_name_lengths": 10, "metadata_size_b": 1063570, "file_size_b": 2163582, "metadata_size_mb": 1.0142993927001953, "file_size_mb": 2.063352584838867}, {"num_cols": 10, "row_group_size": 1000, "col_name_lengths": 50, "metadata_size_b": 9098, "file_size_b": 98115, "metadata_size_mb": 0.008676528930664062, "file_size_mb": 0.09356975555419922}, {"num_cols": 10, "row_group_size": 100, "col_name_lengths": 50, "metadata_size_b": 22293, "file_size_b": 122305, "metadata_size_mb": 0.02126026153564453, "file_size_mb": 0.1166391372680664}, {"num_cols": 10, "row_group_size": 10, "col_name_lengths": 50, "metadata_size_b": 153257, "file_size_b": 344269, "metadata_size_mb": 0.14615726470947266, "file_size_mb": 0.3283205032348633}, {"num_cols": 10, "row_group_size": 1, "col_name_lengths": 50, "metadata_size_b": 1466370, "file_size_b": 2566382, "metadata_size_mb": 1.3984394073486328, "file_size_mb": 2.4474925994873047}, {"num_cols": 10, "row_group_size": 1000, "col_name_lengths": 100, "metadata_size_b": 13114, "file_size_b": 102139, "metadata_size_mb": 0.012506484985351562, "file_size_mb": 0.09740734100341797}, {"num_cols": 10, "row_group_size": 100, "col_name_lengths": 100, "metadata_size_b": 30809, "file_size_b": 130821, "metadata_size_mb": 0.029381752014160156, "file_size_mb": 0.12476062774658203}, {"num_cols": 10, "row_group_size": 10, "col_name_lengths": 100, "metadata_size_b": 206773, "file_size_b": 397785, "metadata_size_mb": 0.19719409942626953, "file_size_mb": 0.37935733795166016}, {"num_cols": 10, "row_group_size": 1, "col_name_lengths": 100, "metadata_size_b": 1969886, "file_size_b": 3069898, "metadata_size_mb": 1.8786296844482422, "file_size_mb": 2.927682876586914}, {"num_cols": 50, "row_group_size": 1000, "col_name_lengths": 1, "metadata_size_b": 22001, "file_size_b": 467035, "metadata_size_mb": 0.020981788635253906, "file_size_mb": 0.44539928436279297}, {"num_cols": 50, "row_group_size": 100, "col_name_lengths": 1, "metadata_size_b": 65635, "file_size_b": 565647, "metadata_size_mb": 0.06259441375732422, "file_size_mb": 0.5394430160522461}, {"num_cols": 50, "row_group_size": 10, "col_name_lengths": 1, "metadata_size_b": 497993, "file_size_b": 1453005, "metadata_size_mb": 0.47492313385009766, "file_size_mb": 1.3856935501098633}, {"num_cols": 50, "row_group_size": 1, "col_name_lengths": 1, "metadata_size_b": 4907571, "file_size_b": 10407583, "metadata_size_mb": 4.680224418640137, "file_size_mb": 9.925444602966309}, {"num_cols": 50, "row_group_size": 1000, "col_name_lengths": 10, "metadata_size_b": 25753, "file_size_b": 470837, "metadata_size_mb": 0.024559974670410156, "file_size_mb": 0.44902515411376953}, {"num_cols": 50, "row_group_size": 100, "col_name_lengths": 10, "metadata_size_b": 73437, "file_size_b": 573449, "metadata_size_mb": 0.07003498077392578, "file_size_mb": 0.5468835830688477}, {"num_cols": 50, "row_group_size": 10, "col_name_lengths": 10, "metadata_size_b": 546295, "file_size_b": 1501307, "metadata_size_mb": 0.5209875106811523, "file_size_mb": 1.431757926940918}, {"num_cols": 50, "row_group_size": 1, "col_name_lengths": 10, "metadata_size_b": 5360873, "file_size_b": 10860885, "metadata_size_mb": 5.112526893615723, "file_size_mb": 10.357747077941895}, {"num_cols": 50, "row_group_size": 1000, "col_name_lengths": 50, "metadata_size_b": 41754, "file_size_b": 486716, "metadata_size_mb": 0.03981971740722656, "file_size_mb": 0.4641685485839844}, {"num_cols": 50, "row_group_size": 100, "col_name_lengths": 50, "metadata_size_b": 107438, "file_size_b": 607450, "metadata_size_mb": 0.10246086120605469, "file_size_mb": 0.5793094635009766}, {"num_cols": 50, "row_group_size": 10, "col_name_lengths": 50, "metadata_size_b": 760296, "file_size_b": 1715308, "metadata_size_mb": 0.7250747680664062, "file_size_mb": 1.6358451843261719}, {"num_cols": 50, "row_group_size": 1, "col_name_lengths": 50, "metadata_size_b": 7374874, "file_size_b": 12874886, "metadata_size_mb": 7.033227920532227, "file_size_mb": 12.278448104858398}, {"num_cols": 50, "row_group_size": 1000, "col_name_lengths": 100, "metadata_size_b": 61666, "file_size_b": 506703, "metadata_size_mb": 0.05880928039550781, "file_size_mb": 0.4832296371459961}, {"num_cols": 50, "row_group_size": 100, "col_name_lengths": 100, "metadata_size_b": 149850, "file_size_b": 649862, "metadata_size_mb": 0.14290809631347656, "file_size_mb": 0.6197566986083984}, {"num_cols": 50, "row_group_size": 10, "col_name_lengths": 100, "metadata_size_b": 1027708, "file_size_b": 1982720, "metadata_size_mb": 0.9800987243652344, "file_size_mb": 1.890869140625}, {"num_cols": 50, "row_group_size": 1, "col_name_lengths": 100, "metadata_size_b": 9892286, "file_size_b": 15392298, "metadata_size_mb": 9.434019088745117, "file_size_mb": 14.679239273071289}, {"num_cols": 100, "row_group_size": 1000, "col_name_lengths": 1, "metadata_size_b": 43025, "file_size_b": 933152, "metadata_size_mb": 0.041031837463378906, "file_size_mb": 0.889923095703125}, {"num_cols": 100, "row_group_size": 100, "col_name_lengths": 1, "metadata_size_b": 130209, "file_size_b": 1130221, "metadata_size_mb": 0.1241769790649414, "file_size_mb": 1.0778627395629883}, {"num_cols": 100, "row_group_size": 10, "col_name_lengths": 1, "metadata_size_b": 1003132, "file_size_b": 2913144, "metadata_size_mb": 0.9566612243652344, "file_size_mb": 2.7781906127929688}, {"num_cols": 100, "row_group_size": 1, "col_name_lengths": 1, "metadata_size_b": 9825741, "file_size_b": 20825753, "metadata_size_mb": 9.370556831359863, "file_size_mb": 19.86098575592041}, {"num_cols": 100, "row_group_size": 1000, "col_name_lengths": 10, "metadata_size_b": 50569, "file_size_b": 940604, "metadata_size_mb": 0.048226356506347656, "file_size_mb": 0.8970298767089844}, {"num_cols": 100, "row_group_size": 100, "col_name_lengths": 10, "metadata_size_b": 145853, "file_size_b": 1145865, "metadata_size_mb": 0.13909626007080078, "file_size_mb": 1.0927820205688477}, {"num_cols": 100, "row_group_size": 10, "col_name_lengths": 10, "metadata_size_b": 1099776, "file_size_b": 3009788, "metadata_size_mb": 1.048828125, "file_size_mb": 2.8703575134277344}, {"num_cols": 100, "row_group_size": 1, "col_name_lengths": 10, "metadata_size_b": 10732385, "file_size_b": 21732397, "metadata_size_mb": 10.235199928283691, "file_size_mb": 20.72562885284424}, {"num_cols": 100, "row_group_size": 1000, "col_name_lengths": 50, "metadata_size_b": 82570, "file_size_b": 972621, "metadata_size_mb": 0.07874488830566406, "file_size_mb": 0.9275636672973633}, {"num_cols": 100, "row_group_size": 100, "col_name_lengths": 50, "metadata_size_b": 213854, "file_size_b": 1213866, "metadata_size_mb": 0.2039470672607422, "file_size_mb": 1.157632827758789}, {"num_cols": 100, "row_group_size": 10, "col_name_lengths": 50, "metadata_size_b": 1527777, "file_size_b": 3437789, "metadata_size_mb": 1.4570016860961914, "file_size_mb": 3.278531074523926}, {"num_cols": 100, "row_group_size": 1, "col_name_lengths": 50, "metadata_size_b": 14760386, "file_size_b": 25760398, "metadata_size_mb": 14.076601028442383, "file_size_mb": 24.56702995300293}, {"num_cols": 100, "row_group_size": 1000, "col_name_lengths": 100, "metadata_size_b": 122346, "file_size_b": 1012382, "metadata_size_mb": 0.11667823791503906, "file_size_mb": 0.9654827117919922}, {"num_cols": 100, "row_group_size": 100, "col_name_lengths": 100, "metadata_size_b": 298630, "file_size_b": 1298642, "metadata_size_mb": 0.28479576110839844, "file_size_mb": 1.2384815216064453}, {"num_cols": 100, "row_group_size": 10, "col_name_lengths": 100, "metadata_size_b": 2062553, "file_size_b": 3972565, "metadata_size_mb": 1.9670038223266602, "file_size_mb": 3.7885332107543945}, {"num_cols": 100, "row_group_size": 1, "col_name_lengths": 100, "metadata_size_b": 19795162, "file_size_b": 30795174, "metadata_size_mb": 18.878137588500977, "file_size_mb": 29.368566513061523}, {"num_cols": 150, "row_group_size": 1000, "col_name_lengths": 1, "metadata_size_b": 64710, "file_size_b": 1399708, "metadata_size_mb": 0.06171226501464844, "file_size_mb": 1.3348655700683594}, {"num_cols": 150, "row_group_size": 100, "col_name_lengths": 1, "metadata_size_b": 196742, "file_size_b": 1696754, "metadata_size_mb": 0.18762779235839844, "file_size_mb": 1.6181507110595703}, {"num_cols": 150, "row_group_size": 10, "col_name_lengths": 1, "metadata_size_b": 1514867, "file_size_b": 4379879, "metadata_size_mb": 1.4446897506713867, "file_size_mb": 4.17697811126709}, {"num_cols": 150, "row_group_size": 1, "col_name_lengths": 1, "metadata_size_b": 14793390, "file_size_b": 31293402, "metadata_size_mb": 14.108076095581055, "file_size_mb": 29.843713760375977}, {"num_cols": 150, "row_group_size": 1000, "col_name_lengths": 10, "metadata_size_b": 75794, "file_size_b": 1410805, "metadata_size_mb": 0.07228279113769531, "file_size_mb": 1.3454484939575195}, {"num_cols": 150, "row_group_size": 100, "col_name_lengths": 10, "metadata_size_b": 219976, "file_size_b": 1719988, "metadata_size_mb": 0.20978546142578125, "file_size_mb": 1.6403083801269531}, {"num_cols": 150, "row_group_size": 10, "col_name_lengths": 10, "metadata_size_b": 1659601, "file_size_b": 4524613, "metadata_size_mb": 1.582718849182129, "file_size_mb": 4.315007209777832}, {"num_cols": 150, "row_group_size": 1, "col_name_lengths": 10, "metadata_size_b": 16153124, "file_size_b": 32653136, "metadata_size_mb": 15.40481948852539, "file_size_mb": 31.140457153320312}, {"num_cols": 150, "row_group_size": 1000, "col_name_lengths": 50, "metadata_size_b": 123794, "file_size_b": 1458769, "metadata_size_mb": 0.11805915832519531, "file_size_mb": 1.391190528869629}, {"num_cols": 150, "row_group_size": 100, "col_name_lengths": 50, "metadata_size_b": 321976, "file_size_b": 1821988, "metadata_size_mb": 0.30706024169921875, "file_size_mb": 1.7375831604003906}, {"num_cols": 150, "row_group_size": 10, "col_name_lengths": 50, "metadata_size_b": 2301601, "file_size_b": 5166613, "metadata_size_mb": 2.1949777603149414, "file_size_mb": 4.9272661209106445}, {"num_cols": 150, "row_group_size": 1, "col_name_lengths": 50, "metadata_size_b": 22195124, "file_size_b": 38695136, "metadata_size_mb": 21.166919708251953, "file_size_mb": 36.902557373046875}, {"num_cols": 150, "row_group_size": 1000, "col_name_lengths": 100, "metadata_size_b": 183438, "file_size_b": 1518519, "metadata_size_mb": 0.1749401092529297, "file_size_mb": 1.4481725692749023}, {"num_cols": 150, "row_group_size": 100, "col_name_lengths": 100, "metadata_size_b": 449120, "file_size_b": 1949132, "metadata_size_mb": 0.428314208984375, "file_size_mb": 1.8588371276855469}, {"num_cols": 150, "row_group_size": 10, "col_name_lengths": 100, "metadata_size_b": 3103745, "file_size_b": 5968757, "metadata_size_mb": 2.9599618911743164, "file_size_mb": 5.6922502517700195}, {"num_cols": 150, "row_group_size": 1, "col_name_lengths": 100, "metadata_size_b": 29747268, "file_size_b": 46247280, "metadata_size_mb": 28.369205474853516, "file_size_mb": 44.10484313964844}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p><br>
+When adding the new columns to our dataset, we used long descriptive names which turns out to also be a contributing factor.</p>
+<p>TODO: talk about chart</p>
+</section>
+<section id="removing-the-memory-landmines" class="level2">
+<h2 class="anchored" data-anchor-id="removing-the-memory-landmines"># Removing the Memory Landmines</h2>
+<p>Since statistics are calculated for each row group, increasing the number of row groups also increases the amount of statistics calculated and stored in the metadata. The statistics are used during predicate push down to check if the row group matches the predicate and if not, the row group can be skipped. Smaller row groups reduces the utility of the statistics, and storing statistics for a single row is just silly. So we can remove the statistics for our purposes.</p>
+<p>Row groups are also encoded (actually the column chunks in a row group are encoded). Encoding small row groups doesn’t allow for great compression and for our use case, encoding the row groups increased the size of the metadata. So we can remove the encoding.</p>
+<p>Parquet files created with Pandas or PyArrow, by default, include the Arrow schema as well. The Arrow schema <a href="https://arrow.apache.org/docs/python/generated/pyarrow.parquet.write_table.html#pyarrow-parquet-write-table">includes additional information</a>. to faithfully recreate the original Arrow data. We aren’t using complex types that would benefit from this, so we can remove the extra schema.</p>
+<p>Shrinking the size of the metadata boils down to three lines when writing the parquet files:</p>
+<div id="dataset-150-columns-row-group-size-1-reduced-metadata" class="cell" data-execution_count="6">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1">num_cols <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">150</span></span>
+<span id="cb7-2">num_rows <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1_000</span></span>
+<span id="cb7-3">data <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> {<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>x<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>: np.random.rand(num_rows) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> x <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(num_cols)}</span>
+<span id="cb7-4">df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.DataFrame(data)</span>
+<span id="cb7-5">df.head()</span>
+<span id="cb7-6"></span>
+<span id="cb7-7">file_path <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"data.parquet"</span></span>
+<span id="cb7-8">df.to_parquet(</span>
+<span id="cb7-9">    file_path,</span>
+<span id="cb7-10">    compression<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"zstd"</span>,</span>
+<span id="cb7-11">    compression_level<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>,</span>
+<span id="cb7-12">    row_group_size<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb7-13">    write_statistics<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>,</span>
+<span id="cb7-14">    store_schema<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span>,</span>
+<span id="cb7-15">    use_dictionary<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">False</span></span>
+<span id="cb7-16">)</span>
+<span id="cb7-17"></span>
+<span id="cb7-18"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pq.ParquetFile(file_path)</span>
+<span id="cb7-19"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">file</span>.metadata)</span></code></pre></div></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;pyarrow._parquet.FileMetaData object at 0x108d7d170&gt;
+  created_by: parquet-cpp-arrow version 23.0.1
+  num_columns: 150
+  num_rows: 1000
+  num_row_groups: 1000
+  format_version: 2.6
+  serialized_size: 6934573</code></pre>
+</div>
+</div>
+<p><br>
+The size of the metadata is now 5,737,509 bytes or 5.4MB, that’s 40% of the initial 14MB.</p>
+<p>And we can rerun the experiment with the new parameters.</p>
+<div id="14c736e5" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="5">
+
+<style>
+  #altair-viz-3ea597dff7b847b39aeb1d19ff821b92.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-3ea597dff7b847b39aeb1d19ff821b92.vega-embed details,
+  #altair-viz-3ea597dff7b847b39aeb1d19ff821b92.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-3ea597dff7b847b39aeb1d19ff821b92"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-3ea597dff7b847b39aeb1d19ff821b92") {
+      outputDiv = document.getElementById("altair-viz-3ea597dff7b847b39aeb1d19ff821b92");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.1.0?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.1.0"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}, "background": "#f8f9fa"}, "data": {"name": "data-891122cc7a5b0893104b30be992b1019"}, "mark": {"type": "line", "point": true, "size": 2}, "encoding": {"color": {"field": "row_group_size", "scale": {"range": ["#368BC1", "#F2BB18", "#BB4430", "#8A9A67", "#CC771F", "#8B5260"]}, "title": "Row Group Size", "type": "nominal"}, "opacity": {"value": 1.0}, "strokeDash": {"field": "col_name_lengths", "title": "Column Name Length (chars)", "type": "nominal"}, "x": {"field": "num_cols", "title": "Number of Columns", "type": "quantitative"}, "y": {"field": "metadata_size_mb", "scale": {"type": "log"}, "title": "Metadata Size (MB)", "type": "quantitative"}}, "padding": 10, "title": {"text": ["Parquet metadata sizes for a single file of float columns"], "subtitle": ["No statistics, no dictionary encoding, no arrow schema"]}, "width": 650, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-891122cc7a5b0893104b30be992b1019": [{"num_cols": 1, "row_group_size": 1000, "col_name_lengths": 1, "metadata_size_b": 125, "file_size_b": 10365, "metadata_size_mb": 0.00011920928955078125, "file_size_mb": 0.009884834289550781}, {"num_cols": 1, "row_group_size": 100, "col_name_lengths": 1, "metadata_size_b": 629, "file_size_b": 12470, "metadata_size_mb": 0.0005998611450195312, "file_size_mb": 0.011892318725585938}, {"num_cols": 1, "row_group_size": 10, "col_name_lengths": 1, "metadata_size_b": 5564, "file_size_b": 31564, "metadata_size_mb": 0.005306243896484375, "file_size_mb": 0.030101776123046875}, {"num_cols": 1, "row_group_size": 1, "col_name_lengths": 1, "metadata_size_b": 52615, "file_size_b": 224068, "metadata_size_mb": 0.050177574157714844, "file_size_mb": 0.21368789672851562}, {"num_cols": 1, "row_group_size": 1000, "col_name_lengths": 10, "metadata_size_b": 143, "file_size_b": 10452, "metadata_size_mb": 0.00013637542724609375, "file_size_mb": 0.009967803955078125}, {"num_cols": 1, "row_group_size": 100, "col_name_lengths": 10, "metadata_size_b": 728, "file_size_b": 12631, "metadata_size_mb": 0.00069427490234375, "file_size_mb": 0.012045860290527344}, {"num_cols": 1, "row_group_size": 10, "col_name_lengths": 10, "metadata_size_b": 6473, "file_size_b": 32535, "metadata_size_mb": 0.006173133850097656, "file_size_mb": 0.031027793884277344}, {"num_cols": 1, "row_group_size": 1, "col_name_lengths": 10, "metadata_size_b": 61624, "file_size_b": 233139, "metadata_size_mb": 0.05876922607421875, "file_size_mb": 0.22233867645263672}, {"num_cols": 1, "row_group_size": 1000, "col_name_lengths": 50, "metadata_size_b": 223, "file_size_b": 10774, "metadata_size_mb": 0.00021266937255859375, "file_size_mb": 0.010274887084960938}, {"num_cols": 1, "row_group_size": 100, "col_name_lengths": 50, "metadata_size_b": 1168, "file_size_b": 13311, "metadata_size_mb": 0.0011138916015625, "file_size_mb": 0.012694358825683594}, {"num_cols": 1, "row_group_size": 10, "col_name_lengths": 50, "metadata_size_b": 10513, "file_size_b": 36815, "metadata_size_mb": 0.010025978088378906, "file_size_mb": 0.035109519958496094}, {"num_cols": 1, "row_group_size": 1, "col_name_lengths": 50, "metadata_size_b": 101664, "file_size_b": 273419, "metadata_size_mb": 0.096954345703125, "file_size_mb": 0.26075267791748047}, {"num_cols": 1, "row_group_size": 1000, "col_name_lengths": 100, "metadata_size_b": 323, "file_size_b": 11170, "metadata_size_mb": 0.00030803680419921875, "file_size_mb": 0.010652542114257812}, {"num_cols": 1, "row_group_size": 100, "col_name_lengths": 100, "metadata_size_b": 1718, "file_size_b": 14153, "metadata_size_mb": 0.0016384124755859375, "file_size_mb": 0.013497352600097656}, {"num_cols": 1, "row_group_size": 10, "col_name_lengths": 100, "metadata_size_b": 15563, "file_size_b": 42157, "metadata_size_mb": 0.014842033386230469, "file_size_mb": 0.04020404815673828}, {"num_cols": 1, "row_group_size": 1, "col_name_lengths": 100, "metadata_size_b": 151714, "file_size_b": 323761, "metadata_size_mb": 0.1446857452392578, "file_size_mb": 0.3087625503540039}, {"num_cols": 10, "row_group_size": 1000, "col_name_lengths": 1, "metadata_size_b": 594, "file_size_b": 94210, "metadata_size_mb": 0.0005664825439453125, "file_size_mb": 0.08984565734863281}, {"num_cols": 10, "row_group_size": 100, "col_name_lengths": 1, "metadata_size_b": 4366, "file_size_b": 113983, "metadata_size_mb": 0.0041637420654296875, "file_size_mb": 0.1087026596069336}, {"num_cols": 10, "row_group_size": 10, "col_name_lengths": 1, "metadata_size_b": 40835, "file_size_b": 291847, "metadata_size_mb": 0.03894329071044922, "file_size_mb": 0.27832698822021484}, {"num_cols": 10, "row_group_size": 1, "col_name_lengths": 1, "metadata_size_b": 387899, "file_size_b": 2072960, "metadata_size_mb": 0.36992931365966797, "file_size_mb": 1.9769287109375}, {"num_cols": 10, "row_group_size": 1000, "col_name_lengths": 10, "metadata_size_b": 774, "file_size_b": 94901, "metadata_size_mb": 0.0007381439208984375, "file_size_mb": 0.09050464630126953}, {"num_cols": 10, "row_group_size": 100, "col_name_lengths": 10, "metadata_size_b": 5356, "file_size_b": 115505, "metadata_size_mb": 0.005107879638671875, "file_size_mb": 0.1101541519165039}, {"num_cols": 10, "row_group_size": 10, "col_name_lengths": 10, "metadata_size_b": 49925, "file_size_b": 301469, "metadata_size_mb": 0.04761219024658203, "file_size_mb": 0.2875032424926758}, {"num_cols": 10, "row_group_size": 1, "col_name_lengths": 10, "metadata_size_b": 477989, "file_size_b": 2163582, "metadata_size_mb": 0.45584583282470703, "file_size_mb": 2.063352584838867}, {"num_cols": 10, "row_group_size": 1000, "col_name_lengths": 50, "metadata_size_b": 1574, "file_size_b": 98115, "metadata_size_mb": 0.0015010833740234375, "file_size_mb": 0.09356975555419922}, {"num_cols": 10, "row_group_size": 100, "col_name_lengths": 50, "metadata_size_b": 9756, "file_size_b": 122305, "metadata_size_mb": 0.009304046630859375, "file_size_mb": 0.1166391372680664}, {"num_cols": 10, "row_group_size": 10, "col_name_lengths": 50, "metadata_size_b": 90325, "file_size_b": 344269, "metadata_size_mb": 0.08614063262939453, "file_size_mb": 0.3283205032348633}, {"num_cols": 10, "row_group_size": 1, "col_name_lengths": 50, "metadata_size_b": 878389, "file_size_b": 2566382, "metadata_size_mb": 0.8376970291137695, "file_size_mb": 2.4474925994873047}, {"num_cols": 10, "row_group_size": 1000, "col_name_lengths": 100, "metadata_size_b": 2574, "file_size_b": 102139, "metadata_size_mb": 0.0024547576904296875, "file_size_mb": 0.09740734100341797}, {"num_cols": 10, "row_group_size": 100, "col_name_lengths": 100, "metadata_size_b": 15256, "file_size_b": 130821, "metadata_size_mb": 0.01454925537109375, "file_size_mb": 0.12476062774658203}, {"num_cols": 10, "row_group_size": 10, "col_name_lengths": 100, "metadata_size_b": 140825, "file_size_b": 397785, "metadata_size_mb": 0.13430118560791016, "file_size_mb": 0.37935733795166016}, {"num_cols": 10, "row_group_size": 1, "col_name_lengths": 100, "metadata_size_b": 1378889, "file_size_b": 3069898, "metadata_size_mb": 1.3150110244750977, "file_size_mb": 2.927682876586914}, {"num_cols": 50, "row_group_size": 1000, "col_name_lengths": 1, "metadata_size_b": 2757, "file_size_b": 467035, "metadata_size_mb": 0.0026292800903320312, "file_size_mb": 0.44539928436279297}, {"num_cols": 50, "row_group_size": 100, "col_name_lengths": 1, "metadata_size_b": 21298, "file_size_b": 565647, "metadata_size_mb": 0.020311355590820312, "file_size_mb": 0.5394430160522461}, {"num_cols": 50, "row_group_size": 10, "col_name_lengths": 1, "metadata_size_b": 201463, "file_size_b": 1453005, "metadata_size_mb": 0.19213008880615234, "file_size_mb": 1.3856935501098633}, {"num_cols": 50, "row_group_size": 1, "col_name_lengths": 1, "metadata_size_b": 1934971, "file_size_b": 10407583, "metadata_size_mb": 1.845332145690918, "file_size_mb": 9.925444602966309}, {"num_cols": 50, "row_group_size": 1000, "col_name_lengths": 10, "metadata_size_b": 3657, "file_size_b": 470837, "metadata_size_mb": 0.0034875869750976562, "file_size_mb": 0.44902515411376953}, {"num_cols": 50, "row_group_size": 100, "col_name_lengths": 10, "metadata_size_b": 26248, "file_size_b": 573449, "metadata_size_mb": 0.02503204345703125, "file_size_mb": 0.5468835830688477}, {"num_cols": 50, "row_group_size": 10, "col_name_lengths": 10, "metadata_size_b": 246913, "file_size_b": 1501307, "metadata_size_mb": 0.2354745864868164, "file_size_mb": 1.431757926940918}, {"num_cols": 50, "row_group_size": 1, "col_name_lengths": 10, "metadata_size_b": 2385421, "file_size_b": 10860885, "metadata_size_mb": 2.2749147415161133, "file_size_mb": 10.357747077941895}, {"num_cols": 50, "row_group_size": 1000, "col_name_lengths": 50, "metadata_size_b": 7657, "file_size_b": 486716, "metadata_size_mb": 0.007302284240722656, "file_size_mb": 0.4641685485839844}, {"num_cols": 50, "row_group_size": 100, "col_name_lengths": 50, "metadata_size_b": 48248, "file_size_b": 607450, "metadata_size_mb": 0.04601287841796875, "file_size_mb": 0.5793094635009766}, {"num_cols": 50, "row_group_size": 10, "col_name_lengths": 50, "metadata_size_b": 448913, "file_size_b": 1715308, "metadata_size_mb": 0.4281167984008789, "file_size_mb": 1.6358451843261719}, {"num_cols": 50, "row_group_size": 1, "col_name_lengths": 50, "metadata_size_b": 4387421, "file_size_b": 12874886, "metadata_size_mb": 4.184170722961426, "file_size_mb": 12.278448104858398}, {"num_cols": 50, "row_group_size": 1000, "col_name_lengths": 100, "metadata_size_b": 12657, "file_size_b": 506703, "metadata_size_mb": 0.012070655822753906, "file_size_mb": 0.4832296371459961}, {"num_cols": 50, "row_group_size": 100, "col_name_lengths": 100, "metadata_size_b": 75748, "file_size_b": 649862, "metadata_size_mb": 0.07223892211914062, "file_size_mb": 0.6197566986083984}, {"num_cols": 50, "row_group_size": 10, "col_name_lengths": 100, "metadata_size_b": 701413, "file_size_b": 1982720, "metadata_size_mb": 0.668919563293457, "file_size_mb": 1.890869140625}, {"num_cols": 50, "row_group_size": 1, "col_name_lengths": 100, "metadata_size_b": 6889921, "file_size_b": 15392298, "metadata_size_mb": 6.570740699768066, "file_size_mb": 14.679239273071289}, {"num_cols": 100, "row_group_size": 1000, "col_name_lengths": 1, "metadata_size_b": 5458, "file_size_b": 933152, "metadata_size_mb": 0.0052051544189453125, "file_size_mb": 0.889923095703125}, {"num_cols": 100, "row_group_size": 100, "col_name_lengths": 1, "metadata_size_b": 42449, "file_size_b": 1130221, "metadata_size_mb": 0.040482521057128906, "file_size_mb": 1.0778627395629883}, {"num_cols": 100, "row_group_size": 10, "col_name_lengths": 1, "metadata_size_b": 403284, "file_size_b": 2913144, "metadata_size_mb": 0.3846015930175781, "file_size_mb": 2.7781906127929688}, {"num_cols": 100, "row_group_size": 1, "col_name_lengths": 1, "metadata_size_b": 3885874, "file_size_b": 20825753, "metadata_size_mb": 3.7058582305908203, "file_size_mb": 19.86098575592041}, {"num_cols": 100, "row_group_size": 1000, "col_name_lengths": 10, "metadata_size_b": 7258, "file_size_b": 940604, "metadata_size_mb": 0.0069217681884765625, "file_size_mb": 0.8970298767089844}, {"num_cols": 100, "row_group_size": 100, "col_name_lengths": 10, "metadata_size_b": 52349, "file_size_b": 1145865, "metadata_size_mb": 0.04992389678955078, "file_size_mb": 1.0927820205688477}, {"num_cols": 100, "row_group_size": 10, "col_name_lengths": 10, "metadata_size_b": 494184, "file_size_b": 3009788, "metadata_size_mb": 0.47129058837890625, "file_size_mb": 2.8703575134277344}, {"num_cols": 100, "row_group_size": 1, "col_name_lengths": 10, "metadata_size_b": 4786774, "file_size_b": 21732397, "metadata_size_mb": 4.565023422241211, "file_size_mb": 20.72562885284424}, {"num_cols": 100, "row_group_size": 1000, "col_name_lengths": 50, "metadata_size_b": 15258, "file_size_b": 972621, "metadata_size_mb": 0.014551162719726562, "file_size_mb": 0.9275636672973633}, {"num_cols": 100, "row_group_size": 100, "col_name_lengths": 50, "metadata_size_b": 96349, "file_size_b": 1213866, "metadata_size_mb": 0.09188556671142578, "file_size_mb": 1.157632827758789}, {"num_cols": 100, "row_group_size": 10, "col_name_lengths": 50, "metadata_size_b": 898184, "file_size_b": 3437789, "metadata_size_mb": 0.8565750122070312, "file_size_mb": 3.278531074523926}, {"num_cols": 100, "row_group_size": 1, "col_name_lengths": 50, "metadata_size_b": 8790774, "file_size_b": 25760398, "metadata_size_mb": 8.383535385131836, "file_size_mb": 24.56702995300293}, {"num_cols": 100, "row_group_size": 1000, "col_name_lengths": 100, "metadata_size_b": 25258, "file_size_b": 1012382, "metadata_size_mb": 0.024087905883789062, "file_size_mb": 0.9654827117919922}, {"num_cols": 100, "row_group_size": 100, "col_name_lengths": 100, "metadata_size_b": 151349, "file_size_b": 1298642, "metadata_size_mb": 0.14433765411376953, "file_size_mb": 1.2384815216064453}, {"num_cols": 100, "row_group_size": 10, "col_name_lengths": 100, "metadata_size_b": 1403184, "file_size_b": 3972565, "metadata_size_mb": 1.3381805419921875, "file_size_mb": 3.7885332107543945}, {"num_cols": 100, "row_group_size": 1, "col_name_lengths": 100, "metadata_size_b": 13795774, "file_size_b": 30795174, "metadata_size_mb": 13.156675338745117, "file_size_mb": 29.368566513061523}, {"num_cols": 150, "row_group_size": 1000, "col_name_lengths": 1, "metadata_size_b": 8274, "file_size_b": 1399708, "metadata_size_mb": 0.007890701293945312, "file_size_mb": 1.3348655700683594}, {"num_cols": 150, "row_group_size": 100, "col_name_lengths": 1, "metadata_size_b": 64412, "file_size_b": 1696754, "metadata_size_mb": 0.061428070068359375, "file_size_mb": 1.6181507110595703}, {"num_cols": 150, "row_group_size": 10, "col_name_lengths": 1, "metadata_size_b": 614116, "file_size_b": 4379879, "metadata_size_mb": 0.5856666564941406, "file_size_mb": 4.17697811126709}, {"num_cols": 150, "row_group_size": 1, "col_name_lengths": 1, "metadata_size_b": 5887659, "file_size_b": 31293402, "metadata_size_mb": 5.6149091720581055, "file_size_mb": 29.843713760375977}, {"num_cols": 150, "row_group_size": 1000, "col_name_lengths": 10, "metadata_size_b": 10974, "file_size_b": 1410805, "metadata_size_mb": 0.010465621948242188, "file_size_mb": 1.3454484939575195}, {"num_cols": 150, "row_group_size": 100, "col_name_lengths": 10, "metadata_size_b": 79262, "file_size_b": 1719988, "metadata_size_mb": 0.07559013366699219, "file_size_mb": 1.6403083801269531}, {"num_cols": 150, "row_group_size": 10, "col_name_lengths": 10, "metadata_size_b": 750466, "file_size_b": 4524613, "metadata_size_mb": 0.7157001495361328, "file_size_mb": 4.315007209777832}, {"num_cols": 150, "row_group_size": 1, "col_name_lengths": 10, "metadata_size_b": 7239009, "file_size_b": 32653136, "metadata_size_mb": 6.903656959533691, "file_size_mb": 31.140457153320312}, {"num_cols": 150, "row_group_size": 1000, "col_name_lengths": 50, "metadata_size_b": 22974, "file_size_b": 1458769, "metadata_size_mb": 0.021909713745117188, "file_size_mb": 1.391190528869629}, {"num_cols": 150, "row_group_size": 100, "col_name_lengths": 50, "metadata_size_b": 145262, "file_size_b": 1821988, "metadata_size_mb": 0.1385326385498047, "file_size_mb": 1.7375831604003906}, {"num_cols": 150, "row_group_size": 10, "col_name_lengths": 50, "metadata_size_b": 1356466, "file_size_b": 5166613, "metadata_size_mb": 1.2936267852783203, "file_size_mb": 4.9272661209106445}, {"num_cols": 150, "row_group_size": 1, "col_name_lengths": 50, "metadata_size_b": 13245009, "file_size_b": 38695136, "metadata_size_mb": 12.631424903869629, "file_size_mb": 36.902557373046875}, {"num_cols": 150, "row_group_size": 1000, "col_name_lengths": 100, "metadata_size_b": 37974, "file_size_b": 1518519, "metadata_size_mb": 0.03621482849121094, "file_size_mb": 1.4481725692749023}, {"num_cols": 150, "row_group_size": 100, "col_name_lengths": 100, "metadata_size_b": 227762, "file_size_b": 1949132, "metadata_size_mb": 0.2172107696533203, "file_size_mb": 1.8588371276855469}, {"num_cols": 150, "row_group_size": 10, "col_name_lengths": 100, "metadata_size_b": 2113966, "file_size_b": 5968757, "metadata_size_mb": 2.0160350799560547, "file_size_mb": 5.6922502517700195}, {"num_cols": 150, "row_group_size": 1, "col_name_lengths": 100, "metadata_size_b": 20752509, "file_size_b": 46247280, "metadata_size_mb": 19.79113483428955, "file_size_mb": 44.10484313964844}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p><br>
+So we were able to reduce the metadata size by 60% just by changing some parameters when writing the file. From the chart, we can see that by reducing the average column name length from 50 characters to 20 characters, we can shave off another few MB per file. That’s simple enough.</p>
+<p>We can shave another another few MB off by reducing the number of columns. That’s not so simple. We want to store that extra data with our training data, it’s useful for analysis and debugging. Parquet isn’t great for storing wide data (lots of columns) but 150 columns doesn’t seem <em>that</em> wide. We don’t want to separate the extra data into separate files because that requires tracking two datasets and joining them; it’s doable but it’s extra work. We could also reduce the extra columns by grouping them all into a single column of JSON or pyarrow structs. This works really well for reducing the size of the metadata but it necessitates knowing exactly which columns to group together and this is variable as our generated training data is updated regularly and has a few configurations. So that would also be a bit of a headache.</p>
+</section>
+<section id="youre-holding-it-wrong" class="level2">
+<h2 class="anchored" data-anchor-id="youre-holding-it-wrong"># You’re Holding it Wrong</h2>
+<p>Now, you might be thinking, “Parquet isn’t intended for these workloads, why not use a more appropriate file format?” And to that I say, yes it isn’t a typical workload but I challenge you to find a better file format that is efficient for random access patterns and still support projection pushdowns. Our use case should be fairly common for training machine learning models. There is already a <a href="https://github.com/apache/arrow/issues/39676">Pull Request in the Arrow project</a> to make Parquet metadata reading faster for random access patterns.</p>
+<p>The solution we’re now using, Parquet files without metadata nor encoding isn’t all that different from the Arrow format (A.K.A. Feather A.K.A. Arrow I.P.C.). We might consider storing our training data in Arrow format as PyArrow can directly read the bytes on disk without any additional processing. In theory, this could be faster than Parquet for our workloads but our initial benchmarks indicated that storing in Arrow format was no faster than storing in Parquet format.</p>
+<p>We also tried selecting rows directly with <a href="https://arrow.apache.org/docs/python/generated/pyarrow.dataset.Dataset.html#pyarrow.dataset.Dataset.take"><code>pa.dataset.take()</code></a> as that API is a bit cleaner and seems like the preferred way to select rows from a dataset. However, this was roughly 30% slower than rolling our solution.</p>
+</section>
+<section id="resources" class="level2">
+<h2 class="anchored" data-anchor-id="resources"># Resources</h2>
+<ul>
+<li><a href="https://arrow.apache.org/docs/python/generated/pyarrow.parquet.ParquetFile.html">Arrow Documentation</a></li>
+<li><a href="https://github.com/apache/arrow/issues/39676">Arrow - Faster Parquet Metadata Reading PR</a></li>
+</ul>
+
+
+<!-- -->
+
+</section>
+
+ ]]></description>
+  <category>parquet</category>
+  <guid>https://rtedwards.github.io/posts/parquet_metadata/</guid>
+  <pubDate>Sat, 01 Mar 2025 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Career Tips Learned the Hard Way</title>
   <link>https://rtedwards.github.io/posts/career_tips/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -94,6 +1363,7 @@
   <title>Deep Learning Notes</title>
   <link>https://rtedwards.github.io/posts/deep-learning-notes/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -264,6 +1534,7 @@
 
 
 
+
 <section id="pub-quiz" class="level2">
 <h2 class="anchored" data-anchor-id="pub-quiz"># Pub Quiz</h2>
 <p>Last week, my company held a pub quiz. This was no ordinary pub quiz, it was designed in a way for teams to learn about other teams. One person from each team submitted four questions about their team. We ended up wtih about 60 questions from all across the company. And when I say “all” I mean <em>all</em>. We had questions about Data Science, Commercial, Operations, Engineering, Product, Marketing, Leadership, Human Resources, you name it. As someone who is fairly familiar with all aspects of our products and engineering teams (but by no means an expert in all these areas) by having been here over four years and written my share of documentation, I came into the pub quiz <em>with confidence</em>. Much of that confidence due to expecting to not need to know British pop culture back through the 70s as is standard in an actual pub quiz.</p>
@@ -384,7 +1655,7 @@
 <div id="cell-normal-rv-sum-verification" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> altair <span class="im" style="color: #00769E;
 background-color: null;
@@ -835,7 +2106,7 @@ font-style: inherit;">"ϵ* (analytical)"</span>],</span>
 <span id="cb1-109"></span>
 <span id="cb1-110"><span class="bu" style="color: null;
 background-color: null;
-font-style: inherit;">print</span>(stats_df)</span></code></pre></div>
+font-style: inherit;">print</span>(stats_df)</span></code></pre></div></div>
 </details>
 <div id="normal-rv-sum-verification" class="cell-output cell-output-display">
 
@@ -941,7 +2212,7 @@ u                   2.005137  3.989215
 <div id="cell-plotted-signal" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="im" style="color: #00769E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> altair <span class="im" style="color: #00769E;
 background-color: null;
@@ -1303,7 +2574,7 @@ font-style: inherit;">10</span>)</span>
 <span id="cb3-72">    .add_params(selection)</span>
 <span id="cb3-73">)</span>
 <span id="cb3-74"></span>
-<span id="cb3-75">chart.display()</span></code></pre></div>
+<span id="cb3-75">chart.display()</span></code></pre></div></div>
 </details>
 <div id="plotted-signal" class="cell-output cell-output-display">
 
@@ -1399,7 +2670,7 @@ Watch this space.</p>
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-ross2010" class="csl-entry">
 Ross, Sheldon. 2010. <em>A First Course in Probability</em>. 8th ed. Pearson Prentice Hall.
 </div>
@@ -1819,6 +3090,289 @@ font-style: inherit;">0.5</span>}</span>
   <category>python</category>
   <guid>https://rtedwards.github.io/posts/waltzing_with_the_walrus/</guid>
   <pubDate>Sat, 12 Aug 2023 23:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Examples</title>
+  <link>https://rtedwards.github.io/posts/examples/</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>This post provides examples of rendered markdown and html elements.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that there are five types of callouts, including: <code>note</code>, <code>warning</code>, <code>important</code>, <code>tip</code>, and <code>caution</code>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip with Title
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is an example of a callout with a title.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Caution</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Important</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Warning</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Expand To Learn About Collapse
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>This is an example of a ‘folded’ caution callout that can be expanded by the user. You can use <code>collapse="true"</code> to collapse it by default or <code>collapse="false"</code> to make a collapsible callout that is expanded by default.</p>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>This is a quote</p>
+</blockquote>
+<section id="markdown" class="level2">
+<h2 class="anchored" data-anchor-id="markdown">Markdown</h2>
+<p>&nbsp; - 1 space<br>
+  - 2 spaces<br>
+  - 4 spaces<br>
+</p>
+</section>
+<section id="code" class="level2">
+<h2 class="anchored" data-anchor-id="code">Code</h2>
+<p>Let there be Rust! <code>let var = 10u32;</code></p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> func() <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-&gt;</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>:</span>
+<span id="cb1-2">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">"""docstring"""</span></span>
+<span id="cb1-3">    string <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hello"</span></span>
+<span id="cb1-4">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> string</span></code></pre></div>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">f</span>(x, y)</span>
+<span id="cb2-2">    x[<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">42</span>    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># mutates x</span></span>
+<span id="cb2-3">    y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> y    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># new binding for y, no mutation</span></span>
+<span id="cb2-4">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> y</span>
+<span id="cb2-5"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">end</span></span></code></pre></div>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode rust code-with-copy"><code class="sourceCode rust"><span id="cb3-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">let</span> var <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">vec!</span>[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"1"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2"</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"3"</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1">var <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"1"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"3"</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">var <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"1"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"3"</span>]</span></code></pre></div>
+<pre class="golang"><code>var = ["1", "2", "3"]</code></pre>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb7-1">var uint_8 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span></code></pre></div>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode cpp code-with-copy"><code class="sourceCode cpp"><span id="cb8-1">var uint_8 <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">;</span></span></code></pre></div>
+<div class="sourceCode" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pip</span> list <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grep</span> jupyter</span></code></pre></div>
+</section>
+<section id="latex" class="level2">
+<h2 class="anchored" data-anchor-id="latex">LaTeX</h2>
+<p><img src="https://latex.codecogs.com/png.latex?e%5Ex"></p>
+<p><img src="https://latex.codecogs.com/png.latex?x%20=%201%20+%20y"></p>
+<p><img src="https://latex.codecogs.com/png.latex?%20x%20=%201%20+%20y"></p>
+</section>
+<section id="embedding-interactive-maps-with-deck.gl" class="level2">
+<h2 class="anchored" data-anchor-id="embedding-interactive-maps-with-deck.gl">Embedding Interactive Maps with Deck.gl</h2>
+<section id="local-file" class="level3">
+<h3 class="anchored" data-anchor-id="local-file">Local file</h3>
+<p>Create deck.gl map and download as html. Save in known directory <code>static/assets/</code> <iframe src="../../assets/test/geojson_layer.html" style="border:0px #ffffff none; border-radius: 10px;" name="myiFrame" scrolling="no" frameborder="1" marginheight="0px" marginwidth="0px" height="600px" width="800px" allowfullscreen=""> </iframe></p>
+</section>
+<section id="remote-file-google-drive" class="level3">
+<h3 class="anchored" data-anchor-id="remote-file-google-drive">Remote File (Google Drive)</h3>
+<p>https://drive.google.com/file/d/[image_id]/view?usp=sharing https://drive.google.com/uc?export=view&amp;id=[image_id]</p>
+<p style="text-align:center;">
+<img src="https://drive.google.com/uc?export=view&amp;id=1pzaupboVK3_OIxad_gBTBDoLeAJrP2tB" style="border:0px #ffffff none; border-radius: 10px;" alt="animated vega-lite">
+</p>
+</section>
+<section id="remote-file-tiny-host" class="level3">
+<h3 class="anchored" data-anchor-id="remote-file-tiny-host">Remote file (Tiny Host)</h3>
+<ul>
+<li><code>https://tiiny.host</code> <iframe src="https://rose-clarey-19.tiiny.site/" style="border:0px #ffffff none; border-radius: 10px;" name="myiFrame" scrolling="no" frameborder="1" marginheight="0px" marginwidth="0px" height="300px" width="600px" allowfullscreen=""> </iframe></li>
+</ul>
+</section>
+<section id="youtube" class="level3">
+<h3 class="anchored" data-anchor-id="youtube">Youtube</h3>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/eGUEAvNpz48" title="YouTube video player" frameborder="0" allow="accelerometer;
+        autoplay;
+        clipboard-write;
+        encrypted-media;
+        gyroscope;
+        picture-in-picture" allowfullscreen="">
+</iframe>
+</section>
+</section>
+<section id="header-1" class="level1">
+<h1>Header 1</h1>
+<p>This is header 1.</p>
+<section id="header-2" class="level2">
+<h2 class="anchored" data-anchor-id="header-2">Header 2</h2>
+<p>This is header 2.</p>
+<section id="header-3" class="level3">
+<h3 class="anchored" data-anchor-id="header-3">Header 3</h3>
+<p>This is header 3.</p>
+<section id="header-4" class="level4">
+<h4 class="anchored" data-anchor-id="header-4">Header 4</h4>
+<p>This is header 4.</p>
+<section id="header-5" class="level5">
+<h5 class="anchored" data-anchor-id="header-5">Header 5</h5>
+<p>This is header 5.</p>
+<section id="header-6" class="level6">
+<h6 class="anchored" data-anchor-id="header-6">Header 6</h6>
+<p>This is header 6.</p>
+
+
+</section>
+</section>
+</section>
+</section>
+</section>
+</section>
+
+ ]]></description>
+  <category>test</category>
+  <guid>https://rtedwards.github.io/posts/examples/</guid>
+  <pubDate>Wed, 01 Jan 2020 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
