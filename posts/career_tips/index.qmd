@@ -1,0 +1,75 @@
+---
+title: "Career Tips Learned the Hard Way"
+date: "2024-06-01"
+# draft: true
+# draft-mode: visible
+categories: [career advice]
+description: "Career advice I've learned through blood, sweat, and tears."
+reading-time: true
+
+reference-location: document
+citation-location: document
+# bibliography: references.bib
+citations-hover: true
+
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    code-summary: ""
+---
+
+# # Introduction
+- Getting a Job
+  - Resume Tips
+  - Networking
+  - Cover Letter / Cold Outreach
+  - Always Be Interviewing
+  - Interviewing
+- At your job
+  - Brag Doc
+  - Glue Work
+  - Managing U
+
+# # Cover Letter / Cold Outreach
+I typically don't subscribe to cover letters.  More often than not no one is going to read them and at best won't make a difference in the decision and at worst will leave a less than great impression.  If a company asks for a cover letter I would either skip if it's optional or don't apply.  It's not worth your time investment.  
+
+However, if the company is small and / or you can reach out to the hiring manager directly, a short "cover letter" in the guise of an email can be a great way to get noticed and show your interest.
+
+> Dear {hiring manager},
+> 
+> I'm excited to submit my application for {job title} at {company}.  I found this job posting online and after comparing the responsibilities {x}, {x}, {z} to my own skills and interests {a}, {b}, {c}, I jumped at the chance to apply.  I believe my {x} years experience in {industry} have allowed me to develop the critical skills necessary to suscceed in this role. 
+Keep it short.  No one wants to read a long email from a stranger and you don't want to spend a good chunk of your time writing something that will be skimmed.
+
+# # Interviewing
+
+## Be a Story-Teller
+There are four stories you have to be able to tell.  These stories will answer almost every behavior-based question.
+- STAR method
+- Beginning, middle end
+
+##### Your most successful project or best accomplishment
+Knowing this will answer a great success or when you succeeded.  It will also answer a time when you hit a tight deadline or tight budget.
+
+##### Least successful story or time your failed
+It will answer questions about time you dealt with difficulties on a project.
+{}
+##### Story about a difficult stakeholder
+Might be more than one, supervisor, stakeholder, customer, co-worker.
+
+##### A passion project you've worked on
+Something you've worked on in the past or something you'd like to work on.  What gets you up in the morning?  What drives you?  Where you want to go with your career? 
+
+## How to ask about the culture
+Just as in a behavioral interview, the company is seeing how you behave through experiences, you can ask specific questions to learn how the company behaves in different situations.  For example:
+- How does the company encourage learning an growth?
+- Tel me about a mistake someone on the team made and how was it handled?
+- Tell me about a suggestion an employee made that was implemented by the company / team?
+- What's a recent projec that excited you?
+
+## How to answer 'tell me about yourself'
+Don't run them through everything in your resume.  They already have your resume and ends up being dry.  Instead you want to make sure you hit the following four components: your background, your passion, 3 relevant skills or strengths that you've built, and what you hope to achieve or get from your next role.  You can also share some personal details if appropriate.
+
+> Hi I'm {name}, I've been a {role} for the past {X} years and I have a background in {domain} and {domain}.  One of the things I really love about this job path is {what have you loved about your career path}.  The last few roles I've had have really helped me hone my skills in {skill 1}, {skill 2}, {skill 3}.  And I'm here today because I really want to take my skillset and apply it in the {company domain}.  Outside of work I love {hobby 1} and am really into {hobby 2}.
+
+> Hi I'm Robert, I've been a Data Scientist & Machine Learning Engineer for the past 5 years and have a background in Machine Learning, Distributed Systems, and Geospatial.  One of the things I really love about this job path is that there's never a dull day; there's always something new to explore in the data or some pipeline to get stuck into and optimize.  The last few roles have helped me develop my skills in stakeholder management, technical writing, and cross-team collaboration.  I've excelled at smaller startups and have developed a wide range of skillsets and I'm here today because I want to go deep in Machine Learning and training on big datasets.  Outside of work I love to go climbing and backpacking and am really into cooking at home. 

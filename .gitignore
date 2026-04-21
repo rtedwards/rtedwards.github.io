@@ -10,3 +10,5 @@ venv
 # Quarto
 _site/
 _freeze
+**/*.quarto_ipynb
+_quarto_internal_scss_error.scss
