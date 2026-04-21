@@ -1,1 +1,6 @@
+---
+title: "Posts"
+listing: true
+---
+
 Not much to see here eh?

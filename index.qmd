@@ -1,7 +1,7 @@
 ---
 title: "The Bear's Toes"
 listing:
-  contents: posts/**/*.qmd
+  contents: posts/*/index.qmd
   sort: "date desc"
   type: table
   date-format: iso
