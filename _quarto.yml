@@ -1,10 +1,20 @@
 project:
   type: website
   output-dir: docs
+  # Referenced from an <iframe src> in posts/examples, which Quarto can't
+  # auto-detect as a dependency, so it must be declared explicitly.
+  resources:
+    - assets/test/geojson_layer.html
+  # Explicit list so stray top-level markdown (e.g. TRASH-FILES.md, README.md)
+  # is not turned into a published page.
+  render:
+    - "*.qmd"
+    - "LICENSE.md"
+    - "posts/"
 
 website:
   title: "The Bear's Toes"
-  site-url: https://rtedwards.github.io/
+  site-url: https://bear-toes.pages.dev/
   favicon: icon/profile-circle.png
   page-navigation: true
   open-graph: true
@@ -25,7 +35,7 @@ website:
         href: index.qmd
     right:
       - icon: github
-        href: https://rtedwards.github.io/
+        href: https://github.com/rtedwards
         aria-label: GitHub
       - icon: linkedin
         href: https://www.linkedin.com/in/robert-edwards-3b98865/

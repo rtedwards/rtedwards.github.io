@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://rtedwards.github.io/about.html</loc>
-    <lastmod>2026-04-21T07:26:53.628Z</lastmod>
+    <loc>https://bear-toes.pages.dev/LICENSE.html</loc>
+    <lastmod>2024-04-01T11:29:53.326Z</lastmod>
   </url>
   <url>
-    <loc>https://rtedwards.github.io/posts/waltzing_with_the_walrus/index.html</loc>
-    <lastmod>2024-01-13T23:35:21.401Z</lastmod>
-  </url>
-  <url>
-    <loc>https://rtedwards.github.io/index.html</loc>
-    <lastmod>2026-04-21T08:17:58.423Z</lastmod>
-  </url>
-  <url>
-    <loc>https://rtedwards.github.io/posts/summing_random_variables/index.html</loc>
+    <loc>https://bear-toes.pages.dev/posts/torch-distributed-explained/index.html</loc>
     <lastmod>2026-04-21T08:00:38.602Z</lastmod>
   </url>
   <url>
-    <loc>https://rtedwards.github.io/LICENSE.html</loc>
-    <lastmod>2024-01-14T00:32:26.202Z</lastmod>
+    <loc>https://bear-toes.pages.dev/posts/stream-statistics/index.html</loc>
+    <lastmod>2026-04-21T08:00:38.601Z</lastmod>
   </url>
   <url>
-    <loc>https://rtedwards.github.io/posts/career_tips/index.html</loc>
-    <lastmod>2026-04-21T08:09:21.272Z</lastmod>
-  </url>
-  <url>
-    <loc>https://rtedwards.github.io/posts/deep-learning-notes/index.html</loc>
-    <lastmod>2026-04-21T08:09:21.272Z</lastmod>
-  </url>
-  <url>
-    <loc>https://rtedwards.github.io/posts/parquet_metadata/index.html</loc>
-    <lastmod>2026-04-21T18:03:37.122Z</lastmod>
-  </url>
-  <url>
-    <loc>https://rtedwards.github.io/posts/index.html</loc>
+    <loc>https://bear-toes.pages.dev/posts/index.html</loc>
     <lastmod>2026-04-21T17:57:51.305Z</lastmod>
   </url>
   <url>
-    <loc>https://rtedwards.github.io/posts/parquet_compression/index.html</loc>
-    <lastmod>2026-04-21T09:12:13.557Z</lastmod>
+    <loc>https://bear-toes.pages.dev/posts/deep-learning-notes/index.html</loc>
+    <lastmod>2026-04-21T08:09:21.272Z</lastmod>
   </url>
   <url>
-    <loc>https://rtedwards.github.io/posts/torch-distributed-explained/index.html</loc>
-    <lastmod>2026-08-22T17:09:15.326Z</lastmod>
+    <loc>https://bear-toes.pages.dev/index.html</loc>
+    <lastmod>2026-04-21T08:17:58.423Z</lastmod>
+  </url>
+  <url>
+    <loc>https://bear-toes.pages.dev/about.html</loc>
+    <lastmod>2026-04-21T08:00:38.540Z</lastmod>
+  </url>
+  <url>
+    <loc>https://bear-toes.pages.dev/posts/career_tips/index.html</loc>
+    <lastmod>2026-04-21T08:09:21.272Z</lastmod>
+  </url>
+  <url>
+    <loc>https://bear-toes.pages.dev/posts/parquet_metadata/index.html</loc>
+    <lastmod>2026-04-21T18:03:37.122Z</lastmod>
+  </url>
+  <url>
+    <loc>https://bear-toes.pages.dev/posts/summing_random_variables/index.html</loc>
+    <lastmod>2026-04-21T08:00:38.602Z</lastmod>
+  </url>
+  <url>
+    <loc>https://bear-toes.pages.dev/posts/waltzing_with_the_walrus/index.html</loc>
+    <lastmod>2024-04-01T11:29:53.344Z</lastmod>
   </url>
 </urlset>
