@@ -19,11 +19,9 @@ website:
   page-navigation: true
   open-graph: true
   reader-mode: true
-  google-analytics:
-    tracking-id: G-RTR8YLS84R
-    storage: cookies
-    anonymize-ip: true
-  cookie-consent: implied
+  # Analytics is Cloudflare Web Analytics, injected via format.html
+  # include-after-body below. It sets no cookies, so no consent banner is
+  # needed and google-analytics/cookie-consent are deliberately absent.
   search:
     location: navbar
     type: textbox
@@ -58,5 +56,13 @@ format:
     theme:
       dark: css/dark.scss
       light: css/light.scss
+    # Cloudflare Web Analytics. Pages is documented as offering a one-click
+    # toggle under the project's Metrics tab, but that control is absent from
+    # the dashboard (cloudflare/cloudflare-docs#17187), so the beacon is
+    # installed by hand. The token is a public site identifier, not a secret.
+    # Only one such snippet may render per page.
+    include-after-body:
+      text: |
+        <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1a257cb2a13c4b63a087d96bc4d89131"}'></script><!-- End Cloudflare Web Analytics -->
 
 highlight-style: atom-one #github #gruvbox #breeze
