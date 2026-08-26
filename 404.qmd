@@ -1,0 +1,18 @@
+---
+title: "404"
+subtitle: "This page has wandered off."
+page-layout: article
+toc: false
+search: false
+sitemap: false
+---
+
+The page you were looking for is not here. It may have been moved or renamed,
+or the link that brought you here may be wrong.
+
+- [Home](/)
+- [Blog](/posts/)
+- [About](/about.html)
+
+If you followed a link on this site to get here, I would like to know about it
+&mdash; the source is on [GitHub](https://github.com/rtedwards/rtedwards.github.io).
