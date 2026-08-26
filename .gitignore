@@ -2,6 +2,8 @@
 .mypy_cache
 .ipynb_checkpoints
 
+TRASH/
+
 /.quarto/
 
 .DS_Store
@@ -12,3 +14,6 @@ _site/
 _freeze
 **/*.quarto_ipynb
 _quarto_internal_scss_error.scss
+
+# Local bookkeeping for the trash-instead-of-delete convention
+TRASH-FILES.md

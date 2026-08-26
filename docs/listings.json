@@ -1,5 +1,17 @@
 [
   {
+    "listing": "/posts/index.html",
+    "items": [
+      "/posts/career_tips/index.html",
+      "/posts/parquet_metadata/index.html",
+      "/posts/deep-learning-notes/index.html",
+      "/posts/torch-distributed-explained/index.html",
+      "/posts/summing_random_variables/index.html",
+      "/posts/stream-statistics/index.html",
+      "/posts/waltzing_with_the_walrus/index.html"
+    ]
+  },
+  {
     "listing": "/index.html",
     "items": [
       "/posts/torch-distributed-explained/index.html",
@@ -8,21 +20,6 @@
       "/posts/career_tips/index.html",
       "/posts/deep-learning-notes/index.html",
       "/posts/summing_random_variables/index.html",
-      "/posts/waltzing_with_the_walrus/index.html",
-      "/posts/examples/index.html"
-    ]
-  },
-  {
-    "listing": "/posts/index.html",
-    "items": [
-      "/posts/parquet_compression/index.html",
-      "/posts/career_tips/index.html",
-      "/posts/parquet_metadata/index.html",
-      "/posts/deep-learning-notes/index.html",
-      "/posts/torch-distributed-explained/index.html",
-      "/posts/examples/index.html",
-      "/posts/summing_random_variables/index.html",
-      "/posts/stream-statistics/index.html",
       "/posts/waltzing_with_the_walrus/index.html"
     ]
   }

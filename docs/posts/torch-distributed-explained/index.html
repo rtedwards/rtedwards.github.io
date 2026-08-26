@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -79,12 +79,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-4e5466e430b1db38349d513585fd1d59.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-43b2d995d73a1754bd3a6f5d899fe64b.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-6d40f8af7092f34acea1908532066003.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-cac0433bb97fa58dc0fc6599c25c149a.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-37ce69c44ba9a24c267c63a33b8f416d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-9c43cd9912dec6c455f52cc28560cb61.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-0a819ed050695c83f671f3d76663f854.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-ce70be97e1a5054c7b3e41315b29b18c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -333,7 +333,7 @@ cookieconsent.run({
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://rtedwards.github.io/"> <i class="bi bi-github" role="img" aria-label="GitHub">
+    <a class="nav-link" href="https://github.com/rtedwards"> <i class="bi bi-github" role="img" aria-label="GitHub">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -503,7 +503,7 @@ cookieconsent.run({
 <li>Train the model and update sampler with the epoch</li>
 <li>Destroy the process group using <code>destroy_process_group</code></li>
 </ol>
-<div id="multi-gpu" class="cell">
+<div id="multi-gpu" class="cell" data-execution_count="1">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data.distributed <span class="im">import</span> DistributedSampler</span>
@@ -605,7 +605,7 @@ cookieconsent.run({
 <section id="communication-host-and-port" class="level3">
 <h3 class="anchored" data-anchor-id="communication-host-and-port">1. Communication: host and port</h3>
 <p>Setting up distributed training on a single (local) node is as simple as setting the host and port as below. To setup multi-node see <a href="https://pytorch.org/tutorials/intermediate/ddp_series_multinode.html">torchrun</a>.</p>
-<div id="host-and-port" class="cell">
+<div id="host-and-port" class="cell" data-execution_count="2">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
@@ -617,7 +617,7 @@ cookieconsent.run({
 <section id="spawn-a-process-on-each-rank-gpu" class="level3">
 <h3 class="anchored" data-anchor-id="spawn-a-process-on-each-rank-gpu">2. Spawn a process on each rank (GPU)</h3>
 <p>Since <code>torch.multiprocessing</code> follows the same API as <code>multiprocessing</code>. To spawn a new process we pass the function to run, the arguments as a tuple, and specify the number of processes (usually the number of GPUs).</p>
-<div id="spawn-process-on-each-rank" class="cell">
+<div id="spawn-process-on-each-rank" class="cell" data-execution_count="3">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -647,7 +647,7 @@ cookieconsent.run({
 <li><a href="https://pytorch.org/docs/stable/distributed.html?highlight=init_process_group#torch.distributed.init_process_group">init_process_group</a> initializes the distributed process group.</li>
 <li>Read more about <a href="https://pytorch.org/docs/stable/distributed.html#which-backend-to-use">choosing a DDP backend</a>.</li>
 </ul>
-<div id="initializing-process-group" class="cell">
+<div id="initializing-process-group" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.distributed <span class="im">import</span> init_process_group</span>
@@ -691,7 +691,7 @@ cookieconsent.run({
 <p>If the batch_size isn’t divided among the processes then then each process gets a full batch and the effective batch size is now x<code>world_size</code> larger and we are likely to run out of CPU or GPU memory if not careful.</p>
 </div>
 </div>
-<div id="distributing-workload-across-workers" class="cell">
+<div id="distributing-workload-across-workers" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># we need to divide the workers and batch across the different processes used in distributed training</span></span>
@@ -707,7 +707,7 @@ cookieconsent.run({
 <li><code>drop_last</code> - by default, the <code>DistributedSampler</code> will append additional samples to fill an incomplete batch (e.g.&nbsp;there’s 100 training samples with <code>batch_size=64</code> there would be one batch of 36 samples). We don’t want to repeat samples for the validation dataset as that would change the metrics.</li>
 <li><code>pin_memory</code> - For large datasets that are loaded into the CPU in the <code>Dataset</code>, pinning the memory can speed up the host to device transfer (see this <a href="https://developer.nvidia.com/blog/how-optimize-data-transfers-cuda-cc/#pinned_host_memory">NVIDIA blog</a> for more details).</li>
 </ul>
-<div id="distributed-sampler" class="cell">
+<div id="distributed-sampler" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># DistributedSampler ensures that training data is chunked across GPUs without overlapping samples</span></span>
@@ -744,7 +744,7 @@ cookieconsent.run({
 <ul>
 <li>Calling the <code>set_epoch()</code> method on the <code>DistributedSampler</code> at the beginning of each epoch is necessary to make shuffling work properly across multiple epochs. Otherwise, the same ordering will be used in each epoch.</li>
 </ul>
-<div id="shuffling-across-epochs" class="cell">
+<div id="shuffling-across-epochs" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ... Neural Network setup</span></span>
@@ -779,7 +779,7 @@ cookieconsent.run({
 <p><a href="https://pytorch.org/docs/stable/multiprocessing.html">PyTorch’s <code>torch.multiprocessing</code> package</a> is a wrapper around the native <code>multiprocessing</code> module and the API is 100% compatible.</p>
 </div>
 </div>
-<div id="mean-and-variance" class="cell">
+<div id="mean-and-variance" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -807,7 +807,7 @@ cookieconsent.run({
 <section id="mlflow-logging" class="level3">
 <h3 class="anchored" data-anchor-id="mlflow-logging">MLFlow logging</h3>
 <p>Since there are now multiple processes runnning the same code, the same logging will happen on each process. MLFlow doesn’t know how to distinguish that there are different processes logging the same metric. We can guard against this by only logging on the main process (GPU0):</p>
-<div id="mlflow-and-torch.distributed" class="cell">
+<div id="mlflow-and-torch.distributed" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> mlflow</span>
@@ -860,7 +860,7 @@ cookieconsent.run({
 <section id="example-torch.distributed.reduce" class="level3">
 <h3 class="anchored" data-anchor-id="example-torch.distributed.reduce">Example: <code>torch.distributed.reduce</code></h3>
 <p>In this example, we gather and combine using summation with the <code>dist.ReduceOp.SUM</code>, all the <code>loss_tensor</code>s into the process <code>0</code> tensor (<code>dst=0</code>). Each tensor in each process must be the same shape. Since we are assigning the values in each processes’s <code>loss_tensor</code> to it’s rank, we expect the final gathered values to be <code>0 + 1 + 2 + 3 = 6</code> in the main process <code>loss_tensor</code>.</p>
-<div id="example-torch.distributed.reduce" class="cell">
+<div id="example-torch.distributed.reduce" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
@@ -907,7 +907,7 @@ tensor([3, 3], device='cuda:3')</code></pre>
 <section id="example-torch.distributed.all_reduce" class="level3">
 <h3 class="anchored" data-anchor-id="example-torch.distributed.all_reduce">Example: <code>torch.distributed.all_reduce</code></h3>
 <p>In this example, we gather and combine using summation with the <code>dist.ReduceOp.SUM</code>, all the <code>loss_tensor</code>s into all the processes. Each tensor in each process must be the same shape. Since we are assigning the values in each processes’s <code>loss_tensor</code> to it’s rank, we expect the final gathered values to be <code>0 + 1 + 2 + 3 = 6</code> in the all the processes’s <code>loss_tensor</code>.</p>
-<div id="example-torch.distributed.all_reduce" class="cell">
+<div id="example-torch.distributed.all_reduce" class="cell" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
@@ -955,7 +955,7 @@ tensor([6, 6], device='cuda:0')</code></pre>
 <h3 class="anchored" data-anchor-id="example-torch.distributed.gather_object">Example: <code>torch.distributed.gather_object</code></h3>
 <p>Syncing across processing is simple enough for tensors, but if we have a number of values to gather (say a bunch of metrics for example) it would be easier to only need to gather once and store those values in an appropriate data structure. Most of the distributed gathering function only work on tensors, but we can use <a href="https://pytorch.org/docs/stable/distributed.html#torch.distributed.gather_object"><code>torch.distributed.gather_object</code></a> and / or <a href="https://pytorch.org/docs/stable/distributed.html#torch.distributed.all_gather_object"><code>torch.distributed.all_gather_object</code></a> to pass pickleable Python objects between ranks.</p>
 <p>In this example, we want to track the losses and number of samples in a <code>Counter</code> so that we can combine and calculate the mean loss after gathering. We gather each loss counter to rank 0. Each counter is placed into the <code>gather_list</code>, which must have all elements set to <code>None</code> initially. When calling, <code>dist.gather_object</code>, the <code>gather_list</code> must only exist in the rank being gathered to (<code>dst=0</code> or rank 0 in this case). Then we use <code>functools.reduce</code> to sum all the Counters gathered in the <code>gather_list</code>.</p>
-<div id="example-torch.distributed.gather_object" class="cell">
+<div id="example-torch.distributed.gather_object" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
@@ -1009,7 +1009,7 @@ Counter({'num_samples': 2, 'loss': 0.01})</code></pre>
 <section id="example-torch.distributed.all_gather_object" class="level3">
 <h3 class="anchored" data-anchor-id="example-torch.distributed.all_gather_object">Example: <code>torch.distributed.all_gather_object</code></h3>
 <p>In this example, we want to track the losses and number of samples in a <code>Counter</code> so that we can combine and calculate the mean loss after gathering. We gather each loss counter to each rank. Each counter is placed into the <code>gather_list</code>, which must have all elements set to <code>None</code> initially. Then we use <code>functools.reduce</code> to sum all the Counters gathered in the <code>gather_list</code>.</p>
-<div id="example-torch.distributed.all_gather_object" class="cell">
+<div id="example-torch.distributed.all_gather_object" class="cell" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
@@ -1226,7 +1226,7 @@ Counter({'num_samples': 10, 'loss': 0.04})</code></pre>
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/rtedwards\.github\.io\/");
+        var filterRegex = new RegExp("https:\/\/bear-toes\.pages\.dev\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
