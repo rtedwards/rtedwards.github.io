@@ -32,9 +32,16 @@ The site is rendered locally and the `docs/` output is committed — Cloudflare
 does no build of its own. To publish:
 
 ```bash
-just build          # renders to docs/
-git add -A && git commit && git push
+just build              # renders to docs/ — skipping this publishes stale HTML
+git add -u              # modified and deleted tracked files
+git add docs posts      # any newly created output or source files
+git commit
+git push
 ```
+
+Source and `docs/` must be committed together. Because Cloudflare runs no build,
+forgetting `just build` fails silently: the deploy succeeds and the site simply
+keeps serving the previous content.
 
 The project is Git-connected via the Cloudflare GitHub App, so pushing to `main`
 triggers a deploy. Note that connecting the repo, and the build settings below,
