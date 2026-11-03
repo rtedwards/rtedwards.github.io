@@ -1,0 +1,342 @@
+---
+import Base from '../layouts/Base.astro';
+
+// The bear walks left to right toward the trail sign in a straight line, front and hind feet
+// landing as pairs on alternating sides. Each print lights up in turn and fades in the same
+// order, so the trail fades behind the bear.
+const cycle = 10; // seconds for one full walk
+const stride = 0.5; // seconds between prints, an estimate; no source gave a walking cadence
+const fadeIn = 3; // percent of the cycle each print takes to appear
+const hold = 35; // percent of the cycle each print stays lit after it appears
+const fadeOut = 4; // percent of the cycle each print takes to fade
+const count = 10; // five front and hind pairs, so the walk ends on a full pair
+const first = 3; // percent of the page width where the walk starts
+const last = 94; // and where it ends, so the trail crosses the whole page
+const hindOffset = 4; // percent of the page width the hind foot lands behind its front foot
+const pairSpan = (last - first - hindOffset) / (Math.ceil(count / 2) - 1); // between pairs
+const isHind = (i: number) => i % 2 === 1;
+const pairOf = (i: number) => Math.floor(i / 2);
+const side = (i: number) => (pairOf(i) % 2 === 0 ? -1 : 1) * 5; // pixels off the centre line
+
+// A small seeded random generator (mulberry32), so every build draws the same uneven trail.
+function seeded(seed: number) {
+  let a = seed;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// Black bear heel pads, drawn around (20, 28) so they can be stretched about that point.
+// The front pad is a wide, flat bean with a dip along its lower edge.
+const frontHeel =
+  'M 8 26 C 8 21.5 12 20.5 16 20.8 C 18.5 21 21.5 21 24 20.8 C 28 20.5 32 21.5 32 26 ' +
+  'C 32 30.5 29 32.5 25 32.2 C 22.5 32 22 30.5 20 30.5 C 18 30.5 17.5 32 15 32.2 C 11 32.5 8 30.5 8 26 Z';
+// The hind pad is taller, rounded at the top and drawn out to a lobe at the back.
+const hindHeel =
+  'M 20 19.5 C 26 19.5 29.5 22.5 29 27 C 28.5 31 25 31.5 22.5 31 C 21.5 33 19.5 35.5 16.5 36 ' +
+  'C 12.5 36.5 11.5 33.5 12.5 30 C 13.5 25 13 19.5 20 19.5 Z';
+
+// A claw: a crescent spike rising from a 2-unit base at (0, 0), the gap above the toe's tip.
+// `bend` is how far sideways the tip reaches, as a fraction of the length (positive curls
+// right). Both edges bow away from the bend, the back edge more, so the claw stays thick at
+// the base and tapers to a hooked point.
+function claw(length: number, bend: number) {
+  const tipX = bend * length;
+  const sag = -Math.sign(bend) * (0.15 + Math.abs(bend) * 0.5) * length;
+  const back = `${((tipX - 1) / 2 + sag).toFixed(2)} ${(-length / 2).toFixed(2)}`;
+  const front = `${((tipX + 1) / 2 + sag * 0.6).toFixed(2)} ${(-length / 2).toFixed(2)}`;
+  return `M -1 0 Q ${back} ${tipX.toFixed(2)} ${(-length).toFixed(2)} Q ${front} 1 0 Z`;
+}
+
+// One bear paw, nudged a little so no two prints match: the heel stretches, each of the five
+// toes shifts, resizes and turns, each claw grows or shrinks, and the whole print scales and
+// tilts a few degrees. Offsets stay small enough that every shape stays inside 40 x 40.
+function paw(i: number) {
+  const random = seeded(i + 1);
+  const vary = (base: number, amount: number) => base + (random() * 2 - 1) * amount;
+  // Toes fan out in an arc above the heel, outer toes leaning outward: x, y, lean in degrees,
+  // and claw bend. The claws curl back in toward the middle, which also keeps the outer
+  // claws inside the drawing.
+  const toes = [
+    [6.5, 19, -28, 0.35],
+    [12, 12.6, -12, 0.25],
+    [20, 10.6, 0, 0],
+    [28, 12.6, 12, -0.25],
+    [33.5, 19, 28, -0.35],
+  ].map(([x, y, lean, bend]) => {
+    const ry = vary(3.4, 0.4);
+    return {
+      cx: vary(x, 0.7),
+      cy: vary(y, 0.7),
+      rx: vary(2.6, 0.3),
+      ry,
+      lean: vary(lean, 5),
+      // Claws start just clear of the toe, as in a print where the claw tip sinks deeper.
+      clawAt: -ry - 0.7,
+      claw: claw(vary(4, 0.9), vary(bend, 0.1)),
+    };
+  });
+  return {
+    heelScale: { x: vary(1, 0.06), y: vary(1, 0.06) },
+    toes,
+    scale: vary(1, 0.08),
+    tilt: vary(0, 6),
+  };
+}
+
+const prints = Array.from({ length: count }, (_, i) => {
+  const start = (i * stride * 100) / cycle;
+  const shape = paw(i);
+  return {
+    i,
+    shape,
+    // Right-side prints are mirror images of left-side ones, so flip them across the x axis.
+    sx: (side(i) > 0 ? -1 : 1) * shape.scale,
+    left: first + hindOffset + pairOf(i) * pairSpan - (isHind(i) ? hindOffset : 0),
+    top: 400 + side(i),
+    // Toes point up in the drawing, so turn them to face along the trail. Hind feet splay a
+    // little more than front feet.
+    rotate: 90 + (isHind(i) ? -4 : 4) + shape.tilt,
+    start,
+    on: start + fadeIn,
+    fading: start + hold,
+    off: start + hold + fadeOut,
+  };
+});
+// The last print has to be gone before the loop restarts, or it would blink off at 100%.
+if (prints[count - 1].off > 100) throw new Error('bear trail: the last print outlives the cycle');
+const keyframes = prints
+  .map(
+    (p) => `@keyframes bear-walk-${p.i} {
+  0%, ${p.start.toFixed(2)}% { opacity: 0; }
+  ${p.on.toFixed(2)}%, ${p.fading.toFixed(2)}% { opacity: 1; }
+  ${p.off.toFixed(2)}%, 100% { opacity: 0; }
+}`,
+  )
+  .join('\n');
+
+// The board outline: a plain rectangle.
+const board = 'M 8 6 H 352 V 176 H 8 Z';
+---
+
+<Base title="Page not found" description="This trail does not lead anywhere.">
+  <section class="lost">
+    <div class="trail" aria-hidden="true">
+      {prints.map((p) => (
+        <svg
+          class="bear-print"
+          viewBox="0 0 40 40"
+          style={`left: ${p.left.toFixed(2)}%; top: ${p.top.toFixed(1)}px; transform: rotate(${p.rotate.toFixed(1)}deg) scale(${p.sx.toFixed(3)}, ${p.shape.scale.toFixed(3)}); animation: bear-walk-${p.i} ${cycle}s linear infinite;`}
+        >
+          <path
+            d={p.i % 2 === 0 ? frontHeel : hindHeel}
+            transform={`translate(20 28) scale(${p.shape.heelScale.x.toFixed(3)} ${p.shape.heelScale.y.toFixed(3)}) translate(-20 -28)`}
+          />
+          {p.shape.toes.map((t) => (
+            <g transform={`translate(${t.cx.toFixed(2)} ${t.cy.toFixed(2)}) rotate(${t.lean.toFixed(1)})`}>
+              <ellipse rx={t.rx.toFixed(2)} ry={t.ry.toFixed(2)} />
+              <path d={t.claw} transform={`translate(0 ${t.clawAt.toFixed(2)})`} />
+            </g>
+          ))}
+        </svg>
+      ))}
+
+      <div class="sign">
+        <svg class="wood" viewBox="0 -40 360 420" role="img" aria-label="A wooden trail sign">
+          <defs>
+          </defs>
+
+          <!-- The post's top pokes out above the board. Drawn first so the frame covers the join. -->
+          <rect x="173" y="-36" width="14" height="44" rx="2" class="post" />
+          <path d="M 177 -30 V -6 M 182 -26 Q 183.5 -16 182 -2" class="grain" />
+
+          <path d={board} class="outline" />
+          <path d="M 18 4 Q 44 5.5 72 4.2 M 26 8.4 H 54 M 6 18 Q 7.5 40 6.2 66 M 10.2 26 V 50 M 342 177.8 Q 316 176.5 288 177.6 M 334 173.6 H 306 M 354 164 Q 352.5 142 353.8 116 M 349.8 156 V 132" class="grain" />
+
+          <rect x="173" y="176" width="14" height="204" class="post" />
+          <path d="M 176 190 Q 177.5 202 176 214 T 176 240 M 180 200 V 236 M 184 186 Q 182.5 200 184 206 M 176 228 V 262 M 180 252 V 290 M 184 270 V 304 M 176 290 Q 177.5 310 176 330 M 184 318 V 352 M 180 336 V 368" class="grain" />
+          <rect x="166" y="170" width="28" height="10" rx="5" class="strap" />
+
+          <!-- One nail through each joint, on the post's centre line. -->
+          <circle class="nail" cx="180" cy="6" r="4.5" />
+          <circle class="nail" cx="180" cy="176" r="4.5" />
+        </svg>
+        <div class="words">
+          <a class="row" href="/"><span class="arrow" aria-hidden="true">←</span><span class="place">Home</span><span class="dist">0.6 km</span></a>
+          <a class="row" href="/about/"><span></span><span class="place">About</span><span class="dist">1.9 km</span><span class="aimed" data-aim="/about/" aria-hidden="true">→</span></a>
+          <a class="row" href="/cv/"><span></span><span class="place">CV</span><span class="dist">3.1 km</span><span class="aimed" data-aim="/cv/" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // The header links move with the window width, so a fixed angle would only be right at one
+  // size. Turn each arrow to face the link it names, and again whenever the layout changes.
+  function aimArrows() {
+    for (const arrow of document.querySelectorAll<HTMLElement>('.aimed')) {
+      const target = document.querySelector(`.site-header nav a[href="${arrow.dataset.aim}"]`);
+      if (!target) continue;
+      const from = arrow.getBoundingClientRect();
+      const to = target.getBoundingClientRect();
+      const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+      const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+      // The glyph points right (0deg); rotation is clockwise, matching screen y growing down.
+      arrow.style.transform = `rotate(${((Math.atan2(dy, dx) * 180) / Math.PI).toFixed(1)}deg)`;
+    }
+  }
+  aimArrows();
+  // Web fonts can shift the header once they load.
+  document.fonts?.ready.then(aimArrows);
+  addEventListener('resize', aimArrows);
+</script>
+
+<style>
+  .lost {
+    text-align: center;
+  }
+
+  .trail {
+    position: relative;
+    height: 470px;
+    margin-top: 1rem;
+    overflow: hidden;
+  }
+
+  .sign {
+    position: absolute;
+    left: 50%;
+    top: 24px;
+    transform: translateX(-50%);
+    width: min(280px, 80%);
+    opacity: 0;
+    animation: sign-in 0.8s 3.2s ease-out forwards;
+  }
+
+  .wood {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* An open outline in the accent yellow, so the page shows through the middle. */
+  .outline {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 12;
+    stroke-linejoin: round;
+  }
+
+  .post {
+    fill: var(--accent);
+  }
+
+  /* Wood grain is cut into the yellow, so it shows the page background through. */
+  .grain {
+    fill: none;
+    stroke: var(--bg);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+
+  .strap {
+    fill: var(--accent);
+  }
+
+  /* Nails are holes punched through the joint, so they show the page background. */
+  .nail {
+    fill: var(--bg);
+  }
+
+  /* The box is exactly the inside of the frame (y 12 to 170 in the 420-tall drawing that starts
+     at y -40), so centring the words in it centres them on the board. */
+  .words {
+    position: absolute;
+    top: 12.38%;
+    right: 8%;
+    bottom: 50%;
+    left: 8%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.7rem;
+    color: var(--accent);
+    /* Routed trail-sign lettering: bold capitals, widely spaced. */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+
+  /* Each line reads arrow, place, distance, arrow, with the distances lined up. A line points
+     left or right by filling one arrow slot, as on a real trail sign. */
+  .row {
+    display: grid;
+    grid-template-columns: 1.3em 1fr auto 1.3em;
+    column-gap: 0.4em;
+    align-items: center;
+    margin: 0;
+    line-height: 1.2;
+    text-align: left;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .dist {
+    text-align: right;
+  }
+
+  /* A sign has no underline, so show the link on hover and focus instead. */
+  a.row:hover .place,
+  a.row:focus-visible .place {
+    text-decoration: underline;
+  }
+
+  /* transform needs a box, and an inline span has none */
+  .arrow {
+    display: inline-block;
+    transform: rotate(46deg);
+  }
+
+  /* Turned by the script below to face its header link; without script it points right. */
+  .aimed {
+    display: inline-block;
+  }
+
+  @keyframes sign-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sign {
+      opacity: 1;
+      animation: none;
+    }
+  }
+</style>
+
+<style is:global set:html={`
+  .bear-print {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    fill: var(--accent);
+  }
+
+  ${keyframes}
+
+  @media (prefers-reduced-motion: reduce) {
+    .bear-print {
+      animation: none !important;
+      opacity: 1;
+    }
+  }
+`}></style>
