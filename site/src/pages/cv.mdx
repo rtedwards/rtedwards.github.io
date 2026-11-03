@@ -7,13 +7,13 @@ layout: ../layouts/Page.astro
 <article class="cv">
   <h1>Robert Edwards</h1>
   <p class="cv-summary">
-    Lead AI and ML engineer.  Owns AI strategy, roadmap and delivery at Bazze, and leads a team of four.  Built the engineering practice at three consecutive companies, from CI/CD and code standards to a model release process.  Background in robotics, geospatial data and distributed systems, and builds a database engine in Rust as a side project.
+    My background in robotics, data science and ML / AI has given me a rich exposure across fields and has enabled me to explore a number of topics that interest me.  Currently I'm building AI agents by day and learning about database design and internals by night.
   </p>
 
 <h2>Experience</h2>
 
 <section class="role">
-    <div class="role-head"><span><strong>Lead AI Engineer</strong> | <em>Bazze</em></span><span class="role-date">June 2025 to present</span></div>
+    <div class="role-head"><span><strong>Lead AI Engineer</strong> | <em>Bazze</em></span><span class="role-date">Jun 2025 - present</span></div>
 
 - I own the AI strategy, roadmap and delivery.  I built an AI analytics assistant.  It is built with PydanticAI and AWS Bedrock.
 - A user asks a question in plain language.  The assistant writes SQL over the company's data in DuckDB.  When a query fails, the assistant reads the schema context that the system injects, and it corrects the query.  Time to insight fell from days to minutes.
@@ -24,7 +24,7 @@ layout: ../layouts/Page.astro
 </section>
 
 <section class="role">
-    <div class="role-head"><span><strong>Machine Learning Engineer</strong> | <em>Orbio Earth (YC S23)</em></span><span class="role-date">June 2024 to June 2025</span></div>
+    <div class="role-head"><span><strong>Machine Learning Engineer</strong> | <em>Orbio Earth (YC S23)</em></span><span class="role-date">Jun 2024 - Jun 2025</span></div>
     <p class="role-summary"><em>Methane detection in satellite imagery with computer vision.</em></p>
 
 - The company built a model that finds methane plumes in satellite scenes.  I worked on the data path, the training stack and the release process.
@@ -38,7 +38,7 @@ layout: ../layouts/Page.astro
 </section>
 
 <section class="role">
-    <div class="role-head"><span><strong>Senior Data Scientist</strong> | <em>General System</em></span><span class="role-date">April 2023 to May 2024</span></div>
+    <div class="role-head"><span><strong>Senior Data Scientist</strong> | <em>General System</em></span><span class="role-date">Apr 2023 - May 2024</span></div>
     <p class="role-summary"><em>A geospatial and spatiotemporal data platform.</em></p>
 
 - I ran the Developer Portal with the Product Director, the CMO and the tech leads.  It has documentation, tutorials, demo videos and a Python SDK.  Customers can integrate with the platform without help from the engineering team.
@@ -49,7 +49,7 @@ layout: ../layouts/Page.astro
 </section>
 
 <section class="role">
-    <div class="role-head"><span><strong>Data Scientist</strong> | <em>General System</em></span><span class="role-date">October 2019 to April 2023</span></div>
+    <div class="role-head"><span><strong>Data Scientist</strong> | <em>General System</em></span><span class="role-date">Oct 2019 - Apr 2023</span></div>
 
 - I led research into new uses for the geospatial index.  I wrote a Python client API for inserting, querying and running new spatial analyses.  The findings moved the index's platform integration forward by six months.
 - I built a prototype user interface with the Data Science team.  Intelligence analysts use it to explore large spatiotemporal datasets.  It uses Python, PostGIS and Streamlit.  Clients bought it, and it became a product offering.
@@ -58,10 +58,45 @@ layout: ../layouts/Page.astro
 </section>
 
 <section class="role">
-    <div class="role-head"><span><strong>Machine Learning Engineer</strong> | <em>Epitheca Consulting</em></span><span class="role-date">April 2021 to October 2022</span></div>
+    <div class="role-head"><span><strong>Machine Learning Engineer</strong> | <em>Epitheca Consulting</em></span><span class="role-date">Apr 2021 - Oct 2022</span></div>
     <p class="role-summary"><em>Data science consulting for startups and small businesses.</em></p>
 
 - I built and deployed production machine learning for startup clients.  One system was a recommender that uses implicit collaborative filtering on AWS SageMaker.  The other was an outlier detector that flags anomalous bank transactions on Azure ML.  I explained both models to stakeholders with SHAP.
+
+</section>
+
+<section class="role">
+    <div class="role-head"><span><strong>R&D Lead, Mechanical</strong> | <em>PRENAV</em></span><span class="role-date">Dec 2016 - Aug 2018</span></div>
+
+- I led the mechanical engineering team in designing and producing multiple UAV systems.  The work improved durability and cut production times.
+- I designed a system for sub-meter GPS accuracy by image-tracking stationary ground stations.  It improved image reconstruction in post-production.
+
+</section>
+
+<section class="role">
+    <div class="role-head"><span><strong>Robotics Engineer</strong> | <em>PRENAV</em></span><span class="role-date">Feb 2015 - Dec 2016</span></div>
+
+- I built an automated heated mold for curing composites.  It logged heating profiles from heating elements, thermocouples, relays and a PID controller that I wrote in C++.
+- I retrofitted an oven into an autoclave with a temperature controller for curing carbon fiber composites.
+- I designed thermal solutions for CPUs and FPGAs using thermodynamics principles and simulations.
+- I rapidly prototyped electromechanical subassemblies for five UAV designs.
+
+</section>
+
+<section class="role">
+    <div class="role-head"><span><strong>Electrical Engineering Support</strong> | <em>NASA Ames Research Center</em></span><span class="role-date">Aug 2014 - Dec 2015</span></div>
+
+- I designed and manufactured a three-degree-of-freedom testbed for nanosatellite flight hardware and software in the Generalized Nanosatellite Avionics Testbed Lab.
+- I wrote low-level C++ drivers that collect sensor data over I2C and serial on a BeagleBone Black.  The data streamed over WiFi to a Python dashboard.
+- I integrated sensor data into a PID controller for the Attitude Determination System.
+
+</section>
+
+<section class="role">
+    <div class="role-head"><span><strong>Student Researcher IV</strong> | <em>NASA Ames Research Center</em></span><span class="role-date">Jun 2013 - Aug 2014</span></div>
+
+- I developed low-level C++ drivers for IMUs, reaction wheels, torque rods and ion electrospray thrusters, to test attitude determination software for nanosatellites.
+- I researched whether cheap CMOS camera modules could work as star trackers on nanosatellites.
 
 </section>
 

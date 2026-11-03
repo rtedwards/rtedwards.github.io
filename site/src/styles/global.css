@@ -175,12 +175,12 @@ main {
 }
 
 .site-header nav a {
-  color: var(--muted);
+  color: var(--fg);
   text-decoration: none;
 }
 
 .site-header nav a:hover {
-  color: var(--accent);
+  text-decoration: underline;
 }
 
 .site-header nav .icon-link {
@@ -199,7 +199,7 @@ main {
   width: 2rem;
   height: 2rem;
   padding: 0;
-  color: var(--muted);
+  color: var(--fg);
   background: none;
   border: none;
   cursor: pointer;
@@ -256,12 +256,12 @@ main {
 }
 
 .site-footer a {
-  color: var(--muted);
+  color: var(--fg);
   text-decoration: none;
 }
 
 .site-footer a:hover {
-  color: var(--accent);
+  text-decoration: underline;
 }
 
 .about-head {
@@ -441,7 +441,7 @@ img {
   padding-bottom: 0.2rem;
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--fg);
+  color: var(--accent);
   border-bottom: 1px solid var(--accent);
 }
 
@@ -455,23 +455,20 @@ img {
   text-align: left;
 }
 
-/* The company name takes the accent colour. Dates are small outlined badges, the same
-   style as the blog's category tags, so they stay quiet next to the title. */
+/* The company name is bold and takes the accent colour, the same as the section headers. */
 .role-head em {
+  font-weight: 700;
+  font-style: normal;
   color: var(--accent);
 }
 
 .role-date {
   align-self: center;
-  padding: 0 0.45rem;
-  font-size: 0.7rem;
-  line-height: 1.5;
+  font-size: 0.85rem;
+  font-weight: 700;
   font-style: normal;
-  color: var(--accent);
+  color: var(--fg);
   white-space: nowrap;
-  background: none;
-  border: 1px solid var(--accent);
-  border-radius: 4px;
 }
 
 .role-summary {
