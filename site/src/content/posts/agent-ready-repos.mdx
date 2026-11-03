@@ -1,0 +1,251 @@
+---
+title: "Setting Up a Repo So Coding Agents Work Well"
+description: "The engineering practices that make a repository safe for coding agents, and the parallel work they make possible."
+date: 2026-11-02
+draft: true
+categories: [agents, engineering practice]
+---
+
+## Tight loops
+
+Every change to software is a guess until something checks it.  The useful question is how long that check takes.  If you learn a change is wrong in a few seconds, you fix it while the reasoning is still fresh.  If you learn it an hour later, from a failed build or a bug report, you have to rebuild the context first, and the mistake may already have been copied into other code.
+
+This is the difference between a tight loop and a slow one.  A tight loop is edit, check, fix, in seconds.  A slow loop has gaps between those steps, and every gap is a place where a mistake can settle in.  The work of setting up a repo is mostly the work of shortening those gaps.
+
+Agents make the question sharper.  An agent makes many small edits, quickly, and it has no memory of the reasons behind each one.  A slow check means the agent builds on a wrong assumption for longer.  A fast check means it corrects course before the next edit.
+
+## The short version
+
+A coding agent is fast, and it does not get tired of running checks.  That makes it easy to ship a lot of code quickly.  It also makes it easy to ship a lot of wrong code quickly, unless the repository makes wrong code hard to merge.
+
+Most of what makes a repo agent-ready is ordinary software engineering.  The agent-specific parts are the early feedback loops, the guardrails that stop an agent from declaring victory too soon, and the setup that lets several agents work at once without stepping on each other.
+
+This post walks through the patterns, the reasons behind them, and what they make possible.
+
+## One source of truth for every check
+
+Every check the project runs should be a named recipe in one task runner file.  Formatting, linting, type checks, tests, audits and benchmarks each get a recipe.  Git hooks, agent hooks and CI then call those recipes.  They do not re-implement them.
+
+This matters more for agents than for people.  A person who runs a different command from the hook usually notices.  An agent that runs a slightly different check will report success for the wrong thing, and nobody sees it until CI fails.
+
+A small example:
+
+```just
+# Everything that must pass before a change is merged.
+gate: format-check lint test audit
+
+format-check:
+    cargo fmt --all --check
+
+lint:
+    cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+test:
+    cargo nextest run --workspace
+
+audit:
+    cargo deny check
+```
+
+The hook runs `just gate`.  The CI job runs `just gate`.  The agent runs `just gate` before it reports that the work is done.  When one of them fails, the same failure shows up everywhere.
+
+## Layers of feedback
+
+The checks run at different points, and each layer has a different job.
+
+1. **Auto-format after each edit.** A hook runs the formatter on each file the agent changes.  The agent never has to think about style, and the diff stays clean.
+2. **Stop hook before the agent finishes.** When the agent tries to end its turn, a hook runs the fast checks.  If they fail, the hook blocks the turn and sends the output back to the agent.  The agent then fixes the problem without you watching.
+3. **Pre-commit.** The same fast checks run on each commit, for people and agents alike.
+4. **Pre-push.** The slower checks run here: tests that take minutes, the concurrency checks, and anything that needs a real database.
+5. **CI.** CI runs the same recipes on a clean machine, with the same toolchain, on every pull request.
+
+The early layers exist for speed.  CI exists to catch regressions, so it should never run a check that the earlier layers skip.  If the local gate and CI disagree, one of them is wrong, and the fix is usually to make them call the same recipe.
+
+Each layer needs a time budget.  A hook that hangs will silently block every commit, and an agent waiting on a hung command burns its session.  Wrapping each job in a timeout turns a hang into a clear failure.  The budget should be large enough for a legitimate slow run, because the point is to catch deadlocks and not to enforce a short runtime.
+
+<Callout>
+**Scope the hooks.** A Stop hook that runs the full test suite after every turn, including turns that only edited a README, teaches the agent to route around it.  Make each hook check whether its files changed, and skip the work when they didn't.
+</Callout>
+
+## Why formatting, linting and types come first
+
+Three kinds of check do most of the early work.  Each one answers a different question.
+
+**Formatting** answers "how should this look?" A formatter decides brace placement, line breaks and spacing, and it decides them the same way every time.  The code stays in one consistent style, so nobody spends attention on style, and diffs show only the changes that matter.  An agent that formats after every edit never has to think about layout at all.
+
+**Linting** answers "is this suspicious?" Code can compile and still contain a pattern that is almost always a mistake: an ignored error, an unused value, a comparison that cannot be true.  A linter flags those patterns.  The pedantic groups flag more, and each flag is a short question that a reviewer would otherwise ask later.
+
+**Type checking** answers "do the pieces fit together?" A type describes what a function accepts and what it returns.  A type checker compares every call against the declared types before the program runs.  In Rust the compiler does this as part of the build.  In Python a type checker such as mypy or pyright does it as a separate step.  Either way, a mismatch shows up as an error at the call site, not as a crash three steps later in code that never ran during the test.
+
+The three checks share one property.  They find problems before the program runs, so the feedback arrives while the change is small.  A type error caught at the call site costs one edit.  The same error found in production costs the investigation, the fix, and the review of everything that depended on the wrong assumption.
+
+<Callout>
+**Language notes.** The tools differ by language.  In Rust, `rustfmt`, `clippy` and the compiler cover formatting, linting and types.  In Python, `ruff` covers formatting and linting, and a type checker such as mypy or pyright covers types.  The roles are the same, so the process is the same.
+</Callout>
+
+Keep these checks fast, and run them often.  A formatter that takes two seconds can run on every edit.  A type checker that takes two minutes runs on commit, and an agent that waits for it will try to do more between checks.  That is the wrong incentive.  Speed here is a design goal in its own right.
+
+## Strict lints, with written exceptions
+
+Turn the strictest lint levels on, and write down every exception.  A pedantic lint group catches real bugs, and it catches them early.  Each exception should explain why the code is right, so the next reader, human or agent, does not "fix" a deliberate choice.
+
+Two rules make strict lints workable for agents:
+
+- **Ban the shortcuts that hide errors.** A rule against `unwrap()` in production code forces the agent to handle the failure, or to state the invariant it relies on.
+- **Make the exceptions visible.** Keep the list of allowed lints in one place, with a reason next to each entry.  An agent that finds a lint it does not understand will often add a blanket `allow`.  A written reason makes that choice harder to make by accident.
+
+Custom lints are the next step.  A project-specific rule, such as "this module must not depend on that one", is cheap to write as a script and very effective, because it encodes a decision the agent would otherwise have to rediscover.
+
+## Small functions, measured
+
+A function that does too much is hard to hold in mind, whether the reader is a person or an agent.  An agent works within a fixed amount of context.  A long function full of branches uses much of that context before the agent reaches the part it has to change.  A short function with a clear name fits in one view, and the agent can reason about all of it.
+
+Several metrics put a number on this:
+
+- **Cyclomatic complexity** counts the independent paths through a function.  Each branch adds one.
+- **Cognitive complexity** counts the same branches, but weights nested ones more heavily, because nesting is harder to read.
+- **Length** counts lines or statements.  It is a blunt measure, and it is easy to enforce.
+- **CRAP score** (Change Risk Anti-Patterns) combines complexity with test coverage.  A complex function with good tests is manageable.  The same function with no tests is the riskiest code in the repo, and the score makes that visible.
+
+Keep the thresholds in configuration, and enforce them in the gate, not in advice.  A rule written in the agent's instructions depends on the agent remembering it.  A failing gate tells the agent what to fix, every time.  Write down any exception, the same way you would for a lint.  In Rust, the clippy lints and a CRAP tool cover this.  In Python, a complexity rule in the linter and a tool such as radon do the same job.
+
+The payoff is the same as the rest of the setup: the problem is caught early, while the function is small enough to split without much thought.
+
+## Type checking, tests and test tiers
+
+Type checking and tests follow the same rule as lints.  They are named recipes, and every entry point calls them.  Fast tests run on every commit.  Slow tests, such as property tests, large benchmarks and anything that needs a container, run before a push or in CI.  Keep the tiers explicit, so an agent knows which command to run for which change.
+
+<Callout>
+**Language notes.** The runners differ too.  Rust projects often use `cargo nextest`, and Python projects use `pytest`.  Both can separate the tiers, through features in Rust and markers in Python.
+</Callout>
+
+Concurrency bugs need their own tier.  Model checkers and undefined-behaviour checkers are slow, and they catch bugs that unit tests will not.  Run them on the code that needs them, and give them their own budget.
+
+## Supply chain and dependency hygiene
+
+Agents add dependencies quickly.  Each one is a supply-chain decision, so put checks in front of it:
+
+- A vulnerability audit against the advisory database.
+- A policy check for licences, banned crates and duplicate versions.
+- A check for unused dependencies.
+- A semver check if you publish a library.
+
+When an advisory has no fix, record the decision with its reason.  A bare ignore list is a liability, because nobody remembers why an entry is there.
+
+<Callout>
+**Language notes.** For Rust projects, `cargo audit` checks the advisory database and `cargo deny` enforces the licence and duplicate-version policy.  For Python projects, `uv` locks the dependency tree, and `pip-audit` checks it against the advisory database.  The lock file is what makes the check meaningful, because it records exactly which versions the audit saw.
+</Callout>
+
+## Guardrails that keep agents honest
+
+The repo should make the safe action the easy one.
+
+- **A deletion convention.** Agents should not delete files outright.  Move them to a trash folder and log the move, with a reason.  A hook can block direct deletion, and the log gives you a record to review later.
+- **A permission allowlist.** Each project keeps a short list of commands the agent may run without asking.  Anything else prompts.  Review the list when the agent starts asking for the same permission repeatedly, because that usually means the list is missing something safe.
+- **Secrets as references.** Keep secrets in a password manager, and have the project refer to them rather than hold values.  A small wrapper resolves the references at run time, so the values only exist in the process that needs them.  Stop the agent from reading secret files directly, and give it a read-only tool that reports which variables are set without showing their values.
+
+## Context the agent can use
+
+An agent starts each session without memory of the last one, so the repo has to carry the context.
+
+- **A short orientation file.** A `CLAUDE.md` (or the equivalent) says what the project is, which commands matter, where the docs live, and what the rules are.  Keep it short, and link to detailed docs instead of copying them in.
+- **A documentation map.** One table that says which document covers which subject.  Agents read the map first and open only the pages they need.
+- **Skills for each kind of task.** A skill is a packaged procedure for one kind of work, such as benchmarking, debugging a crash, or writing an error type.  An agent loads the skill when the task matches, so the procedure is available without filling every session's context.
+- **Written plans.** For larger changes, write a proposal, a design and a task list in the repo, and keep them updated.  An agent picking up the work next week, or a different agent, reads the plan instead of guessing.
+- **A handoff note.** At the end of a long session, write what changed, what is half done, and what to check next.
+
+### Review for what tools cannot catch
+
+Deterministic tools run first.  The formatter, the linter, the type checker, the tests, the audit and the complexity thresholds are fast, they cost no tokens, and they give the same answer every time.  Use them for everything they can catch.
+
+Some problems are beyond any tool: a function that returns the right answer for the wrong reason, a name that misleads the next reader, a missing edge case, a design that will be hard to change, or a test that checks the wrong thing.  For those, an agent review adds judgement.  A review skill such as `/review` or `/code-review` reads the change and reports its findings.  Run it after the gate passes.  The review then spends its tokens on problems that only a reader can see, not on style or type errors the tools already catch.
+
+The order matters.  Tools first, agent review second, human review last.  Each step is more expensive than the one before it, so each step should only see what the previous one missed.
+
+Turn repeated findings into tools.  When a review keeps flagging the same problem, write a lint or a test for it.  The next change then gets that check for free, with no tokens spent on it.  Over time the review finds fewer things, and the things it still finds are the hard ones.
+
+### Orchestrate, delegate and review
+
+For larger work, one agent should plan and review, and others should do the building.  The orchestrator breaks the task down, gives each worker a precise contract, and then reads the diff itself.  A worker's report says what it meant to do.  The diff says what it did.
+
+Model tiers help here.  Use the strongest model for planning and for anything where a wrong plan is expensive.  Use a smaller, cheaper model for searching the code and for mechanical edits.  When a smaller model fails twice on the same problem, move the task up a tier rather than retrying the same model.
+
+The review gate is what stops this from becoming expensive.  Parallel workers that each report green are not evidence of green work.  Run the gate yourself, read the diff, and only then commit.
+
+## Parallel work with worktrees
+
+A git worktree is a second checkout of the same repository, on its own branch, in its own folder.  It lets several agents work at once without sharing a working tree.  It also creates three problems that the repo has to solve.
+
+**Ports and services.** Two worktrees cannot both bind the same port, and two copies of a database cannot share a data volume.  The pattern that works is to set up each worktree when it is created:
+
+1.  Copy the environment file from the main checkout, so secrets carry over without being rotated.
+2.  Give the worktree its own container project name and its own database volume, so the containers and data don't collide.
+3.  Derive each port from the worktree's name, using a stable hash, so the same worktree gets the same ports every time.
+4.  Probe upward from that starting point, skipping ports reserved by the main checkout and ports already recorded in other worktrees' environment files.
+5.  Record the chosen ports in the worktree's own environment file, so every later command reads the same values.
+6.  Install that worktree's dependencies.  Shared caches make this cheap.
+
+Run the setup from both a Zed task and a git post-checkout hook.  The task covers the editor path, and the hook covers a plain `git worktree add` from the terminal.  The setup script is idempotent, so running it twice is harmless.
+
+The key property is that the worktree's name determines its isolation.  An agent given a worktree can start the full stack without asking which port to use, and two agents on two worktrees cannot collide.  In the project I work on, this lets several agents each run a complete database and web stack at the same time.
+
+The URLs are a separate question.  Local ports are per worktree.  Sharing a worktree's stack with someone outside your machine needs a tunnel, and a tunnel config points at one set of ports.  If you want a stable public URL per worktree, that is one tunnel per worktree, or a router in front of them.
+
+## The Rust part: build artifacts and disk
+
+Rust adds two problems that most other ecosystems don't have.
+
+**Separate cargo homes.** A cargo home holds the package registry cache and the locks that guard it.  Every dependency's build fingerprint includes the cargo home path.  If your terminal, your editor and your hooks use different cargo homes, each switch triggers a rebuild of the whole dependency tree.  In one project that cost about five minutes of full rebuild every time the terminal and the editor alternated.
+
+The fix is one cargo home per repository, set from the same environment file that the terminal and the editor read.  A worktree gets its own, and the setup script rewrites the editor's settings to point at it.
+
+**Isolated target directories for hooks.** Rust-analyzer holds a lock on the build directory while it works.  A hook that builds into the same directory can wait on that lock for a long time.  Pointing the hooks at their own target directory avoids the contention.  It costs some disk and one cold build, and every later run is incremental.
+
+**Disk.** Build artifacts are large, and every worktree gets its own.  Across many worktrees, the artifacts reached one to two terabytes.  Three habits keep this under control:
+
+- Report the size of each target directory in the health check, so it is visible.
+- Prune worktrees whose branches are merged, and remove their target directories with them.  Git does not fire a hook when a worktree is removed, so the cleanup has to be a deliberate command.  A report mode that lists what would be removed is safer than a silent sweep.
+- Keep a separate scratch directory for experiments, and clear it on a schedule.
+
+<Callout>
+**Language notes.** Python has the same problem with virtual environments.  Each worktree wants its own environment, and `uv` keeps creating them cheap by sharing a package cache between them.  The cleanup command should remove an environment with the worktree it belongs to.
+</Callout>
+
+<Callout>
+**Git hooks don't see deletions.** Neither git nor most editors fire an event when a worktree is removed.  Stale ports, locks and directories accumulate unless something sweeps them.  Plan the cleanup at the same time as the setup.
+</Callout>
+
+## What this makes possible
+
+The setup changes what an agent can do in a day.
+
+- **Several changes at once.** Each agent works in its own worktree, with its own ports, database and build directory.  The orchestrator reviews the diffs as they land.
+- **Changes that stay reviewable.** The gate runs the same way for every change.  The diff is the record of what happened.
+- **Fewer surprises at merge time.** Strict lints, the same gate in CI, and an orchestrator that reads the diffs catch most problems before they reach the main branch.
+- **Safer secrets.** The agent can run the project and use its secrets without reading them.
+- **Less time setting up.** A new worktree is ready to run within a few minutes, with no manual steps.
+
+## Where that leaves the work
+
+With these checks in place, the routine questions answer themselves.  Style is settled, so nobody debates it.  Type mismatches, ignored errors, known-vulnerable dependencies and common concurrency mistakes are caught before a reviewer sees the change.  The gate runs the same way for every change, on every machine, so a passing change means the same thing each time.
+
+That frees attention for the work the checks cannot do.  Deciding what the software should do, how its parts should fit together, which interfaces will last, and where the boundaries belong are design questions.  A type checker does not answer them, and an agent cannot answer them alone.  The repo setup makes it possible to spend most of the effort there.
+
+It is not a guarantee.  Checks find what they were written to find, and a passing gate does not prove the design is right.  But a whole class of bugs stops at the gate, and the time saved on those bugs goes into the design.  That trade is why the setup is worth the effort.
+
+## Checklist
+
+Start with the parts that give the most feedback per hour of work:
+
+1.  One task runner file, with a single `gate` recipe that runs everything a merge needs.
+2.  Hooks and CI that call the same recipes.
+3.  A hook that formats after each edit, and a Stop hook that blocks an unfinished turn.
+4.  Strict lints, with the exceptions written down.
+5.  An audit and a dependency policy check (`cargo deny` and `cargo audit` in Rust, `uv` and `pip-audit` in Python).
+6.  A `CLAUDE.md`, a documentation map and one skill for each kind of task you repeat.
+7.  A deletion convention, a permission allowlist, and secrets kept as references.
+8.  A worktree setup script, run from both the editor and a git hook, that allocates ports from the worktree's name.
+9.  One cargo home per repository, and separate target directories for hooks if you use Rust.  In Python, one virtual environment per worktree.
+10.  A cleanup command that reports disk use per worktree and prunes the merged ones.
+
+None of this needs a particular tool.  Each item is a pattern, and the tools that implement it will change.  The patterns are what make the work safe to hand to an agent.

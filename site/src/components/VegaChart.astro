@@ -1,0 +1,64 @@
+---
+// Renders a Vega-Lite spec produced by a Python script. The spec is serialized
+// into the page, and vega-embed draws it in the browser. The colours are applied
+// here, not in Python, so the chart follows the site theme and redraws on toggle.
+interface Props {
+  spec: Record<string, unknown>;
+}
+
+const { spec } = Astro.props;
+---
+
+<div class="vega-chart" data-spec={JSON.stringify(spec)}></div>
+
+<script>
+  import embed, { type Result } from 'vega-embed';
+  import { currentTheme, onThemeChange, type Theme } from '../scripts/theme';
+
+  // Match the site palette in css/light.scss and css/dark.scss.
+  const palette: Record<Theme, { text: string; rule: string; bar: string; line: string }> = {
+    light: { text: '#222', rule: '#dee2e6', bar: '#368bc1', line: '#222' },
+    dark: { text: '#f8f9fa', rule: '#3a3b3f', bar: '#f2bb18', line: '#f8f9fa' },
+  };
+
+  function themed(spec: Record<string, any>, theme: Theme) {
+    const p = palette[theme];
+    return {
+      ...spec,
+      config: {
+        ...spec.config,
+        background: 'transparent',
+        view: { stroke: null },
+        axis: {
+          ...spec.config?.axis,
+          labelColor: p.text,
+          titleColor: p.text,
+          domainColor: p.rule,
+          tickColor: p.rule,
+          gridColor: p.rule,
+        },
+        bar: { color: p.bar },
+        line: { color: p.line },
+      },
+    };
+  }
+
+  for (const el of document.querySelectorAll<HTMLElement>('.vega-chart')) {
+    const spec = JSON.parse(el.dataset.spec ?? '{}');
+    let result: Result | undefined;
+
+    const render = async () => {
+      result?.finalize();
+      result = await embed(el, themed(spec, currentTheme()), { actions: false, renderer: 'svg' });
+    };
+
+    render();
+    onThemeChange(render);
+  }
+</script>
+
+<style>
+  .vega-chart {
+    margin: 2rem 0;
+  }
+</style>

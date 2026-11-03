@@ -1,0 +1,14 @@
+{
+  "small_bytes": 159246,
+  "small_mb": 0.15,
+  "large_bytes": 16101895,
+  "large_mb": 15.4,
+  "reduced_bytes": 6934573,
+  "reduced_mb": 6.6,
+  "reduced_pct_of_large": 43,
+  "reduction_pct": 57,
+  "files": 2000,
+  "processes": 8,
+  "per_process_gb": 30,
+  "total_gb": 240
+}
