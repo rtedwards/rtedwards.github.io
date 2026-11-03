@@ -15,5 +15,10 @@ _freeze
 **/*.quarto_ipynb
 _quarto_internal_scss_error.scss
 
+# Astro site (generated artifacts under site/src/generated are committed)
+site/node_modules/
+site/dist/
+site/.astro/
+
 # Local bookkeeping for the trash-instead-of-delete convention
 TRASH-FILES.md

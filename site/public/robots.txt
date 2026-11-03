@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Full sitemap index (the Quarto-era /sitemap.xml redirects here too).
+Sitemap: https://bear-toes.pages.dev/sitemap-index.xml

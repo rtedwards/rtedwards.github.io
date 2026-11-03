@@ -1,0 +1,3 @@
+# Cloudflare Pages redirects for URLs the Quarto site published.
+/about.html        /about/            301
+/sitemap.xml       /sitemap-index.xml 301

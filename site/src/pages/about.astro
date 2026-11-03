@@ -1,0 +1,22 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const entry = await getEntry('about', 'about');
+if (!entry) throw new Error('About page content is missing: src/content/about.mdx');
+const { Content } = await render(entry);
+---
+
+<Base title="About" description={entry.data.description}>
+  <section class="about">
+    <header class="about-head">
+      <img class="avatar" src="/icon/profile-circle.png" alt="" width="120" height="120" />
+      <div>
+        <h1>{entry.data.name}</h1>
+        <p class="about-tagline">{entry.data.tagline}</p>
+      </div>
+    </header>
+
+    <Content />
+  </section>
+</Base>

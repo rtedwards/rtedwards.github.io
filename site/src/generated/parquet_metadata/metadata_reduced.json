@@ -1,0 +1,629 @@
+{
+  "config": {
+    "view": {
+      "continuousWidth": 300,
+      "continuousHeight": 300
+    }
+  },
+  "data": {
+    "name": "data-bd32f241f57cb71d2772f7e015d67792"
+  },
+  "mark": {
+    "type": "line",
+    "point": true,
+    "size": 2
+  },
+  "encoding": {
+    "color": {
+      "field": "row_group_size",
+      "scale": {
+        "range": [
+          "#368BC1",
+          "#F2BB18",
+          "#BB4430",
+          "#8A9A67",
+          "#CC771F",
+          "#8B5260"
+        ]
+      },
+      "title": "Row Group Size",
+      "type": "nominal"
+    },
+    "opacity": {
+      "value": 1.0
+    },
+    "strokeDash": {
+      "field": "col_name_lengths",
+      "title": "Column Name Length (chars)",
+      "type": "nominal"
+    },
+    "x": {
+      "field": "num_cols",
+      "title": "Number of Columns",
+      "type": "quantitative"
+    },
+    "y": {
+      "field": "metadata_size_mb",
+      "scale": {
+        "type": "log"
+      },
+      "title": "Metadata Size (MB)",
+      "type": "quantitative"
+    }
+  },
+  "padding": 10,
+  "title": {
+    "text": [
+      "Parquet metadata sizes for a single file of float columns"
+    ],
+    "subtitle": [
+      "No statistics, no dictionary encoding, no arrow schema"
+    ]
+  },
+  "width": 650,
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json",
+  "datasets": {
+    "data-bd32f241f57cb71d2772f7e015d67792": [
+      {
+        "num_cols": 1,
+        "row_group_size": 1000,
+        "col_name_lengths": 1,
+        "metadata_size_b": 132,
+        "metadata_size_mb": 0.000125885009765625
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 100,
+        "col_name_lengths": 1,
+        "metadata_size_b": 699,
+        "metadata_size_mb": 0.0006666183471679688
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 10,
+        "col_name_lengths": 1,
+        "metadata_size_b": 6128,
+        "metadata_size_mb": 0.0058441162109375
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 1,
+        "col_name_lengths": 1,
+        "metadata_size_b": 57679,
+        "metadata_size_mb": 0.055006980895996094
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 1000,
+        "col_name_lengths": 10,
+        "metadata_size_b": 150,
+        "metadata_size_mb": 0.0001430511474609375
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 100,
+        "col_name_lengths": 10,
+        "metadata_size_b": 798,
+        "metadata_size_mb": 0.0007610321044921875
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 10,
+        "col_name_lengths": 10,
+        "metadata_size_b": 7037,
+        "metadata_size_mb": 0.006711006164550781
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 1,
+        "col_name_lengths": 10,
+        "metadata_size_b": 66688,
+        "metadata_size_mb": 0.0635986328125
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 1000,
+        "col_name_lengths": 50,
+        "metadata_size_b": 230,
+        "metadata_size_mb": 0.0002193450927734375
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 100,
+        "col_name_lengths": 50,
+        "metadata_size_b": 1238,
+        "metadata_size_mb": 0.0011806488037109375
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 10,
+        "col_name_lengths": 50,
+        "metadata_size_b": 11077,
+        "metadata_size_mb": 0.010563850402832031
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 1,
+        "col_name_lengths": 50,
+        "metadata_size_b": 106728,
+        "metadata_size_mb": 0.10178375244140625
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 1000,
+        "col_name_lengths": 100,
+        "metadata_size_b": 330,
+        "metadata_size_mb": 0.0003147125244140625
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 100,
+        "col_name_lengths": 100,
+        "metadata_size_b": 1788,
+        "metadata_size_mb": 0.001705169677734375
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 10,
+        "col_name_lengths": 100,
+        "metadata_size_b": 16127,
+        "metadata_size_mb": 0.015379905700683594
+      },
+      {
+        "num_cols": 1,
+        "row_group_size": 1,
+        "col_name_lengths": 100,
+        "metadata_size_b": 156778,
+        "metadata_size_mb": 0.14951515197753906
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 1000,
+        "col_name_lengths": 1,
+        "metadata_size_b": 682,
+        "metadata_size_mb": 0.0006504058837890625
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 100,
+        "col_name_lengths": 1,
+        "metadata_size_b": 5246,
+        "metadata_size_mb": 0.0050029754638671875
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 10,
+        "col_name_lengths": 1,
+        "metadata_size_b": 48599,
+        "metadata_size_mb": 0.046347618103027344
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 1,
+        "col_name_lengths": 1,
+        "metadata_size_b": 464963,
+        "metadata_size_mb": 0.4434232711791992
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 1000,
+        "col_name_lengths": 10,
+        "metadata_size_b": 862,
+        "metadata_size_mb": 0.0008220672607421875
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 100,
+        "col_name_lengths": 10,
+        "metadata_size_b": 6236,
+        "metadata_size_mb": 0.005947113037109375
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 10,
+        "col_name_lengths": 10,
+        "metadata_size_b": 57689,
+        "metadata_size_mb": 0.055016517639160156
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 1,
+        "col_name_lengths": 10,
+        "metadata_size_b": 555053,
+        "metadata_size_mb": 0.5293397903442383
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 1000,
+        "col_name_lengths": 50,
+        "metadata_size_b": 1662,
+        "metadata_size_mb": 0.0015850067138671875
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 100,
+        "col_name_lengths": 50,
+        "metadata_size_b": 10636,
+        "metadata_size_mb": 0.010143280029296875
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 10,
+        "col_name_lengths": 50,
+        "metadata_size_b": 98089,
+        "metadata_size_mb": 0.09354496002197266
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 1,
+        "col_name_lengths": 50,
+        "metadata_size_b": 955453,
+        "metadata_size_mb": 0.9111909866333008
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 1000,
+        "col_name_lengths": 100,
+        "metadata_size_b": 2662,
+        "metadata_size_mb": 0.0025386810302734375
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 100,
+        "col_name_lengths": 100,
+        "metadata_size_b": 16136,
+        "metadata_size_mb": 0.01538848876953125
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 10,
+        "col_name_lengths": 100,
+        "metadata_size_b": 148589,
+        "metadata_size_mb": 0.14170551300048828
+      },
+      {
+        "num_cols": 10,
+        "row_group_size": 1,
+        "col_name_lengths": 100,
+        "metadata_size_b": 1455953,
+        "metadata_size_mb": 1.388504981994629
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 1000,
+        "col_name_lengths": 1,
+        "metadata_size_b": 3205,
+        "metadata_size_mb": 0.0030565261840820312
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 100,
+        "col_name_lengths": 1,
+        "metadata_size_b": 25778,
+        "metadata_size_mb": 0.024583816528320312
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 10,
+        "col_name_lengths": 1,
+        "metadata_size_b": 241227,
+        "metadata_size_mb": 0.23005199432373047
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 1,
+        "col_name_lengths": 1,
+        "metadata_size_b": 2332035,
+        "metadata_size_mb": 2.224001884460449
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 1000,
+        "col_name_lengths": 10,
+        "metadata_size_b": 4105,
+        "metadata_size_mb": 0.003914833068847656
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 100,
+        "col_name_lengths": 10,
+        "metadata_size_b": 30728,
+        "metadata_size_mb": 0.02930450439453125
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 10,
+        "col_name_lengths": 10,
+        "metadata_size_b": 286677,
+        "metadata_size_mb": 0.27339649200439453
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 1,
+        "col_name_lengths": 10,
+        "metadata_size_b": 2782485,
+        "metadata_size_mb": 2.6535844802856445
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 1000,
+        "col_name_lengths": 50,
+        "metadata_size_b": 8105,
+        "metadata_size_mb": 0.007729530334472656
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 100,
+        "col_name_lengths": 50,
+        "metadata_size_b": 52728,
+        "metadata_size_mb": 0.05028533935546875
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 10,
+        "col_name_lengths": 50,
+        "metadata_size_b": 488677,
+        "metadata_size_mb": 0.46603870391845703
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 1,
+        "col_name_lengths": 50,
+        "metadata_size_b": 4784485,
+        "metadata_size_mb": 4.562840461730957
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 1000,
+        "col_name_lengths": 100,
+        "metadata_size_b": 13105,
+        "metadata_size_mb": 0.012497901916503906
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 100,
+        "col_name_lengths": 100,
+        "metadata_size_b": 80228,
+        "metadata_size_mb": 0.07651138305664062
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 10,
+        "col_name_lengths": 100,
+        "metadata_size_b": 741177,
+        "metadata_size_mb": 0.7068414688110352
+      },
+      {
+        "num_cols": 50,
+        "row_group_size": 1,
+        "col_name_lengths": 100,
+        "metadata_size_b": 7286985,
+        "metadata_size_mb": 6.949410438537598
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 1000,
+        "col_name_lengths": 1,
+        "metadata_size_b": 6356,
+        "metadata_size_mb": 0.006061553955078125
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 100,
+        "col_name_lengths": 1,
+        "metadata_size_b": 51429,
+        "metadata_size_mb": 0.04904651641845703
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 10,
+        "col_name_lengths": 1,
+        "metadata_size_b": 483048,
+        "metadata_size_mb": 0.46067047119140625
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 1,
+        "col_name_lengths": 1,
+        "metadata_size_b": 4682938,
+        "metadata_size_mb": 4.465997695922852
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 1000,
+        "col_name_lengths": 10,
+        "metadata_size_b": 8156,
+        "metadata_size_mb": 0.007778167724609375
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 100,
+        "col_name_lengths": 10,
+        "metadata_size_b": 61329,
+        "metadata_size_mb": 0.058487892150878906
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 10,
+        "col_name_lengths": 10,
+        "metadata_size_b": 573948,
+        "metadata_size_mb": 0.5473594665527344
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 1,
+        "col_name_lengths": 10,
+        "metadata_size_b": 5583838,
+        "metadata_size_mb": 5.325162887573242
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 1000,
+        "col_name_lengths": 50,
+        "metadata_size_b": 16156,
+        "metadata_size_mb": 0.015407562255859375
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 100,
+        "col_name_lengths": 50,
+        "metadata_size_b": 105329,
+        "metadata_size_mb": 0.1004495620727539
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 10,
+        "col_name_lengths": 50,
+        "metadata_size_b": 977948,
+        "metadata_size_mb": 0.9326438903808594
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 1,
+        "col_name_lengths": 50,
+        "metadata_size_b": 9587838,
+        "metadata_size_mb": 9.143674850463867
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 1000,
+        "col_name_lengths": 100,
+        "metadata_size_b": 26156,
+        "metadata_size_mb": 0.024944305419921875
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 100,
+        "col_name_lengths": 100,
+        "metadata_size_b": 160329,
+        "metadata_size_mb": 0.15290164947509766
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 10,
+        "col_name_lengths": 100,
+        "metadata_size_b": 1482948,
+        "metadata_size_mb": 1.4142494201660156
+      },
+      {
+        "num_cols": 100,
+        "row_group_size": 1,
+        "col_name_lengths": 100,
+        "metadata_size_b": 14592838,
+        "metadata_size_mb": 13.916814804077148
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 1000,
+        "col_name_lengths": 1,
+        "metadata_size_b": 9622,
+        "metadata_size_mb": 0.009176254272460938
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 100,
+        "col_name_lengths": 1,
+        "metadata_size_b": 77892,
+        "metadata_size_mb": 0.07428359985351562
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 10,
+        "col_name_lengths": 1,
+        "metadata_size_b": 733880,
+        "metadata_size_mb": 0.6998825073242188
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 1,
+        "col_name_lengths": 1,
+        "metadata_size_b": 7084723,
+        "metadata_size_mb": 6.756518363952637
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 1000,
+        "col_name_lengths": 10,
+        "metadata_size_b": 12322,
+        "metadata_size_mb": 0.011751174926757812
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 100,
+        "col_name_lengths": 10,
+        "metadata_size_b": 92742,
+        "metadata_size_mb": 0.08844566345214844
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 10,
+        "col_name_lengths": 10,
+        "metadata_size_b": 870230,
+        "metadata_size_mb": 0.8299160003662109
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 1,
+        "col_name_lengths": 10,
+        "metadata_size_b": 8436073,
+        "metadata_size_mb": 8.045266151428223
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 1000,
+        "col_name_lengths": 50,
+        "metadata_size_b": 24322,
+        "metadata_size_mb": 0.023195266723632812
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 100,
+        "col_name_lengths": 50,
+        "metadata_size_b": 158742,
+        "metadata_size_mb": 0.15138816833496094
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 10,
+        "col_name_lengths": 50,
+        "metadata_size_b": 1476230,
+        "metadata_size_mb": 1.4078426361083984
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 1,
+        "col_name_lengths": 50,
+        "metadata_size_b": 14442073,
+        "metadata_size_mb": 13.77303409576416
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 1000,
+        "col_name_lengths": 100,
+        "metadata_size_b": 39322,
+        "metadata_size_mb": 0.03750038146972656
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 100,
+        "col_name_lengths": 100,
+        "metadata_size_b": 241242,
+        "metadata_size_mb": 0.23006629943847656
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 10,
+        "col_name_lengths": 100,
+        "metadata_size_b": 2233730,
+        "metadata_size_mb": 2.130250930786133
+      },
+      {
+        "num_cols": 150,
+        "row_group_size": 1,
+        "col_name_lengths": 100,
+        "metadata_size_b": 21949573,
+        "metadata_size_mb": 20.932744026184082
+      }
+    ]
+  }
+}

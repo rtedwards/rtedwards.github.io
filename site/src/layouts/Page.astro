@@ -1,0 +1,10 @@
+---
+import Base from './Base.astro';
+
+// Layout for MDX pages. Frontmatter supplies the title and description.
+const { frontmatter } = Astro.props;
+---
+
+<Base title={frontmatter.title} description={frontmatter.description}>
+  <slot />
+</Base>

@@ -1,0 +1,16 @@
+---
+import VegaChart from './VegaChart.astro';
+
+// The chart's Vega-Lite spec is written by scripts/build_artifacts.py.
+// `name` is the path under src/generated/, without the .json extension.
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+const charts = import.meta.glob<{ default: Record<string, unknown> }>('../generated/**/*.json', { eager: true });
+const spec = charts[`../generated/${name}.json`]?.default;
+if (!spec) throw new Error(`No chart artifact named ${name}`);
+---
+
+<VegaChart spec={spec} />

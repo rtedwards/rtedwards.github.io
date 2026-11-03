@@ -1,0 +1,33 @@
+---
+import type { Stats } from './stats-types';
+
+// A table of means and variances, written by scripts/build_artifacts.py.
+// `name` is the path under src/generated/, without the .json extension.
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+const files = import.meta.glob<{ default: Stats }>('../generated/**/*.json', { eager: true });
+const data = files[`../generated/${name}.json`]?.default;
+if (!data) throw new Error(`No stats artifact named ${name}`);
+---
+
+<table class="stats">
+  <thead>
+    <tr>
+      <th>Series</th>
+      <th>Mean</th>
+      <th>Variance</th>
+    </tr>
+  </thead>
+  <tbody>
+    {data.rows.map((row) => (
+      <tr>
+        <td>{row.series}</td>
+        <td>{row.mean.toFixed(3)}</td>
+        <td>{row.var.toFixed(3)}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>

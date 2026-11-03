@@ -1,0 +1,385 @@
+---
+title: "Pub Quiz: Summing Two Random Variables"
+description: "My company's holiday pub quiz almost had a question about summing two random variables."
+date: 2024-01-14
+categories: [probability, pub quiz]
+---
+
+
+## Pub Quiz
+
+Last week, my company held a pub quiz.  This was no ordinary pub quiz, it was designed in a way for teams to learn about other teams.  One person from each team submitted four questions about their team.  We ended up with about 60 questions from all across the company.  And when I say "all" I mean _all_.  We had questions about Data Science, Commercial, Operations, Engineering, Product, Marketing, Leadership, Human Resources, you name it.  As someone who is fairly familiar with all aspects of our products and engineering teams (but by no means an expert in all these areas) by having been here over four years and written my share of documentation, I came into the pub quiz _with confidence_.  Much of that confidence due to expecting to not need to know British pop culture back through the 70s as is standard in an actual pub quiz.
+
+That confidence was quickly smashed with questions like:
+
+- _What was the 2023 Coca Cola Christmas commercial slogan?_
+- _What is the collective age of the Customer Support team?_
+- _What month was repo XXX created?_
+
+The Data Science round was the trickiest of them all, in no small part because reading the question took up almost all of the response time!  After the quiz, my teammate who wrote the Data Science questions shared one that didn't quite make the cut.
+
+I share the question with the reader here, with only some minor rewording.  My answer follows.
+
+## Question
+
+### The preamble
+
+You fit the following univariate regression model using Ordinary Least Squares (OLS)
+
+<Note>
+In the original question, the OLS abbreviation was given without the unabbreviated form.  Not sure it would have made the question any easier.
+</Note>
+
+$$
+y = \alpha + \beta x + \epsilon
+$$
+
+Where the residual, $\epsilon$, is Normally distributed with mean 0 and standard deviation 1, that is:
+
+$$
+\epsilon \sim {N}(0, 1)
+$$
+
+From OLS, you determine:
+
+- $\alpha=3$
+- $\beta=2$
+
+---
+
+The next month, your colleague reruns the experiment and collects the same size dataset.  They forgot to check the calibration of the machine used to collect the data and as a result the dataset now has a measurement error, $u$.  That is,
+
+$$
+\begin{aligned}
+y^* &\equiv y + u \\
+y^* &= \alpha^* + \beta^*x + \epsilon^*
+\end{aligned}
+$$
+
+The measurement error has mean 2 and standard deviation 2.
+
+$$
+u \sim N(2,2)
+$$
+
+The residuals in the new sample dataset are also normally distributed.
+
+$$
+\epsilon^* \sim {N}(\mu^*, \sigma^*)
+$$
+
+### And finally the question
+
+What values does your colleague find when running a regression with OLS? (Try solving with a pen and paper):
+
+- $\alpha^* = \text{ ??}$
+- $\beta^* = \text{ ??}$
+- $\mu^* = \text{ ??}$
+- $\sigma^* = \text{ ??}$
+
+## Analytical solution
+
+There's a few things to immediately note:
+
+1.  The _hell_ this is a pub quiz question!
+2.  We assume $y^*$, $\epsilon$, $u$, and $\epsilon^*$ are independent random variables.  If they weren't, this would be a wee bit trickier (we would need to have information about the joint distributions, i.e. covariances).
+3.  We recognize that the new residuals are going to include the previous residuals as well as the new measurement error, $\epsilon^* = \epsilon + u$.
+4.  Whether it was a typo or meant to be tricky, the question states the standard deviation rather than the variance for the Normal distribution.  Typically, the notation is uses the variance, $N(\mu, \sigma^2)$.  Rewriting into the standard notation:
+
+<Note>
+I've highly probably in all likelihood had the same question on a Probability exam during my Statistics postgrad.
+</Note>
+
+$$
+\begin{aligned}
+\epsilon &\sim N(0, 1) \quad\rightarrow\quad N(0, 1) \\
+u &\sim N(2, 2) \quad\rightarrow\quad N(2, \sqrt{2}) \\
+\epsilon^* &\sim N(\mu^*, \sigma^{*}) \quad\rightarrow\quad N(\mu^*, \sigma^{*2})
+\end{aligned}
+$$
+
+The problem boils down to realizing that we have a summation of two independent Normally distributed random variables, $y$ and $u$.  How do independent Normally distributed random variables sum?  If you don't remember, don't worry, neither did I.  After some revision we know that (Ross, 2010):
+
+$$
+\begin{aligned}
+\text{E}[X + Y]   &= \text{E}[X] + \text{E}[Y] \\
+\text{Var}[X + Y] &= \text{Var}[X] + \text{Var}[Y] + 2\text{Cov}[X,Y]
+\end{aligned}
+$$
+
+The assumption that the random variables are independent means the covariance is zero, $2\text{Cov}[X,Y] = 0$.  We can simply add the means and variances (Ross, 2010, pp. 256-257) giving:
+
+$$
+\begin{aligned}
+y^* &= y + u \\
+&= \alpha + \beta x + \epsilon + u \\
+&= \alpha + \beta x + \epsilon^* \\
+&= \alpha + \beta x + \Big( N(\mu_{\epsilon}, \sigma_{\epsilon}^2) + N(\mu_u, \sigma_u^2) \Big) \\
+&= \alpha + \beta x + \Big( N(\mu_{\epsilon} + \mu_u, \sigma_{\epsilon}^2 + \sigma_u^2) \Big) \\
+&= \alpha + \beta x + N(0 + 2, 1 + 4) \\
+&= \alpha + \beta x + N(2, 5)
+\end{aligned}
+$$
+
+where,
+
+<Pair>
+<Cell>
+
+$$
+\begin{aligned}
+\mu_{\epsilon^*} &= \mu_{\epsilon} + \mu_u \\
+&= 0 + 2 \\
+&= 2
+\end{aligned}
+$$
+
+</Cell>
+<Cell>
+
+$$
+\begin{aligned}
+\sigma_{\epsilon^*}^2 &= \sigma_{\epsilon}^2 + \sigma_u^2 \\
+&= 1 + 4 \\
+&= 5
+\end{aligned}
+$$
+
+</Cell>
+</Pair>
+
+Plugging in the values for $\alpha$ and $\beta$, we find the following solution:
+
+$$
+y^* = 3 + 2x + N(2, 5)
+$$
+
+- $\alpha^* = 3$
+- $\beta^* = 2$
+- $\mu^* = 2$
+- $\sigma^* = \sqrt{5}$
+
+<Note>
+Remember, we were asked for $\sigma^*$ not $\sigma^{*2}$.
+</Note>
+
+We can arguably simplify this a bit further by noting that the bias, $\alpha$, and the mean of the residuals, $\mu_{\epsilon^*}$, are both constants that shift the intercept and can be grouped.  Subtracting the mean of the error from the bias...
+
+$$
+\begin{aligned}
+y^* &= \alpha + \beta x + N(2, 5) \\
+&= 3 + 2x + N(2, 5) \\
+&= (3+2) + 2x + N(0, 5) \\
+&= 5 + 2x + N(0,5)
+\end{aligned}
+$$
+
+And rewriting using the standard deviation rather than the variance (like in the original question) we arrive at:
+
+$$
+y = 5 + 2x + N(0,\sqrt{5})
+$$
+
+- $\alpha^* = 5$
+- $\beta^* = 2$
+- $\mu^* = 2$
+- $\sigma^* = \sqrt{5}$
+
+<Note>
+If instead we took 2 as the variance in $u \sim N(2,2)$:
+
+- $\alpha^* = 5$
+- $\beta^* = 2$
+- $\mu^* = 2$
+- $\sigma^* = \sqrt{3}$
+</Note>
+
+## Computational verification
+
+Let's check our analytical solution through computational methods.  First let's check that we can indeed simply add the means and variances of independent random variables.
+
+```python
+import altair as alt
+import polars as pl
+import torch
+
+n = 100_000
+
+err = torch.normal(0, 1, size=(n,))
+u = torch.normal(2, 2, size=(n,))  # standard deviation 2
+
+err_computational = err + u
+err_analytical = torch.normal(2, 5 ** (0.5), size=(n,))
+
+
+def histogram_frame(values: torch.Tensor, series: str) -> pl.DataFrame:
+    # torch.histogram returns the endpoints of each bin, we want the middle value
+    density, edges = torch.histogram(values, density=True)
+    mids = (edges[:-1] + edges[1:]) / 2
+    return pl.DataFrame({
+        "x": mids.numpy(),
+        "density": density.numpy(),
+        "series": [series] * len(mids),
+    })
+
+
+df = pl.concat([
+    histogram_frame(err, "err"),
+    histogram_frame(u, "u"),
+    histogram_frame(err_computational, "err* (computational)"),
+    histogram_frame(err_analytical, "err* (analytical)"),
+])
+
+chart = (
+    alt.Chart(df)
+    .mark_line()
+    .encode(
+        x="x:Q",
+        y="density:Q",
+        color=alt.Color("series:N", title="Random Variable"),
+    )
+    .properties(width=650)
+)
+
+stats = pl.DataFrame({
+    "series": ["ϵ", "u", "ϵ* (computational)", "ϵ* (analytical)"],
+    "mean": [err.mean().item(), u.mean().item(), err_computational.mean().item(), err_analytical.mean().item()],
+    "var": [err.var().item(), u.var().item(), err_computational.var().item(), err_analytical.var().item()],
+})
+```
+
+<Chart name="summing_random_variables/density_chart" />
+
+In the chart, we can see $\epsilon \sim N(0,1)$ is centered on 0 while $u \sim N(2,2)$, $\epsilon^*_{\text{analytical}} \sim N(2, 5)$, and $\epsilon^*_{\text{computational}} \sim N(0, 1) + N(2, 4)$ are all centered on 2.  Summing the means worked!
+
+The variance is a bit more difficult to verify from the chart.  We can see that $\epsilon^*_{\text{analytical}}$ and $\epsilon^*_{\text{computational}}$ have the same distribution, slightly wider than $u$.  The error between the means and variances is small.  If we increase the sample size these errors move closer towards 0.
+
+<StatsTable name="summing_random_variables/stats" />
+
+Now that we're confident in random variable arithmetic, let's check the full analytical solution to a computational one.  Below we plot the first measured sample, $y_1$, with the original signal, $y_{\text{signal}}$, as a backdrop for reference:
+
+<Pair>
+<Cell>
+
+$$
+\begin{aligned}
+y_{\text{signal}} &= \alpha + \beta x \\
+&= 3 + 2 x
+\end{aligned}
+$$
+
+</Cell>
+<Cell>
+
+$$
+\begin{aligned}
+y_{1} &= \alpha + \beta x + \epsilon \\
+&= 3 + 2 x + N(\mu, \sigma^2) \\
+&= 3 + 2 x + N(0, 1)
+\end{aligned}
+$$
+
+</Cell>
+</Pair>
+
+<Pair>
+<Cell>
+
+$$
+\begin{aligned}
+y^*_{\text{analytical}} &= y + u \\
+&= \alpha + \beta x + \epsilon^* \\
+&= 3 + 2 x + N(\mu^*, \sigma^{*2}) \\
+&= 5 + 2 x + N(0, 5)
+\end{aligned}
+$$
+
+</Cell>
+<Cell>
+
+$$
+\begin{aligned}
+y^*_{\text{computational}} &= y + u \\
+&= \alpha + \beta x + \epsilon + u \\
+&= 3 + 2 x + N(0, 1) + N(2, 4)
+\end{aligned}
+$$
+
+</Cell>
+</Pair>
+
+```python
+import altair as alt
+import polars as pl
+import torch
+
+x = torch.arange(0, 10, 0.01)
+
+# Original Signal
+a = 3
+b = 2
+signal = a + (b * x)
+
+# y Our measured sample
+err_mean = 0
+err_std = 1
+err = torch.normal(err_mean, err_std, size=(len(x),))
+y = a + (b * x) + err
+
+# y* Analytical
+a = 5
+b = 2
+err_mean = 0
+err_std = 5 ** (0.5)
+err_analytical = torch.normal(err_mean, err_std, size=(len(x),))
+y_analytical = a + (b * x) + err_analytical
+
+# y* Computational
+a = 3
+b = 2
+u_mean = 2
+u_std = 2  # u ~ N(2, 2)
+u = torch.normal(u_mean, u_std, size=(len(x),))
+y_computational = a + (b * x) + (err + u)
+
+# Data munging
+df = pl.concat([
+    pl.DataFrame({"x": x.numpy(), "y": signal.numpy(), "dataset": ["signal (original)"] * len(x)}),
+    pl.DataFrame({"x": x.numpy(), "y": y.numpy(), "dataset": ["y"] * len(x)}),
+    pl.DataFrame({"x": x.numpy(), "y": y_computational.numpy(), "dataset": ["y* (computational)"] * len(x)}),
+    pl.DataFrame({"x": x.numpy(), "y": y_analytical.numpy(), "dataset": ["y* (analytical)"] * len(x)}),
+])
+
+chart = (
+    alt.Chart(df, title="Computational simulation of the problem matches the analytical solution")
+    .mark_circle(size=10)
+    .encode(
+        x="x:Q",
+        y="y:Q",
+        color=alt.Color("dataset:N", title=None),
+    )
+    .properties(width=650)
+)
+```
+
+<Chart name="summing_random_variables/scatter_chart" />
+
+The chart shows both the computational analysis verifies the analytical solution, and the table above shows the mean and variance of the residuals of the computational analysis are the same as the analytical solution.
+
+## In the end, it didn't even matter
+
+That took a bit of work.  Thankfully, this question didn't make it into our company pub quiz.  Even if it had, I think everyone (sans the author) would have had to ultimately guess the answer.  We only had 30 seconds per question.  I didn't even finish reading the problem statement let alone begin tackling it in that time!
+
+In the end, whether this question would have been included or not, wouldn't have changed the outcome.  The quiz was neck and neck between 3 teams for most of the game.  My team bouncing between 1st and 3rd place.  That is until the final round of questions from the Leadership team, which were highly specific to a certain someone.
+
+<Note>
+If we have another pub quiz, I'll make sure to sling in some equally maladjusted questions.  But I'll post the answers beforehand here.
+
+Watch this space.
+</Note>
+
+Good thing I had the CEO on my team 🥇
+
+## References
+
+Ross, S. (2010). *A First Course in Probability* (8th ed.).  Pearson Prentice Hall.

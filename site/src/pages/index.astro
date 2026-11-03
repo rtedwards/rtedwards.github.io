@@ -1,0 +1,97 @@
+---
+import { getPublishedPosts } from '../lib/posts';
+import Base from '../layouts/Base.astro';
+
+const posts = (await getPublishedPosts())
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Base title="The Bear's Toes">
+  <table class="listing" data-listing>
+    <thead>
+      <tr>
+        <th aria-sort="descending">
+          <button type="button" data-sort="date">Date</button>
+        </th>
+        <th>Title</th>
+        <th aria-sort="none">
+          <button type="button" data-sort="tags">Categories</button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {posts.map((post) => (
+        <tr data-date={post.data.date.toISOString().slice(0, 10)} data-tags={post.data.categories.join('|')}>
+          <td class="date">{post.data.date.toISOString().slice(0, 10)}</td>
+          <td>
+            <a href={`/posts/${post.id}/`}>{post.data.title}</a>
+            <span class="description">{post.data.description}</span>
+          </td>
+          <td>
+            {post.data.categories.map((category) => (
+              <button type="button" class="tag" data-tag={category} aria-pressed="false">{category}</button>
+            ))}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</Base>
+
+<script>
+  const table = document.querySelector<HTMLTableElement>('[data-listing]');
+  const body = table?.tBodies[0];
+  const tagButtons = table?.querySelectorAll<HTMLButtonElement>('[data-tag]') ?? [];
+
+  // Show only the posts with the given tag. Passing null shows every post.
+  // The choice goes into the URL, so a filtered view can be shared.
+  function applyFilter(tag: string | null) {
+    for (const row of Array.from(body?.rows ?? [])) {
+      const tags = (row.dataset.tags ?? '').split('|');
+      row.hidden = tag !== null && !tags.includes(tag);
+    }
+    tagButtons.forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.tag === tag));
+    });
+
+    const url = new URL(location.href);
+    if (tag === null) url.searchParams.delete('tag');
+    else url.searchParams.set('tag', tag);
+    history.replaceState(null, '', url);
+  }
+
+  tagButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const tag = button.dataset.tag!;
+      const active = button.getAttribute('aria-pressed') === 'true';
+      applyFilter(active ? null : tag);  // clicking the selected tag again shows all posts
+    });
+  });
+
+  const initial = new URLSearchParams(location.search).get('tag');
+  if (initial) applyFilter(initial);
+
+  // Sort the listing by date or by categories. Clicking the same header again reverses the order.
+  table?.querySelectorAll<HTMLButtonElement>('[data-sort]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const header = button.closest('th')!;
+      const key = button.dataset.sort!;
+      const current = header.getAttribute('aria-sort');
+      const first = key === 'date' ? 'descending' : 'ascending';
+      const next = current === first ? (first === 'descending' ? 'ascending' : 'descending') : first;
+
+      table!.querySelectorAll('th').forEach((th) => th.setAttribute('aria-sort', 'none'));
+      header.setAttribute('aria-sort', next);
+
+      const rows = Array.from(body!.rows);
+      const attribute = key === 'date' ? 'date' : 'tags';
+      const direction = next === 'ascending' ? 1 : -1;
+      rows.sort((a, b) => {
+        const x = a.dataset[attribute] ?? '';
+        const y = b.dataset[attribute] ?? '';
+        return x.localeCompare(y) * direction;
+      });
+      body!.append(...rows);
+    });
+  });
+</script>

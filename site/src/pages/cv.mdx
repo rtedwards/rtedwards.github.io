@@ -1,0 +1,100 @@
+---
+title: "CV"
+description: "Long-form CV of Robert Edwards: roles, projects and talks."
+layout: ../layouts/Page.astro
+---
+
+<article class="cv">
+  <h1>Robert Edwards</h1>
+  <p class="cv-summary">
+    Lead AI and ML engineer.  Owns AI strategy, roadmap and delivery at Bazze, and leads a team of four.  Built the engineering practice at three consecutive companies, from CI/CD and code standards to a model release process.  Background in robotics, geospatial data and distributed systems, and builds a database engine in Rust as a side project.
+  </p>
+
+<h2>Experience</h2>
+
+<section class="role">
+    <div class="role-head"><span><strong>Lead AI Engineer</strong> | <em>Bazze</em></span><span class="role-date">June 2025 to present</span></div>
+
+- I own the AI strategy, roadmap and delivery.  I built an AI analytics assistant.  It is built with PydanticAI and AWS Bedrock.
+- A user asks a question in plain language.  The assistant writes SQL over the company's data in DuckDB.  When a query fails, the assistant reads the schema context that the system injects, and it corrects the query.  Time to insight fell from days to minutes.
+- I made agent quality a metric that runs in regression tests.  Checkpoint evals inspect the intermediate state of each agent run.  Run-level invariants check the results.  A synthetic data generator gives every eval case a known answer.  Hybrid search and reciprocal rank fusion reranking raised recommendation accuracy.  A stricter data ontology supported both.
+- I built the production observability stack with OpenTelemetry, Logfire and Grafana.  Leadership sees the cost of each query.  PII scrubbing supports the enterprise security review.
+- I set the engineering bar for a team of four.  I mentored two engineers.  I introduced code standards, CI/CD and a review practice, and I run sprint planning and retrospectives.
+
+</section>
+
+<section class="role">
+    <div class="role-head"><span><strong>Machine Learning Engineer</strong> | <em>Orbio Earth (YC S23)</em></span><span class="role-date">June 2024 to June 2025</span></div>
+    <p class="role-summary"><em>Methane detection in satellite imagery with computer vision.</em></p>
+
+- The company built a model that finds methane plumes in satellite scenes.  I worked on the data path, the training stack and the release process.
+- **Release process.** I set up a Model Release Process across ML, QA and engineering.  It covers versioning, documentation and sign-off.  It was the first formal path from an experiment to production at the company.  I mentored two engineers into it.
+- **Data path.** Scenes were tiled into chips with rasterio.  The chips were stored as NumPy arrays in Parquet.  Methane plumes were simulated into chips at load time.  The chips moved from float32 to int16, which halved the storage and the I/O bandwidth.  The chip size moved from 128 px to 256 px, for more model context and better I/O efficiency.
+- I tuned the Parquet layout for three competing needs: random sampling, correlation between rows in the same batch, and sequential I/O.  A row group size was chosen to balance them.  A row group index made sampling a targeted read.  I chose zstd at level 9 for the codec.  Decompression speed stays close to flat across levels, so a high level costs only write time.  The storage side is described in <a href="/posts/parquet_metadata/">Creating Memory Leaks with Parquet Metadata</a>.
+- **Training.** I moved training from DataParallel to DistributedDataParallel.  I tuned the DataLoader for workers, pinned memory, prefetching and persistent workers.  I also right-sized the cluster.  GPU utilisation rose from 50 to 60 percent to about 90 percent.  Training time roughly halved.  The training changes came with a move from two GPUs to four larger GPUs, so the utilisation figure is the cleaner measure of the data path work.  The training loop is described in <a href="/posts/torch-distributed-explained/">Distributed Training with DistributedDataParallel</a>.
+- I improved the model's recall by sourcing synthetic training data that was closer in distribution to real data.  I rewrote a cloud map-reduce job to run on a single machine.  The rewrite removed days of runtime and a four-figure compute bill for each run.
+- When the company shut down, I open-sourced the methane pipeline as <a href="https://orbio-earth.github.io/Project-Eucalyptus/">Project Eucalyptus</a>.  It is a public guide to training data, tiling, validation and plume quantification.
+
+</section>
+
+<section class="role">
+    <div class="role-head"><span><strong>Senior Data Scientist</strong> | <em>General System</em></span><span class="role-date">April 2023 to May 2024</span></div>
+    <p class="role-summary"><em>A geospatial and spatiotemporal data platform.</em></p>
+
+- I ran the Developer Portal with the Product Director, the CMO and the tech leads.  It has documentation, tutorials, demo videos and a Python SDK.  Customers can integrate with the platform without help from the engineering team.
+- I built the synthetic data capability.  It generates spatiotemporal datasets of more than 100 billion records.  It uses Python, multiprocessing, PostGIS and OSRM.  Sales demos and full-scale stress tests use these datasets, and no real personal data is involved.
+- I designed and shipped new query types for the platform API in Rust.  I worked with the tech leads and the Product Director to keep query performance and consistency across internal systems.
+- I built a prototype of spatial embeddings.  It allows semantic search over spatial data, with Python and pgvector.
+
+</section>
+
+<section class="role">
+    <div class="role-head"><span><strong>Data Scientist</strong> | <em>General System</em></span><span class="role-date">October 2019 to April 2023</span></div>
+
+- I led research into new uses for the geospatial index.  I wrote a Python client API for inserting, querying and running new spatial analyses.  The findings moved the index's platform integration forward by six months.
+- I built a prototype user interface with the Data Science team.  Intelligence analysts use it to explore large spatiotemporal datasets.  It uses Python, PostGIS and Streamlit.  Clients bought it, and it became a product offering.
+- I set up the Data Science team's engineering practice from nothing.  I trained the team on Git feature branches, CI/CD, static analysis and linting.
+
+</section>
+
+<section class="role">
+    <div class="role-head"><span><strong>Machine Learning Engineer</strong> | <em>Epitheca Consulting</em></span><span class="role-date">April 2021 to October 2022</span></div>
+    <p class="role-summary"><em>Data science consulting for startups and small businesses.</em></p>
+
+- I built and deployed production machine learning for startup clients.  One system was a recommender that uses implicit collaborative filtering on AWS SageMaker.  The other was an outlier detector that flags anomalous bank transactions on Azure ML.  I explained both models to stakeholders with SHAP.
+
+</section>
+
+<h2>Projects</h2>
+
+<section class="project">
+<h3>Database for multidimensional data (in progress)</h3>
+    <p>This is an OLAP database for multidimensional data, written in Rust with SQL served through Apache DataFusion.  Each record is indexed on a Z-order key as it arrives.  The index keeps the same structure for any insertion order, and it is designed for skewed value distributions.  It targets spatial and spatiotemporal data, telemetry and log streams, and other records with several numeric attributes that are queried together.</p>
+
+- Data is stored in column-contiguous segments on disk.
+- SQL is parsed and planned by Apache DataFusion, with custom operators for spatial and multidimensional access.
+- Supports concurrent workloads: multiple ingest threads write to the index at the same time, and queries run during ingest.
+</section>
+
+<section class="project">
+<h3>Timelapse Tools</h3>
+    <p>Timelapse Tools lets photographers edit and render timelapses from a sequence of camera RAW, HEIC or still images, as a native Apple app with a companion command-line tool.  Its built-in editor keyframes adjustments and removes flicker across the sequence, then exports to H.264, HEVC, ProRes or GIF.  Rendering stays on the GPU, and memory stays flat however many frames a timelapse has.</p>
+</section>
+
+<h2>Talks</h2>
+<ul>
+    <li><em>Do Androids Dream of Synthetic Sheep?  Generating realistic spatiotemporal data for testing on hundreds of billions of records.</em> Geomob, London, April 2024.</li>
+    <li><em>Deeper, Broader, Faster, Strong: Expanding into New Dimensions With Spatiotemporal Data.</em> Spatial Data Science Conference, New York, October 2023.</li>
+</ul>
+
+<h2>Education</h2>
+<ul>
+    <li class="edu-row"><span><strong>MSc Biostatistics</strong> | <em>University of Glasgow</em></span><span class="role-date">2019</span></li>
+    <li class="edu-row"><span><strong>BSc Mechanical Engineering</strong> | <em>University of California, Davis</em></span><span class="role-date">2014</span></li>
+</ul>
+
+<h2>Skills</h2>
+  <p class="skill-line"><strong>Expertise:</strong> AI engineering | Machine learning | Computer vision | Geospatial | Distributed systems</p>
+  <p class="skill-line"><strong>Software:</strong> PydanticAI | AWS Bedrock | FastAPI | PyTorch | scikit-learn | OpenTelemetry | PostGIS | Docker | Git | GitLab CI</p>
+  <p class="skill-line"><strong>Languages:</strong> Python | Rust | Julia</p>
+</article>
